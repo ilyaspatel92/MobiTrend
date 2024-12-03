@@ -1,0 +1,17 @@
+E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Service\bin\Release\net8.0\Mobi.Service.deps.json
+E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Service\bin\Release\net8.0\Mobi.Service.dll
+E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Service\bin\Release\net8.0\Mobi.Service.pdb
+E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Service\bin\Release\net8.0\Mobi.Data.dll
+E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Service\bin\Release\net8.0\Mobi.Repository.dll
+E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Service\bin\Release\net8.0\Mobi.Data.pdb
+E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Service\bin\Release\net8.0\Mobi.Repository.pdb
+E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Service\obj\Release\net8.0\Mobi.Service.csproj.AssemblyReference.cache
+E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Service\obj\Release\net8.0\Mobi.Service.GeneratedMSBuildEditorConfig.editorconfig
+E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Service\obj\Release\net8.0\Mobi.Service.AssemblyInfoInputs.cache
+E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Service\obj\Release\net8.0\Mobi.Service.AssemblyInfo.cs
+E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Service\obj\Release\net8.0\Mobi.Service.csproj.CoreCompileInputs.cache
+E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Service\obj\Release\net8.0\Mobi.Ser.C5CDDA69.Up2Date
+E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Service\obj\Release\net8.0\Mobi.Service.dll
+E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Service\obj\Release\net8.0\refint\Mobi.Service.dll
+E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Service\obj\Release\net8.0\Mobi.Service.pdb
+E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Service\obj\Release\net8.0\ref\Mobi.Service.dll
