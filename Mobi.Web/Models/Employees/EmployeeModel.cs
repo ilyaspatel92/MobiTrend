@@ -40,13 +40,13 @@ namespace Mobi.Web.Models.Employees
         public int? MobileType { get; set; } // Enum value, optional.
 
         //[StringLength(50, ErrorMessage = "Registration method cannot exceed 50 characters.")]
-        public string? RegistrationVia { get; set; }
+        public int RegistrationVia { get; set; }
 
         //[StringLength(100, ErrorMessage = "Device ID cannot exceed 100 characters.")]
         public string? DeviceId { get; set; }
 
         //[StringLength(50, ErrorMessage = "Register Status cannot exceed 50 characters.")]
-        public string? RegisterStatus { get; set; }
+        public bool RegisterStatus { get; set; }
 
         [Required(ErrorMessage = "Company ID is required.")]
         public string? CompanyId { get; set; }

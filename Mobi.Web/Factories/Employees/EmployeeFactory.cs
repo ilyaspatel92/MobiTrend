@@ -21,7 +21,7 @@ namespace Mobi.Web.Factories.Employees
                 UserName = employee.UserName,
                 MobileType = employee.MobileType,
                 DeviceId = employee.DeviceId,
-                RegistrationVia = employee.RegistrationVia,
+                RegistrationVia = employee.RegistrationType,
                 RegisterStatus = employee.RegisterStatus,
                 CreatedDate = employee.CreatedDate
             };
