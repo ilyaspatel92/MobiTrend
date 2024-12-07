@@ -1,0 +1,150 @@
+﻿@{
+    ViewData["Title"] = "Employee List";
+}
+<div class="col-md-12">
+<div class="card card-info card-outline mb-4"> <!--begin::Header-->
+                                <div class="card-header">
+            <div class="card-title">Employee List</div>
+            <div class="d-flex justify-content-end">
+                <a href="@Url.Action("Create", "Employee")" class="btn btn-success">Add Employee</a
+            </div>
+                                </div> <!--end::Header--> <!--begin::Form-->
+        <form id="searchForm" method="get" action="@Url.Action("GetEmployees", "Employee")"> <!--begin::Body-->
+                                    <div class="card-body"> <!--begin::Row-->
+                                        <div class="row g-3"> <!--begin::Col-->
+                    <div class="col-md-6">
+                        <label for="validationCustom01" class="form-label">Search by Name</label>
+                        <input type="text" id="searchByName" name="name" class="form-control" placeholder="Enter Name" />
+                                                <div class="valid-feedback">Looks good!</div>
+                                            </div> <!--end::Col--> <!--begin::Col-->
+                    <div class="col-md-6">
+                        <label for="validationCustom02" class="form-label">Search by ID:</label> 
+                        <input type="text" id="searchById" name="id" class="form-control" placeholder="Enter ID" />
+                                            </div> <!--end::Col--> <!--begin::Col-->
+                                             <!--end::Col--> <!--begin::Col-->
+                                        </div> <!--end::Row-->
+                                    </div> <!--end::Body--> <!--begin::Footer-->
+            <div class="card-footer">
+                <button type="submit" class="btn btn-info">Search</button>
+            </div> <!--end::Footer-->
+                                </form> <!--end::Form--> <!--begin::JavaScript-->
+                            </div>
+</div>
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-12">
+                    <div class="card-header">
+                        <h3 class="card-title">Bordered Table</h3>
+                    </div> <!-- /.card-header -->
+                    <div class="card-body">
+                        <table class="table table-bordered" id="employeeTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name (English)</th>
+                                    <th>Name (Arabic)</th>
+                                    <th>Status</th>
+                                    <th>Company ID</th>
+                                    <th>Mobile Number</th>
+                                    <th>Email</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var employee in Model)
+                                {
+                                    <tr class="align-middle">
+                                        <td>@employee.Id</td>
+                                        <td>@employee.NameEng</td>
+                                        <td>@employee.NameArabic</td>
+                                        <td>@employee.Status</td>
+                                        <td>@employee.CompanyId</td>
+                                        <td>@employee.MobileNumber</td>
+                                        <td>@employee.Email</td>
+                                        <td>
+                                            <a href="@Url.Action("Details", "Employee", new { id = employee.Id })" class="btn btn-info btn-sm">Details</a>
+                                            <a href="@Url.Action("Edit", "Employee", new { id = employee.Id })" class="btn btn-primary btn-sm">Edit</a>
+                                            <a href="@Url.Action("Delete", "Employee", new { id = employee.Id })" class="btn btn-danger btn-sm">Delete</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div> <!-- /.card-body -->
+                </div> <!-- /.card -->
+            </div> <!-- /.col -->
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div> <!--end::App Content-->
+@section Scripts {
+    <!-- jQuery and DataTable scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css" />
+
+    <script>
+        $(document).ready(function () {
+            var table = $('#employeeTable').DataTable({
+                ajax: {
+                    url: '@Url.Action("GetEmployees", "Employee")',
+                    type: 'GET',
+                    data: function (d) {
+                        // Pass search parameters from the form to the server
+                        d.name = $('#searchByName').val();
+                        d.id = $('#searchById').val();
+                    },
+                    dataType: 'json',
+                    // Process the data and update the records count
+                    dataSrc: function (json) {
+                        // Update the pagination and record count
+                        return json.data;
+                    }
+                },
+                columns: [
+                    { data: 'id' },
+                    { data: 'nameEng' },
+                    { data: 'nameArabic' },
+                    { data: 'status' },
+                    { data: 'companyId' },
+                    { data: 'mobileNumber' },
+                    { data: 'email' },
+                    {
+                        data: null,
+                        render: function (data) {
+                            return `
+                                <a href="/Employee/Details/${data.id}" class="btn btn-info btn-sm">Details</a>
+                                <a href="/Employee/Edit/${data.id}" class="btn btn-primary btn-sm">Edit</a>
+                                <a href="/Employee/Delete/${data.id}" class="btn btn-danger btn-sm">Delete</a>
+                            `;
+                        }
+                    }
+                ],
+                processing: true,
+                serverSide: false, // We're handling client-side pagination
+                paging: true,
+                searching: false, // Disable the default DataTable search
+                lengthChange: true, // Allow changing page length
+                pageLength: 10, // Default page length
+                language: {
+                    paginate: {
+                        previous: "Previous",
+                        next: "Next"
+                    },
+                    info: "Showing _START_ to _END_ of _TOTAL_ entries (filtered from _MAX_ total entries)"
+                }
+            });
+
+            // Trigger the AJAX request on form submit
+            $('#searchForm').on('submit', function (e) {
+                e.preventDefault(); // Prevent the default form submission
+                table.ajax.reload(); // Reload the table data with the new filters
+            });
+        });
+
+    </script>
+}

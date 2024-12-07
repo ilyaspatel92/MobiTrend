@@ -1,0 +1,120 @@
+﻿@model Mobi.Web.Models.Employees.EmployeeModel
+
+@{
+    ViewData["Title"] = "Add Employee";
+}
+
+<div class="card card-info card-outline mb-4">
+    <!-- Begin::Header -->
+    <div class="card-header">
+        <h4 class="card-title">Add Employee</h4>
+    </div>
+    <!-- End::Header -->
+    <!-- Begin::Form -->
+    <form asp-action="Create" method="post" class="needs-validation" novalidate>
+        <!-- Validation Summary -->
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <!-- Begin::Body -->
+        <div class="card-body">
+            <div class="row g-3">
+                <!-- Name (English) -->
+                <div class="col-md-6">
+                    <label asp-for="NameEng" class="form-label">Name (English)</label>
+                    <input asp-for="NameEng" class="form-control" placeholder="Enter Name (English)" />
+                    <span asp-validation-for="NameEng" class="text-danger"></span>
+                </div>
+
+                <!-- Name (Arabic) -->
+                <div class="col-md-6">
+                    <label asp-for="NameArabic" class="form-label">Name (Arabic)</label>
+                    <input asp-for="NameArabic" class="form-control" placeholder="Enter Name (Arabic)" />
+                    <span asp-validation-for="NameArabic" class="text-danger"></span>
+                </div>
+
+                <!-- Status -->
+                <div class="col-md-6">
+                    <label asp-for="Status" class="form-label">Status</label>
+                    <select asp-for="Status" class="form-select">
+                        <option selected disabled value="">Choose...</option>
+                        <option value="true">Active</option>
+                        <option value="false">Inactive</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+
+                <!-- File Number -->
+                <div class="col-md-6">
+                    <label asp-for="FileNumber" class="form-label">File Number</label>
+                    <input asp-for="FileNumber" class="form-control" placeholder="Enter File Number" />
+                    <span asp-validation-for="FileNumber" class="text-danger"></span>
+                </div>
+
+                <!-- Mobile Number -->
+                <div class="col-md-6">
+                    <label asp-for="MobileNumber" class="form-label">Mobile Number</label>
+                    <input asp-for="MobileNumber" class="form-control" placeholder="Enter Mobile Number" />
+                    <span asp-validation-for="MobileNumber" class="text-danger"></span>
+                </div>
+
+                <!-- Email -->
+                <div class="col-md-6">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <input asp-for="Email" type="email" class="form-control" placeholder="Enter Email Address" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <!-- Password -->
+                <div class="col-md-6">
+                    <label asp-for="Password" class="form-label">Password</label>
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Enter Password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <!-- Username -->
+                <div class="col-md-6">
+                    <label asp-for="UserName" class="form-label">Username</label>
+                    <input asp-for="UserName" class="form-control" placeholder="Enter Username" />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+
+                <!-- Company ID -->
+                <div class="col-md-6">
+                    <label asp-for="CompanyId" class="form-label">Company ID</label>
+                    <input asp-for="CompanyId" class="form-control" placeholder="Enter Company ID" />
+                    <span asp-validation-for="CompanyId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <!-- End::Body -->
+        <!-- Begin::Footer -->
+        <div class="card-footer text-center">
+            <button type="submit" class="btn btn-info">Add Employee</button>
+        </div>
+        <!-- End::Footer -->
+    </form>
+    <!-- End::Form -->
+</div>
+
+@section Scripts {
+    <!-- JavaScript for Bootstrap validation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        (() => {
+            "use strict";
+            const forms = document.querySelectorAll(".needs-validation");
+            Array.from(forms).forEach((form) => {
+                form.addEventListener("submit", (event) => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add("was-validated");
+                }, false);
+            });
+        })();
+    </script>
+}
