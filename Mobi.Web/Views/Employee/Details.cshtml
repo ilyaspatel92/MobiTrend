@@ -1,0 +1,47 @@
+﻿@model Mobi.Web.Models.Employees.EmployeeModel
+
+@{
+    ViewData["Title"] = "Employee Details";
+}
+
+<h2>Employee Details</h2>
+
+<div class="card">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">ID:</dt>
+            <dd class="col-sm-9">@Model.Id</dd>
+
+            <dt class="col-sm-3">Name (English):</dt>
+            <dd class="col-sm-9">@Model.NameEng</dd>
+
+            <dt class="col-sm-3">Name (Arabic):</dt>
+            <dd class="col-sm-9">@Model.NameArabic</dd>
+
+            <dt class="col-sm-3">Status:</dt>
+            <dd class="col-sm-9">@Model.Status ? "Active" : "Inactive"</dd>
+
+            <dt class="col-sm-3">File Number:</dt>
+            <dd class="col-sm-9">@Model.FileNumber</dd>
+
+            <dt class="col-sm-3">Mobile Number:</dt>
+            <dd class="col-sm-9">@Model.MobileNumber</dd>
+
+            <dt class="col-sm-3">Email:</dt>
+            <dd class="col-sm-9">@Model.Email</dd>
+
+            <dt class="col-sm-3">Company ID:</dt>
+            <dd class="col-sm-9">@Model.CompanyId</dd>
+
+            <dt class="col-sm-3">Mobile Type:</dt>
+            <dd class="col-sm-9">@Model.MobileType</dd>
+
+            <dt class="col-sm-3">Registration Via:</dt>
+            <dd class="col-sm-9">@Model.RegistrationVia</dd>
+        </dl>
+    </div>
+</div>
+
+<a asp-action="List" class="btn btn-secondary mt-3">Back to List</a>
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary mt-3">Edit</a>
+<a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger mt-3">Delete</a>
