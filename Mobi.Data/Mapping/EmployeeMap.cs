@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Mobi.Data.Domain;
+using Mobi.Data.Domain.Employees;
 
 namespace Mobi.Data.Mapping
 {
-    public class CompanysMap
+    public class EmployeeMap
     {
-        public CompanysMap(EntityTypeBuilder<Company> entityBuilder)
+        public EmployeeMap(EntityTypeBuilder<Employee> entityBuilder)
         {
             entityBuilder.HasKey(c => c.Id);
         }
     }
+   
 }

@@ -11,7 +11,7 @@ namespace Mobi.Service.Compnay
     {
         #region Fields
 
-        private readonly IRepository<Companys> _companyRepository;
+        private readonly IRepository<Company> _companyRepository;
 
         #endregion
 
@@ -21,7 +21,7 @@ namespace Mobi.Service.Compnay
         /// Initializes a new instance of the <see cref="CompanyService"/> class.
         /// </summary>
         /// <param name="companyRepository">Repository for company operations.</param>
-        public CompanyService(IRepository<Companys> companyRepository)
+        public CompanyService(IRepository<Company> companyRepository)
         {
             _companyRepository = companyRepository;
         }
@@ -35,7 +35,7 @@ namespace Mobi.Service.Compnay
         /// </summary>
         /// <param name="searchText">The text to search for.</param>
         /// <returns>A list of matching companies.</returns>
-        public IEnumerable<Companys> GetCompanies(string searchText)
+        public IEnumerable<Company> GetCompanies(string searchText)
         {
             var query = _companyRepository.GetAll().AsQueryable();
 
@@ -55,7 +55,7 @@ namespace Mobi.Service.Compnay
         /// Inserts a new company into the system.
         /// </summary>
         /// <param name="company">The company to insert.</param>
-        public void InsertCompany(Companys company)
+        public void InsertCompany(Company company)
         {
             if (company == null)
                 throw new ArgumentNullException(nameof(company));
@@ -68,7 +68,7 @@ namespace Mobi.Service.Compnay
         /// </summary>
         /// <param name="id">The unique identifier of the company.</param>
         /// <returns>The matching company.</returns>
-        public Companys GetCompanyById(int id)
+        public Company GetCompanyById(int id)
         {
             return _companyRepository.GetById(id);
         }
@@ -77,7 +77,7 @@ namespace Mobi.Service.Compnay
         /// Updates an existing company's details.
         /// </summary>
         /// <param name="company">The company to update.</param>
-        public void UpdateCompany(Companys company)
+        public void UpdateCompany(Company company)
         {
             if (company == null)
                 throw new ArgumentNullException(nameof(company));
@@ -89,7 +89,7 @@ namespace Mobi.Service.Compnay
         /// Deletes a company from the system.
         /// </summary>
         /// <param name="company">The company to delete.</param>
-        public void DeleteCompany(Companys company)
+        public void DeleteCompany(Company company)
         {
             if (company == null)
                 throw new ArgumentNullException(nameof(company));
