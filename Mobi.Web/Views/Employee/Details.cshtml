@@ -5,7 +5,12 @@
 }
 
 <h2>Employee Details</h2>
-
+<div class="card-header">
+    <!-- Back to List Button on the left side -->
+    <a href="@Url.Action("List", "Employee")" class="btn btn-secondary btn-sm">
+        <i class="fas fa-arrow-left"></i> Back to List
+    </a>
+</div>
 <div class="card">
     <div class="card-body">
         <dl class="row">
@@ -19,7 +24,7 @@
             <dd class="col-sm-9">@Model.NameArabic</dd>
 
             <dt class="col-sm-3">Status:</dt>
-            <dd class="col-sm-9">@Model.Status ? "Active" : "Inactive"</dd>
+            <dd class="col-sm-9">@(Model.Status ? "Active" : "Inactive")</dd>
 
             <dt class="col-sm-3">File Number:</dt>
             <dd class="col-sm-9">@Model.FileNumber</dd>
@@ -33,11 +38,11 @@
             <dt class="col-sm-3">Company ID:</dt>
             <dd class="col-sm-9">@Model.CompanyId</dd>
 
-            <dt class="col-sm-3">Mobile Type:</dt>
+@*             <dt class="col-sm-3">Mobile Type:</dt>
             <dd class="col-sm-9">@Model.MobileType</dd>
 
             <dt class="col-sm-3">Registration Via:</dt>
-            <dd class="col-sm-9">@Model.RegistrationVia</dd>
+            <dd class="col-sm-9">@Model.RegistrationVia</dd> *@
         </dl>
     </div>
 </div>

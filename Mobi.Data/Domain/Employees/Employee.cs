@@ -3,7 +3,7 @@
     public class Employee : BaseEntity
     {
         public string NameEng { get; set; }
-        public string? NameArabic { get; set; }
+        public string NameArabic { get; set; }
         public bool Status { get; set; }
         public string? CompanyId { get; set; }
         public string? FileNumber { get; set; }

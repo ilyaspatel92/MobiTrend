@@ -2,6 +2,7 @@
 using Mobi.Data.Domain.Employees;
 using Mobi.Service.Employees;
 using Mobi.Web.Factories.Employees;
+using Mobi.Web.Models.Employees;
 
 namespace Mobi.Web.Controllers.Employees
 {
@@ -87,19 +88,37 @@ namespace Mobi.Web.Controllers.Employees
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Employee employee)
+        public IActionResult Create(EmployeeModel model)
         {
+            if (_employeeService.IsEmailExists(model.Email))
+            {
+                ModelState.AddModelError("Email", "The email address is already in use.");
+            }
+
+            if (string.IsNullOrEmpty(model.CompanyId))
+                model.CompanyId = "1";
+
             if (ModelState.IsValid)
             {
-                employee.CreatedDate = DateTime.Now;
+                var employee = new Employee
+                {
+                    NameEng = model.NameEng,
+                    NameArabic = model.NameArabic,
+                    Status = model.Status,
+                    FileNumber = model.FileNumber,
+                    MobileNumber = model.MobileNumber,
+                    Email = model.Email,
+                    UserName = model.Email,
+                    Password = model.Password,
+                    CompanyId = model.CompanyId,
+                    CreatedDate = DateTime.Now
+                };
+
                 _employeeService.AddEmployee(employee);
                 return RedirectToAction(nameof(List));
             }
 
-            // Use the factory to prepare the ViewModel
-            var employeeModel = _employeeFactory.PrepareEmployeeViewModel(employee);
-
-            return View(employeeModel);
+            return View(model);
         }
 
         public IActionResult Edit(int id)
@@ -117,15 +136,53 @@ namespace Mobi.Web.Controllers.Employees
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Employee employee)
+        public IActionResult Edit(int id, EmployeeModel model)
         {
-            if (id != employee.Id || !ModelState.IsValid)
+            if (id != model.Id)
             {
-                return View(employee);
+                ModelState.AddModelError("", "Invalid employee ID.");
+                return View(model);
             }
-            _employeeService.UpdateEmployee(employee);
-            return RedirectToAction(nameof(List));
+            if (string.IsNullOrEmpty(model.Password))
+            {
+                ModelState.Remove("Password");  
+            }
+            if (ModelState.IsValid)
+            {
+                // Retrieve the existing employee record
+                var existingEmployee = _employeeService.GetEmployeeById(id);
+                if (existingEmployee == null)
+                {
+                    return NotFound();
+                }
+                // Check for email uniqueness if the email is being updated
+                if (existingEmployee.Email != model.Email)
+                {
+                    if (_employeeService.IsEmailExists(model.Email)) 
+                    {
+                        ModelState.AddModelError("Email", "The email address is already in use.");
+                        return View(model);
+                    }
+                }
+
+                // Update fields
+                existingEmployee.NameEng = model.NameEng;
+                existingEmployee.NameArabic = model.NameArabic;
+                existingEmployee.Status = model.Status;
+                existingEmployee.FileNumber = model.FileNumber;
+                existingEmployee.MobileNumber = model.MobileNumber;
+                existingEmployee.Email = model.Email;
+                existingEmployee.UserName = model.Email;
+                existingEmployee.CompanyId = model.CompanyId;
+
+                // Update the record
+                _employeeService.UpdateEmployee(existingEmployee);
+                return RedirectToAction(nameof(List));
+            }
+
+            return View(model);
         }
+
 
         public IActionResult Delete(int id)
         {

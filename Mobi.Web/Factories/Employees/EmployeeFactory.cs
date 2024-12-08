@@ -5,6 +5,11 @@ namespace Mobi.Web.Factories.Employees
 {
     public class EmployeeFactory : IEmployeeFactory
     {
+        /// <summary>
+        /// Prepares the EmployeeModel ViewModel from the Employee domain object.
+        /// </summary>
+        /// <param name="employee">The domain Employee object.</param>
+        /// <returns>The ViewModel EmployeeModel.</returns>
         public EmployeeModel PrepareEmployeeViewModel(Employee employee)
         {
             return new EmployeeModel
@@ -18,7 +23,7 @@ namespace Mobi.Web.Factories.Employees
                 MobileNumber = employee.MobileNumber,
                 Email = employee.Email,
                 PhotoPath = employee.PhotoPath,
-                UserName = employee.UserName,
+                Password = employee.Password, // Map the password for initial creation or edit
                 MobileType = employee.MobileType,
                 DeviceId = employee.DeviceId,
                 RegistrationVia = employee.RegistrationType,
@@ -27,6 +32,11 @@ namespace Mobi.Web.Factories.Employees
             };
         }
 
+        /// <summary>
+        /// Prepares a collection of EmployeeModel ViewModels from a collection of Employee domain objects.
+        /// </summary>
+        /// <param name="employees">The collection of Employee domain objects.</param>
+        /// <returns>The collection of ViewModel EmployeeModels.</returns>
         public IEnumerable<EmployeeModel> PrepareEmployeeViewModels(IEnumerable<Employee> employees)
         {
             return employees.Select(PrepareEmployeeViewModel);
