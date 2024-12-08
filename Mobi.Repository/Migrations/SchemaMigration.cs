@@ -6,15 +6,15 @@ namespace Mobi.Repository.Migrations
     public class SchemaMigration : Migration
     {
         public override void Up()
-        {         
+        {
             if (!Schema.Table("Companys").Exists())
             {
                 // Create the Companys table
                 Create.Table("Companys")
                     .WithColumn("Id").AsInt32().PrimaryKey().Identity()
                     .WithColumn("CompanyName").AsString(255).NotNullable()
-                    .WithColumn("CompanyId").AsInt32().NotNullable()
-                    .WithColumn("CreatedDate").AsDate().NotNullable();
+                    .WithColumn("CompanyId").AsString(255).NotNullable()
+                    .WithColumn("CreatedDate").AsDateTime().NotNullable();
             }
 
             if (!Schema.Table("SystemUsers").Exists())
@@ -26,8 +26,8 @@ namespace Mobi.Repository.Migrations
                     .WithColumn("UserName").AsString(255).NotNullable()
                     .WithColumn("UserStatus").AsString(50).NotNullable()
                     .WithColumn("Password").AsString(255).NotNullable()
-                    .WithColumn("CompanyID").AsInt32().NotNullable()
-                    .WithColumn("CreatedDate").AsDate().NotNullable()
+                    .WithColumn("CompanyID").AsString(255).NotNullable()
+                    .WithColumn("CreatedDate").AsDateTime().NotNullable()
                     .WithColumn("Deleted").AsBoolean().NotNullable();
 
                 // Add foreign key only if the table was created
@@ -44,7 +44,7 @@ namespace Mobi.Repository.Migrations
                     .WithColumn("NameEng").AsString(255).NotNullable()
                     .WithColumn("NameArabic").AsString(255).Nullable()
                     .WithColumn("Status").AsBoolean().NotNullable().WithDefaultValue(true)
-                    .WithColumn("CompanyId").AsInt32().NotNullable()
+                    .WithColumn("CompanyId").AsString(255).NotNullable()
                     .WithColumn("FileNumber").AsString(100).Nullable()
                     .WithColumn("MobileNumber").AsString(20).Nullable()
                     .WithColumn("Email").AsString(255).Nullable()
@@ -56,7 +56,8 @@ namespace Mobi.Repository.Migrations
                     .WithColumn("DeviceId").AsString(255).Nullable()
                     .WithColumn("RegisterStatus").AsString(50).Nullable()
                     .WithColumn("NameEng").AsString(255).NotNullable()
-                    .WithColumn("CID").AsString(255).Nullable();
+                    .WithColumn("CID").AsString(255).Nullable()
+                    .WithColumn("CreatedDate").AsDateTime().NotNullable();
 
                 Create.ForeignKey("FK_Employee_Company")
                     .FromTable("Employee").ForeignColumn("CompanyId")
@@ -79,9 +80,9 @@ namespace Mobi.Repository.Migrations
                 Delete.Table("Companys");
             }
 
-            if (Schema.Table("Company").Exists())
+            if (Schema.Table("Employee").Exists())
             {
-                Delete.Table("Company");
+                Delete.Table("Employee");
             }
         }
     }

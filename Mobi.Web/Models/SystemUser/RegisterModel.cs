@@ -20,6 +20,6 @@ namespace Mobi.Web.Models.SystemUser
         public int CompanyID { get; set; }
 
         [Required]
-        public string UserStatus { get; set; }
+        public bool UserStatus { get; set; }
     }
 }
