@@ -1,6 +1,12 @@
 ﻿using Mobi.Data.Domain.Employees;
 using Mobi.Web.Models.Employees;
-
+using QRCoder;
+using Microsoft.AspNetCore.Mvc;
+using QRCoder;
+using System;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 namespace Mobi.Web.Factories.Employees
 {
     public class EmployeeFactory : IEmployeeFactory
@@ -28,7 +34,8 @@ namespace Mobi.Web.Factories.Employees
                 DeviceId = employee.DeviceId,
                 RegistrationVia = employee.RegistrationType,
                 RegisterStatus = employee.RegisterStatus,
-                CreatedDate = employee.CreatedDate
+                CreatedDate = employee.CreatedDate,
+                QrCode = GenerateQrCode(employee.Email)
             };
         }
 
@@ -40,6 +47,29 @@ namespace Mobi.Web.Factories.Employees
         public IEnumerable<EmployeeModel> PrepareEmployeeViewModels(IEnumerable<Employee> employees)
         {
             return employees.Select(PrepareEmployeeViewModel);
+        }
+
+        private string GenerateQrCode(string email)
+        {
+            // Initialize the QRCode generator
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(email, QRCodeGenerator.ECCLevel.Q);
+
+            // Generate the QRCode image
+            BitmapByteQRCode qrCode = new BitmapByteQRCode(qrCodeData);
+
+            // Convert to Base64 string
+            string base64String = Convert.ToBase64String(qrCode.GetGraphic(20));
+
+            // Return as a data URI for embedding in an <img> tag
+            return string.Format("data:image/png;base64,{0}", base64String);
+        }
+        private string GenerateQrCode1(string email)
+        {
+            QRCodeGenerator QrGenerator = new QRCodeGenerator();
+            QRCodeData QrCodeData = QrGenerator.CreateQrCode(email, QRCodeGenerator.ECCLevel.Q);
+            BitmapByteQRCode QrCode = new(QrCodeData);
+            return string.Format("data:image/png;base64,{0}", Convert.ToBase64String(QrCode.GetGraphic(2)));
         }
     }
 }
