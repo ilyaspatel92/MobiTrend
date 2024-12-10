@@ -9,5 +9,6 @@ namespace Mobi.Service.Employees
         void AddEmployee(Employee employee);
         void UpdateEmployee(Employee employee);
         void RemoveEmployee(Employee employee);
+        bool IsEmailExists(string email);
     }
 }

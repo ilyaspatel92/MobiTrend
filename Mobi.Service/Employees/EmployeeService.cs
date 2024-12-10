@@ -1,13 +1,5 @@
 ﻿using Mobi.Data.Domain.Employees;
 using Mobi.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Mobi.Data.Domain;
-using Mobi.Repository;
 
 namespace Mobi.Service.Employees
 {
@@ -44,5 +36,11 @@ namespace Mobi.Service.Employees
         {
             _employeeRepository.Delete(employee);
         }
+
+        public bool IsEmailExists(string email)
+        {
+            return _employeeRepository.GetAll().Any(e => e.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+        }
+
     }
 }

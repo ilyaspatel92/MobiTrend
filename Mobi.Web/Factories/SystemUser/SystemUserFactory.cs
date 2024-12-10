@@ -27,7 +27,7 @@ namespace Mobi.Service.Factories
                 Password = PasswordHelper.HashPassword(model.Password),
                 CompanyID = model.CompanyID,
                 UserStatus = model.UserStatus,
-                CreatedDate = (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+                CreatedDate = DateTime.UtcNow,
                 Deleted = false
             };
         }
