@@ -59,10 +59,129 @@ namespace Mobi.Repository.Migrations
                     .WithColumn("CID").AsString(255).Nullable()
                     .WithColumn("CreatedDate").AsDateTime().NotNullable();
 
-                Create.ForeignKey("FK_Employee_Company")
+                Create.ForeignKey("FK_Employee_Companys")
                     .FromTable("Employee").ForeignColumn("CompanyId")
-                    .ToTable("Company").PrimaryColumn("Id");
+                    .ToTable("Companys").PrimaryColumn("Id");
             }
+
+            if (!Schema.Table("EmployeeAttendanceLogs").Exists())
+            {
+                // Create the EmployeeAttendanceLogs table
+                Create.Table("EmployeeAttendanceLogs")
+                    .WithColumn("Id").AsInt32().PrimaryKey().Identity() // Auto-increment primary key
+                    .WithColumn("EmployeeId").AsInt32().NotNullable()
+                    .WithColumn("DateandTime").AsDateTime().NotNullable()
+                    .WithColumn("TransTypeId").AsInt32().NotNullable()
+                    .WithColumn("CurrentLocation").AsString(255).NotNullable()
+                    .WithColumn("ProofTypeId").AsInt32().NotNullable()
+                    .WithColumn("Latitude").AsDecimal().NotNullable()
+                    .WithColumn("Longtitude").AsDecimal().NotNullable()
+                    .WithColumn("MobileSerialNumber").AsString().NotNullable()
+                    .WithColumn("Photo").AsString().NotNullable()
+                    .WithColumn("LocationId").AsInt32().NotNullable()
+                    .WithColumn("Transferred").AsBoolean().NotNullable().WithDefaultValue(false)
+                    .WithColumn("TransferTime").AsDateTime().NotNullable()
+                    .WithColumn("LocationBeaconMappingId").AsInt32().NotNullable();
+
+                // Add foreign key only if the table was created
+                Create.ForeignKey("FK_EmployeeAttendanceLogs_LocationBeaconMappingId")
+                    .FromTable("EmployeeAttendanceLogs").ForeignColumn("LocationBeaconMappingId")
+                    .ToTable("LocationBeaconMapping").PrimaryColumn("Id");
+            }
+
+            if (!Schema.Table("SystemUserAuthorityMapping").Exists())
+            {
+                // Create the EmployeeAttendanceLogs table
+                Create.Table("SystemUserAuthorityMapping")
+                    .WithColumn("Id").AsInt32().PrimaryKey().Identity() // Auto-increment primary key
+                    .WithColumn("SystemUserID").AsInt32().NotNullable()
+                    .WithColumn("ScreenAuthority").AsString().NotNullable()
+                    .WithColumn("ScreenAuthoritySystemName").AsString().NotNullable();
+
+                // Add foreign key only if the table was created
+                Create.ForeignKey("FK_SystemUserAuthorityMapping_SystemUserID")
+                    .FromTable("SystemUserAuthorityMapping").ForeignColumn("SystemUserID")
+                    .ToTable("SystemUsers").PrimaryColumn("Id");
+            }
+
+            if (!Schema.Table("EmployeeLocation").Exists())
+            {
+                // Create the EmployeeLocation table
+                Create.Table("EmployeeLocation")
+                    .WithColumn("Id").AsInt32().PrimaryKey().Identity() // Auto-increment primary key
+                    .WithColumn("EmployeeId").AsInt32().NotNullable()
+                    .WithColumn("LocationId").AsInt32().NotNullable();
+
+                // Add foreign key only if the table was created
+                Create.ForeignKey("FK_EmployeeLocation_EmployeeId")
+                    .FromTable("EmployeeLocation").ForeignColumn("EmployeeId")
+                    .ToTable("Employee").PrimaryColumn("Id");
+            }
+
+            if (!Schema.Table("Locations").Exists())
+            {
+                // Create the EmployeeAttendanceLogs table
+                Create.Table("Locations")
+                    .WithColumn("Id").AsInt32().PrimaryKey().Identity() // Auto-increment primary key
+                    .WithColumn("LocationNameEnglish").AsString(2000).NotNullable()
+                    .WithColumn("LocationNameArabic").AsString(2000).NotNullable()
+                    .WithColumn("Status").AsBoolean().NotNullable().WithDefaultValue(false)
+                    .WithColumn("BeaconProof").AsInt32().NotNullable()
+                    .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                    .WithColumn("GPSLocationAddress").AsString(2000).NotNullable()
+                    .WithColumn("Latitude").AsDecimal().NotNullable()
+                    .WithColumn("Longtitude").AsDecimal().NotNullable()
+                    .WithColumn("SetRadius").AsDecimal().NotNullable()
+                    .WithColumn("CompanyId").AsDecimal().NotNullable();
+
+                // Add foreign key only if the table was created
+                Create.ForeignKey("FK_Locations_CompanyId")
+                    .FromTable("Locations").ForeignColumn("CompanyId")
+                    .ToTable("Companys").PrimaryColumn("Id");
+            }
+
+            if (!Schema.Table("LocationBeaconMapping").Exists())
+            {
+                // Create the EmployeeAttendanceLogs table
+                Create.Table("LocationBeaconMapping")
+                    .WithColumn("Id").AsInt32().PrimaryKey().Identity() // Auto-increment primary key
+                    .WithColumn("LocationId").AsInt32().NotNullable()
+                    .WithColumn("BeaconName").AsString(2000).NotNullable()
+                    .WithColumn("UUID").AsString(2000).NotNullable()
+                    .WithColumn("Status").AsBoolean().NotNullable().WithDefaultValue(false);
+
+                // Add foreign key only if the table was created
+                Create.ForeignKey("FK_LocationBeaconMapping_LocationId")
+                    .FromTable("LocationBeaconMapping").ForeignColumn("LocationId")
+                    .ToTable("Locations").PrimaryColumn("Id");
+            }
+
+            if (!Schema.Table("Language").Exists())
+            {
+                // Create the EmployeeAttendanceLogs table
+                Create.Table("Language")
+                    .WithColumn("Id").AsInt32().PrimaryKey().Identity() // Auto-increment primary key
+                    .WithColumn("LanguageName").AsString(2000).NotNullable()
+                    .WithColumn("DisplayOrder").AsInt32().NotNullable()
+                    .WithColumn("UniqueSeoCode").AsString(2000).NotNullable()
+                    .WithColumn("Published").AsBoolean().NotNullable().WithDefaultValue(false);
+
+            }
+
+            if (!Schema.Table("LocaleStringResource").Exists())
+            {
+                // Create the EmployeeAttendanceLogs table
+                Create.Table("LocaleStringResource")
+                    .WithColumn("Id").AsInt32().PrimaryKey().Identity() // Auto-increment primary key
+                    .WithColumn("ResourceName").AsString(2000).NotNullable()
+                    .WithColumn("ResourceValue").AsString(2000).NotNullable()
+                    .WithColumn("LanguageId").AsInt32().NotNullable();
+
+                // Add foreign key only if the table was created
+                Create.ForeignKey("FK_LocaleStringResource_LanguageId")
+                    .FromTable("LocaleStringResource").ForeignColumn("LanguageId")
+                    .ToTable("Language").PrimaryColumn("Id");
+            }            
 
         }
 
@@ -83,6 +202,35 @@ namespace Mobi.Repository.Migrations
             if (Schema.Table("Employee").Exists())
             {
                 Delete.Table("Employee");
+            }
+
+            if (Schema.Table("EmployeeAttendanceLogs").Exists())
+            {
+                Delete.Table("EmployeeAttendanceLogs");
+            }
+            if (Schema.Table("SystemUserAuthorityMapping").Exists())
+            {
+                Delete.Table("SystemUserAuthorityMapping");
+            }
+            if (Schema.Table("EmployeeLocation").Exists())
+            {
+                Delete.Table("EmployeeLocation");
+            }
+            if (Schema.Table("Locations").Exists())
+            {
+                Delete.Table("Locations");
+            }
+            if (Schema.Table("LocationBeaconMapping").Exists())
+            {
+                Delete.Table("LocationBeaconMapping");
+            }
+            if (Schema.Table("Language").Exists())
+            {
+                Delete.Table("Language");
+            }
+            if (Schema.Table("LocaleStringResource").Exists())
+            {
+                Delete.Table("LocaleStringResource");
             }
         }
     }

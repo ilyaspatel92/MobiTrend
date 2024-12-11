@@ -82,6 +82,21 @@
             <button type="submit" class="btn btn-info">Update Employee</button>
         </div>
     </form>
+
+    <!-- QR Code Section -->
+    <div class="card-body mt-4">
+        <h4 class="card-title">QR Code</h4>
+        <div class="text-center">
+            @if (!string.IsNullOrEmpty(Model.QrCode))
+            {
+                <img src="@Model.QrCode" alt="QR Code" style="width: 150px; height: 150px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);" />
+            }
+            else
+            {
+                <p class="text-muted">No QR Code available</p>
+            }
+        </div>
+    </div>
 </div>
 
 @section Scripts {

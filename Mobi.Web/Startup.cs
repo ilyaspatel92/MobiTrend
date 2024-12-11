@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentMigrator.Runner;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -56,19 +57,29 @@ namespace Mobi.Web
             services.Configure<JwtSettings>(jwtSettings);
 
             var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]);
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+            .AddCookie(options =>
+            {
+                options.LoginPath = "/Account/Login"; // Redirect to login page
+                options.LogoutPath = "/Account/Logout";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = jwtSettings["Issuer"],
-                        ValidAudience = jwtSettings["Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(key)
-                    };
-                });
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtSettings["Issuer"],
+                    ValidAudience = jwtSettings["Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                };
+            });
 
             // Add Swagger for API Documentation
             services.AddSwaggerGen(c =>
@@ -83,19 +94,19 @@ namespace Mobi.Web
                     Scheme = "Bearer"
                 });
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
                 {
+                    Reference = new OpenApiReference
                     {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        Array.Empty<string>()
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
                     }
-                });
+                },
+                Array.Empty<string>()
+            }
+        });
             });
 
             // Register Repository and Services
@@ -110,6 +121,7 @@ namespace Mobi.Web
             // Register Helpers
             services.AddSingleton<JwtTokenHelper>();
         }
+
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -136,7 +148,6 @@ namespace Mobi.Web
                 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
                 try
                 {
-                    // Ensure the database exists
                     if (dbContext.Database.EnsureCreated())
                     {
                         runner.MigrateUp();
@@ -146,24 +157,20 @@ namespace Mobi.Web
                     {
                         runner.MigrateUp();
                         Console.WriteLine("Migrations applied successfully.");
-
                     }
-                    
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error during migration: {ex.Message}");
-                    // Optional: Log detailed error information
                 }
             }
 
-            // Configure Middleware
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+            app.UseAuthentication(); // Enables Authentication
+            app.UseAuthorization();  // Enables Authorization
 
             app.UseEndpoints(endpoints =>
             {
@@ -176,5 +183,6 @@ namespace Mobi.Web
                     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
             });
         }
+
     }
 }

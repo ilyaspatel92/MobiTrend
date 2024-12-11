@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Mobi.Data.Domain.Employees;
 using Mobi.Service.Employees;
 using Mobi.Web.Factories.Employees;
@@ -6,6 +7,7 @@ using Mobi.Web.Models.Employees;
 
 namespace Mobi.Web.Controllers.Employees
 {
+    [Authorize]
     public class EmployeeController : Controller
     {
         private readonly IEmployeeService _employeeService;

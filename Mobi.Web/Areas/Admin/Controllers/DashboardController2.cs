@@ -10,7 +10,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
     [Area("Admin")]
     [ApiController]
     [Route("Admin/[controller]/[action]")]
-    //[Authorize] // Ensure this controller requires authentication
+    [Authorize] // Ensure this controller requires authentication
     public class DashboardController2 : Controller
     {
 
