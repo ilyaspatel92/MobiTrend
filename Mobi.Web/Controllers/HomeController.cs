@@ -5,7 +5,6 @@ using System.Diagnostics;
 
 namespace Mobi.Web.Controllers
 {
-    //[Authorize(Policy = "WebPolicy")]
     [Authorize]
     public class HomeController : Controller
     {

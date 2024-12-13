@@ -10,7 +10,7 @@ namespace Mobi.Data.Mapping
 {
     public class LocationsMap
     {
-        public LocationsMap(EntityTypeBuilder<Location> entityBuilder)
+        public LocationsMap(EntityTypeBuilder<Locations> entityBuilder)
         {
             entityBuilder.HasKey(c => c.Id);
         }
