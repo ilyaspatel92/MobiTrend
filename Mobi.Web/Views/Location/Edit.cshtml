@@ -1,0 +1,28 @@
+﻿@model Mobi.Web.Models.Locations.LocationModel
+
+<h2>Edit Location</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label asp-for="LocationNameEnglish"></label>
+        <input asp-for="LocationNameEnglish" class="form-control" />
+        <span asp-validation-for="LocationNameEnglish" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="LocationNameArabic"></label>
+        <input asp-for="LocationNameArabic" class="form-control" />
+        <span asp-validation-for="LocationNameArabic" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Latitude"></label>
+        <input asp-for="Latitude" class="form-control" />
+        <span asp-validation-for="Latitude" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Longitude"></label>
+        <input asp-for="Longitude" class="form-control" />
+        <span asp-validation-for="Longitude" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
+</form>

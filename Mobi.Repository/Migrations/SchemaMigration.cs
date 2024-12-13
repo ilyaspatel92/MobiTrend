@@ -118,10 +118,10 @@ namespace Mobi.Repository.Migrations
                     .ToTable("Employee").PrimaryColumn("Id");
             }
 
-            if (!Schema.Table("Locations").Exists())
+            if (!Schema.Table("Location").Exists())
             {
                 // Create the EmployeeAttendanceLogs table
-                Create.Table("Locations")
+                Create.Table("Location")
                     .WithColumn("Id").AsInt32().PrimaryKey().Identity() // Auto-increment primary key
                     .WithColumn("LocationNameEnglish").AsString(2000).NotNullable()
                     .WithColumn("LocationNameArabic").AsString(2000).NotNullable()
@@ -135,8 +135,8 @@ namespace Mobi.Repository.Migrations
                     .WithColumn("CompanyId").AsDecimal().NotNullable();
 
                 // Add foreign key only if the table was created
-                Create.ForeignKey("FK_Locations_CompanyId")
-                    .FromTable("Locations").ForeignColumn("CompanyId")
+                Create.ForeignKey("FK_Location_CompanyId")
+                    .FromTable("Location").ForeignColumn("CompanyId")
                     .ToTable("Companys").PrimaryColumn("Id");
             }
 
@@ -153,7 +153,7 @@ namespace Mobi.Repository.Migrations
                 // Add foreign key only if the table was created
                 Create.ForeignKey("FK_LocationBeaconMapping_LocationId")
                     .FromTable("LocationBeaconMapping").ForeignColumn("LocationId")
-                    .ToTable("Locations").PrimaryColumn("Id");
+                    .ToTable("Location").PrimaryColumn("Id");
             }
 
             if (!Schema.Table("Language").Exists())
@@ -216,9 +216,9 @@ namespace Mobi.Repository.Migrations
             {
                 Delete.Table("EmployeeLocation");
             }
-            if (Schema.Table("Locations").Exists())
+            if (Schema.Table("Location").Exists())
             {
-                Delete.Table("Locations");
+                Delete.Table("Location");
             }
             if (Schema.Table("LocationBeaconMapping").Exists())
             {

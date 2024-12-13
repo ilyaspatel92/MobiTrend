@@ -3,6 +3,7 @@ using FluentMigrator.Runner;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
@@ -12,9 +13,11 @@ using Mobi.Repository.Migrations;
 using Mobi.Service.Employees;
 using Mobi.Service.Factories;
 using Mobi.Service.Helpers;
+using Mobi.Service.Locations;
 using Mobi.Service.SystemUser;
 using Mobi.Web.Areas.Admin.Utilities;
 using Mobi.Web.Factories.Employees;
+using Mobi.Web.Factories.Locations;
 using Mobi.Web.Utilities;
 using System.Text;
 
@@ -35,7 +38,17 @@ namespace Mobi.Web
         public void ConfigureServices(IServiceCollection services)
         {
             // Add Controllers with Views
-            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddControllersWithViews(options =>
+            {
+                // Apply the Web Policy (Cookie) to all MVC controllers globally
+                //options.Filters.Add(new AuthorizeFilter("WebPolicy"));
+            }).AddRazorRuntimeCompilation();
+
+            services.AddControllers(options =>
+            {
+                // Apply the Api Policy (JWT) to all API controllers globally
+                //options.Filters.Add(new AuthorizeFilter("ApiPolicy"));
+            });
 
             // Add EF Core with SQL Server
             services.AddDbContext<ApplicationContext>(options =>
@@ -56,30 +69,6 @@ namespace Mobi.Web
             var jwtSettings = Configuration.GetSection("JwtSettings");
             services.Configure<JwtSettings>(jwtSettings);
 
-            var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]);
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            })
-            .AddCookie(options =>
-            {
-                options.LoginPath = "/Account/Login"; // Redirect to login page
-                options.LogoutPath = "/Account/Logout";
-                options.AccessDeniedPath = "/Account/AccessDenied";
-            })
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtSettings["Issuer"],
-                    ValidAudience = jwtSettings["Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(key)
-                };
-            });
 
             // Add Swagger for API Documentation
             services.AddSwaggerGen(c =>
@@ -91,32 +80,82 @@ namespace Mobi.Web
                     Description = "JWT Authorization header using the Bearer scheme.",
                     Name = "Authorization",
                     Type = SecuritySchemeType.ApiKey,
+                    BearerFormat = "JWT",
                     Scheme = "Bearer"
                 });
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
-        {
-            {
-                new OpenApiSecurityScheme
                 {
-                    Reference = new OpenApiReference
                     {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
                     }
-                },
-                Array.Empty<string>()
-            }
-        });
+                });
             });
+
+
+            var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]);
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme; 
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;   
+            })
+             .AddCookie(options =>
+            {
+                options.LoginPath = "/Account/Login"; // Redirect to login page
+                options.LogoutPath = "/Account/Logout";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtSettings["Issuer"],
+                    ValidAudience = jwtSettings["Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                };
+            });
+
+            //services.AddAuthorization(options =>
+            //{
+            //    // Web Policy for Cookie Authentication (applied globally to MVC controllers)
+            //    options.AddPolicy("WebPolicy", policy =>
+            //    {
+            //        policy.RequireAuthenticatedUser()
+            //              .AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme);
+            //    });
+
+            //    // API Policy for JWT Authentication (applied globally to API controllers)
+            //    options.AddPolicy("ApiPolicy", policy =>
+            //    {
+            //        policy.RequireAuthenticatedUser()
+            //              .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
+            //    });
+            //});
+
+
 
             // Register Repository and Services
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<ISystemUserService, SystemUserService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
+            services.AddScoped<ILocationService, LocationService>();
 
             // Register Factories
             services.AddScoped<ISystemUserFactory, SystemUserFactory>();
             services.AddScoped<IEmployeeFactory, EmployeeFactory>();
+            services.AddScoped<ILocationFactory, LocationFactory>();
+
 
             // Register Helpers
             services.AddSingleton<JwtTokenHelper>();

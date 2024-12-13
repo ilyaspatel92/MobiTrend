@@ -1,0 +1,123 @@
+﻿@model LocationModel
+
+<div class="container">
+    <form asp-action="Create" method="post">
+        <!-- Header and Save Button -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Add Locations</h2>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+
+        <!-- Location Name English -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <label asp-for="LocationNameEnglish"></label>
+                <input asp-for="LocationNameEnglish" class="form-control" />
+                <span asp-validation-for="LocationNameEnglish" class="text-danger"></span>
+            </div>
+
+            <!-- Location Name Arabic -->
+            <div class="col-md-4">
+                <label asp-for="LocationNameArabic"></label>
+                <input asp-for="LocationNameArabic" class="form-control" />
+                <span asp-validation-for="LocationNameArabic" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Status"></label>
+                <select asp-for="Status" class="form-control">
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Proof Type Checkboxes (placed at the end) -->
+        <div class="form-group mb-4">
+            <label>Proof Type</label>
+            <div>
+                <input type="checkbox" id="gpsProofCheckbox" value="GPS Proof" />
+                <label for="gpsProofCheckbox">GPS Proof</label>
+                <input type="checkbox" id="beaconProofCheckbox" value="Beacon Proof" class="ms-3" />
+                <label for="beaconProofCheckbox">Beacon Proof</label>
+            </div>
+        </div>
+
+        <!-- GPS Proof Section (Hidden by default) -->
+        <div id="gpsProofSection" class="mt-3" style="display: none;">
+            <h4>Map Coordination</h4>
+            <p>Include your map or related content here for GPS Proof.</p>            
+            <div id="map" style="height: 400px; border: 1px solid #ccc;"></div>
+            <button type="button" class="btn btn-secondary mt-2">Draw Polygon</button>
+            <button type="button" class="btn btn-secondary mt-2">Set Radius</button>
+        </div>
+
+        <!-- Beacon Proof Section (Hidden by default) -->
+        <div id="beaconListSection" class="mt-3" style="display: none;">
+            <h4>Beacon List</h4>
+            <p>Include your beacon list or related content here for Beacon Proof.</p>
+            <h4>Beacon List</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Beacon Name</th>
+                        <th>UUID</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" class="form-control" placeholder="Beacon Name" /></td>
+                        <td><input type="text" class="form-control" placeholder="UUID" /></td>
+                        <td>
+                            <select class="form-control">
+                                <option value="true">Active</option>
+                                <option value="false">Inactive</option>
+                            </select>
+                        </td>
+                        <td><button type="button" class="btn btn-primary">Edit</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" class="btn btn-secondary">Add new</button>
+        </div>
+
+    </form>
+</div>
+
+<!-- JavaScript to Show/Hide Sections based on Checkbox Selection -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const gpsCheckbox = document.getElementById("gpsProofCheckbox");
+        const beaconCheckbox = document.getElementById("beaconProofCheckbox");
+        const gpsSection = document.getElementById("gpsProofSection");
+        const beaconSection = document.getElementById("beaconListSection");
+
+        function toggleSections() {
+            // Show or hide the GPS Proof section
+            gpsSection.style.display = gpsCheckbox.checked ? "block" : "none";
+
+            // Show or hide the Beacon Proof section
+            beaconSection.style.display = beaconCheckbox.checked ? "block" : "none";
+        }
+
+        // Add event listeners to checkboxes
+        if (gpsCheckbox) {
+            gpsCheckbox.addEventListener("change", toggleSections);
+        }
+        if (beaconCheckbox) {
+            beaconCheckbox.addEventListener("change", toggleSections);
+        }
+    });
+
+     // Initialize Google Maps if needed
+        function initMap() {
+            const map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 40.7128, lng: -74.0060 }, // New York Coordinates as default
+                zoom: 12
+            });
+        }
+</script>
+@section Scripts {
+<!-- Include Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+}
