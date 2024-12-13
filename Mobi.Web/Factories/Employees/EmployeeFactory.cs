@@ -64,12 +64,5 @@ namespace Mobi.Web.Factories.Employees
             // Return as a data URI for embedding in an <img> tag
             return string.Format("data:image/png;base64,{0}", base64String);
         }
-        private string GenerateQrCode1(string email)
-        {
-            QRCodeGenerator QrGenerator = new QRCodeGenerator();
-            QRCodeData QrCodeData = QrGenerator.CreateQrCode(email, QRCodeGenerator.ECCLevel.Q);
-            BitmapByteQRCode QrCode = new(QrCodeData);
-            return string.Format("data:image/png;base64,{0}", Convert.ToBase64String(QrCode.GetGraphic(2)));
-        }
     }
 }

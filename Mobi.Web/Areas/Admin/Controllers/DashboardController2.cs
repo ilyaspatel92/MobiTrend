@@ -7,6 +7,7 @@ using Mobi.Web.Models.APIModels;
 
 namespace Mobi.Web.Areas.Admin.Controllers
 {
+    [Authorize(Policy = "ApiPolicy")]
     [Area("Admin")]
     [ApiController]
     [Route("Admin/[controller]/[action]")]

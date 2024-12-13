@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Mobi.Data.Mapping
 {
-    public class LocationsMap
+    public class LocationMap
     {
-        public LocationsMap(EntityTypeBuilder<Location> entityBuilder)
+        public LocationMap(EntityTypeBuilder<Location> entityBuilder)
         {
             entityBuilder.HasKey(c => c.Id);
         }
