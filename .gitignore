@@ -364,3 +364,4 @@ __pycache__/
 /.vs/Mobi/FileContentIndex/094195aa-247e-409b-9507-d52b5b7132b7.vsidx
 /.vs/Mobi/v17/.futdcache.v2
 /.vs/Mobi/v17/DocumentLayout.backup.json
+/Mobi.Web/appsettings.json

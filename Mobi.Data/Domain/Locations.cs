@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Mobi.Data.Domain
+﻿namespace Mobi.Data.Domain
 {
     public class Locations : BaseEntity
     {
-        public int Id { get; set; }
         public string LocationNameEnglish { get; set; }
         public string LocationNameArabic { get; set; }
         public bool Status { get; set; }

@@ -42,5 +42,25 @@ namespace Mobi.Service.Employees
             return _employeeRepository.GetAll().Any(e => e.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
         }
 
+        public IList<Employee> GetEmployeeByEmailList(string email)
+        {
+            return _employeeRepository.GetAll()
+                .Where(x=>x.Email.Equals(email, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+
+        public Employee GetEmployeeByEmail(string email)
+        {
+            return _employeeRepository.GetAll()
+                .Where(x => x.Email.Equals(email, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+        }
+
+        public Employee GetEmployeeByEmailOrUserName(string searchText)
+        {
+            return _employeeRepository.GetAll()
+                .Where(x => x.Email.Equals(searchText, StringComparison.OrdinalIgnoreCase) || x.UserName.Equals(searchText, StringComparison.OrdinalIgnoreCase))
+                .FirstOrDefault();
+        }
+       
     }
 }
