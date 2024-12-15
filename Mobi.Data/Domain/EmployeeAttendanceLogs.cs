@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Mobi.Data.Domain
+﻿namespace Mobi.Data.Domain
 {
     public class EmployeeAttendanceLogs : BaseEntity
     {
-        public int Id { get; set; }
         public int EmployeeId { get; set; }
 
         public DateTime DateandTime { get; set; }

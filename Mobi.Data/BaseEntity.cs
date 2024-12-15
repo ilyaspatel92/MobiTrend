@@ -1,6 +1,6 @@
 ﻿namespace Mobi.Data
 {
-    public class BaseEntity
+    public  partial class BaseEntity 
     {
         public int Id { get; set; }
     }

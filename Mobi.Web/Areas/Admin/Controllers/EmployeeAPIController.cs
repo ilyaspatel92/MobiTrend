@@ -147,7 +147,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     return StatusCode(500, response);
                 }
 
-                var employee = _employeeService.GetEmployeeByEmailOrUserName(Profilebase64);
+                var employee = _employeeService.GetEmployeeByEmail(Profilebase64);
                 if (employee is null)
                 {
                     response.Success = false;

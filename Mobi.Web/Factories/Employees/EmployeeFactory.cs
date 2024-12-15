@@ -1,12 +1,6 @@
 ﻿using Mobi.Data.Domain.Employees;
 using Mobi.Web.Models.Employees;
 using QRCoder;
-using Microsoft.AspNetCore.Mvc;
-using QRCoder;
-using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 namespace Mobi.Web.Factories.Employees
 {
     public class EmployeeFactory : IEmployeeFactory

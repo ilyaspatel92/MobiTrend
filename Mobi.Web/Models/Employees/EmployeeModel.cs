@@ -12,13 +12,13 @@ namespace Mobi.Web.Models.Employees
 
         [Required(ErrorMessage = "Name (Arabic) is required.")]
         [StringLength(100, ErrorMessage = "Name (Arabic) cannot exceed 100 characters.")]
-        public string? NameArabic { get; set; }
+        public string NameArabic { get; set; }
 
         [Required(ErrorMessage = "Status is required.")]
         public bool Status { get; set; }
 
         [StringLength(50, ErrorMessage = "File Number cannot exceed 50 characters.")]
-        public string? FileNumber { get; set; }
+        public string FileNumber { get; set; }
 
         [Required(ErrorMessage = "Mobile Number is required.")]
         [Phone(ErrorMessage = "Please provide a valid mobile number.")]
@@ -28,9 +28,9 @@ namespace Mobi.Web.Models.Employees
         [EmailAddress(ErrorMessage = "Please provide a valid email address.")]
         [StringLength(150, ErrorMessage = "Email cannot exceed 150 characters.")]
         public string Email { get; set; }
-        public string? UserName { get; set; }
+        public string UserName { get; set; }
         
-        public string? PhotoPath { get; set; }
+        public string PhotoPath { get; set; }
 
         [Required(ErrorMessage = "Password is required.")]
         [StringLength(50, MinimumLength = 6, ErrorMessage = "Password must be between 6 and 50 characters.")]
@@ -39,14 +39,14 @@ namespace Mobi.Web.Models.Employees
         public int MobileType { get; set; }
         public int RegistrationVia { get; set; }
 
-        public string? DeviceId { get; set; }
+        public string DeviceId { get; set; }
 
         public bool RegisterStatus { get; set; }
         public string CompanyId { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
-        public string? QrCode { get; set; }
+        public string QrCode { get; set; }
 
     }
 }

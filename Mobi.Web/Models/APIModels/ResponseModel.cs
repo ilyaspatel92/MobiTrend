@@ -15,6 +15,7 @@
         public ResponseModel()
         {
             Success = true;
+            ErrorList = new List<string>();
         }
     }
 }
