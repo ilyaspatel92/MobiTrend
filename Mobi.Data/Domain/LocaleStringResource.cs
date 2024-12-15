@@ -1,5 +1,4 @@
-﻿
-namespace Mobi.Data.Domain
+﻿namespace Mobi.Data.Domain
 {
     public class LocaleStringResource: BaseEntity
     {

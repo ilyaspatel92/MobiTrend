@@ -22,6 +22,15 @@ namespace Mobi.Service.Employees
             return _employeeRepository.GetById(id);
         }
 
+        public Employee GetEmployeeByEmailOrUserName(string email)
+        {
+            return _employeeRepository
+                .GetAll()
+                .FirstOrDefault(e => e.Email.Equals(email, StringComparison.OrdinalIgnoreCase) ||
+                                     e.UserName.Equals(email, StringComparison.OrdinalIgnoreCase));
+        }
+
+
         public void AddEmployee(Employee employee)
         {
             _employeeRepository.Insert(employee);
@@ -42,25 +51,11 @@ namespace Mobi.Service.Employees
             return _employeeRepository.GetAll().Any(e => e.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
         }
 
-        public IList<Employee> GetEmployeeByEmailList(string email)
+        public Employee GetEmployeeByEmail(string email) 
         {
-            return _employeeRepository.GetAll()
-                .Where(x=>x.Email.Equals(email, StringComparison.OrdinalIgnoreCase))
-                .ToList();
+            return _employeeRepository
+                .GetAll()
+                .FirstOrDefault(e => e.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
         }
-
-        public Employee GetEmployeeByEmail(string email)
-        {
-            return _employeeRepository.GetAll()
-                .Where(x => x.Email.Equals(email, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-        }
-
-        public Employee GetEmployeeByEmailOrUserName(string searchText)
-        {
-            return _employeeRepository.GetAll()
-                .Where(x => x.Email.Equals(searchText, StringComparison.OrdinalIgnoreCase) || x.UserName.Equals(searchText, StringComparison.OrdinalIgnoreCase))
-                .FirstOrDefault();
-        }
-       
     }
 }

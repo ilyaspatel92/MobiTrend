@@ -118,25 +118,26 @@ namespace Mobi.Repository.Migrations
                     .ToTable("Employee").PrimaryColumn("Id");
             }
 
-            if (!Schema.Table("Locations").Exists())
+            if (!Schema.Table("Location").Exists())
             {
-                // Create the EmployeeAttendanceLogs table
-                Create.Table("Locations")
+                // Create the Location table
+                Create.Table("Location")
                     .WithColumn("Id").AsInt32().PrimaryKey().Identity() // Auto-increment primary key
                     .WithColumn("LocationNameEnglish").AsString(2000).NotNullable()
                     .WithColumn("LocationNameArabic").AsString(2000).NotNullable()
                     .WithColumn("Status").AsBoolean().NotNullable().WithDefaultValue(false)
                     .WithColumn("BeaconProof").AsInt32().NotNullable()
+                    .WithColumn("GPSProof").AsInt32().NotNullable()
                     .WithColumn("CreatedDate").AsDateTime().NotNullable()
-                    .WithColumn("GPSLocationAddress").AsString(2000).NotNullable()
-                    .WithColumn("Latitude").AsDecimal().NotNullable()
-                    .WithColumn("Longtitude").AsDecimal().NotNullable()
-                    .WithColumn("SetRadius").AsDecimal().NotNullable()
-                    .WithColumn("CompanyId").AsDecimal().NotNullable();
+                    .WithColumn("GPSLocationAddress").AsString(2000).Nullable()
+                    .WithColumn("Latitude").AsDecimal().Nullable()
+                    .WithColumn("Longtitude").AsDecimal().Nullable()
+                    .WithColumn("SetRadius").AsDecimal().Nullable()
+                    .WithColumn("CompanyId").AsDecimal().Nullable();
 
                 // Add foreign key only if the table was created
-                Create.ForeignKey("FK_Locations_CompanyId")
-                    .FromTable("Locations").ForeignColumn("CompanyId")
+                Create.ForeignKey("FK_Location_CompanyId")
+                    .FromTable("Location").ForeignColumn("CompanyId")
                     .ToTable("Companys").PrimaryColumn("Id");
             }
 
@@ -153,7 +154,7 @@ namespace Mobi.Repository.Migrations
                 // Add foreign key only if the table was created
                 Create.ForeignKey("FK_LocationBeaconMapping_LocationId")
                     .FromTable("LocationBeaconMapping").ForeignColumn("LocationId")
-                    .ToTable("Locations").PrimaryColumn("Id");
+                    .ToTable("Location").PrimaryColumn("Id");
             }
 
             if (!Schema.Table("Language").Exists())
@@ -165,6 +166,11 @@ namespace Mobi.Repository.Migrations
                     .WithColumn("DisplayOrder").AsInt32().NotNullable()
                     .WithColumn("UniqueSeoCode").AsString(2000).NotNullable()
                     .WithColumn("Published").AsBoolean().NotNullable().WithDefaultValue(false);
+
+                // Insert the language records
+                Execute.Sql("INSERT INTO Language (LanguageName, UniqueSeoCode, Published, DisplayOrder) VALUES ('English', 'en', 1, 1)");
+                Execute.Sql("INSERT INTO Language (LanguageName, UniqueSeoCode, Published, DisplayOrder) VALUES ('Arabic', 'ar', 1, 2)");
+
 
             }
 
@@ -181,7 +187,12 @@ namespace Mobi.Repository.Migrations
                 Create.ForeignKey("FK_LocaleStringResource_LanguageId")
                     .FromTable("LocaleStringResource").ForeignColumn("LanguageId")
                     .ToTable("Language").PrimaryColumn("Id");
-            }            
+
+
+                // Insert values into LocaleStringResource
+                Execute.Sql("INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId) VALUES ('Mobi.Test', 'This is English', 1)");
+                Execute.Sql("INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId) VALUES ('Mobi.Test', 'This is Arabic', 2)");
+            }
 
         }
 
@@ -216,9 +227,9 @@ namespace Mobi.Repository.Migrations
             {
                 Delete.Table("EmployeeLocation");
             }
-            if (Schema.Table("Locations").Exists())
+            if (Schema.Table("Location").Exists())
             {
-                Delete.Table("Locations");
+                Delete.Table("Location");
             }
             if (Schema.Table("LocationBeaconMapping").Exists())
             {

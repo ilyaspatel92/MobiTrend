@@ -11,6 +11,7 @@
         public Exception Exception { get; set; }
 
         public List<string> ErrorList { get; set; }
+
         public ResponseModel()
         {
             Success = true;
