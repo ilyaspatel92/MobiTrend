@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Mvc;
 using Mobi.Data.Domain.Employees;
 using Mobi.Service.Employees;
@@ -11,11 +10,7 @@ using Mobi.Web.Models.Employees;
 
 namespace Mobi.Web.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    [ApiController]
-    [Route("Admin/[controller]/[action]")]
-    [Authorize] // Ensure this controller requires authentication
-    public class EmployeeAPIController : Controller
+    public class EmployeeAPIController : BaseAPIController
     {
 
         private readonly IEmployeeService _employeeService;
@@ -44,7 +39,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     }
 
                     queryModel.Email = queryModel.Email.Trim();
-                    var employee = _employeeService.GetEmployeeByEmailOrUserName(queryModel.Email);
+                    var employee = _employeeService.GetEmployeeByEmail(queryModel.Email);
                     if (employee is null)
                     {
                         response.Success = false;
@@ -271,6 +266,30 @@ namespace Mobi.Web.Areas.Admin.Controllers
                 response.Message = "success";
                 response.Data = "User created successfully!!";
                 return Ok(response);              //OR return response
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = "Failure";
+                response.Data = null;
+                response.Exception = ex;
+                return StatusCode(500, response);  //OR return response
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetCurrentEmployeeDetails()
+        {
+            ResponseModel<Employee> response = new ResponseModel<Employee>();            
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var employee = _employeeService.GetCurrentEmployee(token);
+            try
+            {
+
+                response.Success = true;
+                response.Message = "success";
+                response.Data = employee;
+                return Ok(response);      
             }
             catch (Exception ex)
             {

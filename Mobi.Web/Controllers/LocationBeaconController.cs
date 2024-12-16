@@ -6,7 +6,7 @@ using Mobi.Web.Models.LocationBeacons;
 
 namespace Mobi.Web.Controllers.LocationBeacons
 {
-    public class LocationBeaconController : Controller
+    public class LocationBeaconController : BasePublicController
     {
         private readonly ILocationBeaconService _locationBeaconService;
         private readonly ILocationBeaconFactory _locationBeaconFactory;

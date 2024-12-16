@@ -6,25 +6,43 @@ using System.Security.Claims;
 
 namespace Mobi.Web.Controllers
 {
-    //[Authorize(Policy = "WebPolicy")]
-    public class AccountController : Controller
+    public class AccountController : BasePublicController
     {
-        // Login GET
-        public IActionResult Login()
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Login(string returnUrl = null)
         {
+            // Validate ReturnUrl to avoid recursive redirects
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                ViewData["ReturnUrl"] = returnUrl;
+            }
+            else
+            {
+                ViewData["ReturnUrl"] = "/";
+            }
+
             return View();
         }
 
         // Login POST
         [HttpPost]
-        public async Task<IActionResult> Login(string email, string password)
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(string email, string password, string returnUrl = null)
         {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            {
+                ModelState.AddModelError("", "Email and password are required.");
+                return View();
+            }
+
             // Replace with actual user validation logic
             if (email == "admin@mobi.com" && password == "admin")
             {
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, email)
+                    new Claim(ClaimTypes.Name, email),
+                    new Claim(ClaimTypes.Email, email)
                 };
 
                 var claimsIdentity = new ClaimsIdentity(
@@ -32,14 +50,22 @@ namespace Mobi.Web.Controllers
 
                 await HttpContext.SignInAsync(
                     CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity));
+                    new ClaimsPrincipal(claimsIdentity),
+                    new AuthenticationProperties { IsPersistent = true });
+
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
 
                 return RedirectToAction("Index", "Home");
             }
 
-            ViewBag.Error = "Invalid username or password";
+            // Invalid login
+            ModelState.AddModelError("", "Invalid username or password.");
             return View();
         }
+
 
         // Logout
         public async Task<IActionResult> Logout()

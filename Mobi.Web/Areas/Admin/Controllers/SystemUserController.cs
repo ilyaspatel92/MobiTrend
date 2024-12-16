@@ -1,17 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Mobi.Service.Factories;
 using Mobi.Service.SystemUser;
 using Mobi.Web.Areas.Admin.Utilities;
-using Mobi.Web.Models;
 using Mobi.Web.Models.SystemUser;
 
 namespace Mobi.Web.Areas.Admin.Controllers
 {
-    [ApiController]
-    [Route("api/admin/systemusers")]
-    [Authorize]
-    public class SystemUserController : ControllerBase
+    public class SystemUserController : BaseAPIController
     {
         #region Fields
 

@@ -2,13 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Mobi.Data.Domain.Employees;
 using Mobi.Service.Employees;
+using Mobi.Service.Helpers;
 using Mobi.Web.Factories.Employees;
 using Mobi.Web.Models.Employees;
 
 namespace Mobi.Web.Controllers.Employees
 {
-    [Authorize]
-    public class EmployeeController : Controller
+    public class EmployeeController : BasePublicController
     {
         private readonly IEmployeeService _employeeService;
         private readonly IEmployeeFactory _employeeFactory;
@@ -66,23 +66,6 @@ namespace Mobi.Web.Controllers.Employees
             });
         }
 
-
-
-        //[HttpGet]
-        //public JsonResult GetEmployees()
-        //{
-        //    var employees = _employeeService.GetAllEmployees();
-        //    var employeeViewModels = _employeeFactory.PrepareEmployeeViewModels(employees);
-        //    return Json(new { data = employeeViewModels });
-        //}
-
-        //public IActionResult List()
-        //{
-        //    var employees = _employeeService.GetAllEmployees();
-        //    var employeeViewModels = _employeeFactory.PrepareEmployeeViewModels(employees);
-        //    return View(employeeViewModels);
-        //}
-
         public IActionResult Create()
         {
             return View();
@@ -111,7 +94,7 @@ namespace Mobi.Web.Controllers.Employees
                     MobileNumber = model.MobileNumber,
                     Email = model.Email,
                     UserName = model.Email,
-                    Password = model.Password,
+                    Password = PasswordHelper.HashPassword(model.Password),
                     CompanyId = model.CompanyId,
                     CreatedDate = DateTime.Now
                 };
@@ -147,7 +130,7 @@ namespace Mobi.Web.Controllers.Employees
             }
             if (string.IsNullOrEmpty(model.Password))
             {
-                ModelState.Remove("Password");  
+                ModelState.Remove("Password");
             }
             if (ModelState.IsValid)
             {
@@ -160,7 +143,7 @@ namespace Mobi.Web.Controllers.Employees
                 // Check for email uniqueness if the email is being updated
                 if (existingEmployee.Email != model.Email)
                 {
-                    if (_employeeService.IsEmailExists(model.Email)) 
+                    if (_employeeService.IsEmailExists(model.Email))
                     {
                         ModelState.AddModelError("Email", "The email address is already in use.");
                         return View(model);

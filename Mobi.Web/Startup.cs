@@ -2,12 +2,10 @@
 using FluentMigrator.Runner;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using Mobi.Repository;
 using Mobi.Repository.Migrations;
 using Mobi.Service.Employees;
@@ -41,16 +39,22 @@ namespace Mobi.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add Controllers with Views
+            // Add Controllers with Views (Web Application)
             services.AddControllersWithViews(options =>
             {
-                // Apply the Web Policy (Cookie) to all MVC controllers globally
-                //options.Filters.Add(new AuthorizeFilter("WebPolicy"));
+                options.Filters.Add(new AuthorizeFilter("WebPolicy"));
             }).AddRazorRuntimeCompilation();
 
-            services.AddControllers();
+            // Add API Controllers (Admin API)
+            services.AddControllers(options =>
+            {
+                options.Filters.Add(new AuthorizeFilter("ApiPolicy"));
+            });
 
             services.AddHttpContextAccessor();
+
+            // Configure Kestrel's request limits
+            services.Configure<KestrelServerOptions>(Configuration.GetSection("Kestrel"));
 
             // Add EF Core with SQL Server
             services.AddDbContext<ApplicationContext>(options =>
@@ -67,104 +71,134 @@ namespace Mobi.Web
             // Add AutoMapper
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
-            // Add JWT Authentication
-            var jwtSettings = Configuration.GetSection("JwtSettings");
-            services.Configure<JwtSettings>(jwtSettings);
+            // JWT Authentication Configuration
+            var jwtSettings = Configuration.GetSection("JwtSettings").Get<JwtSettings>();
+            services.AddSingleton(jwtSettings);
+            services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
 
 
-            // Add Swagger for API Documentation
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Mobi API", Version = "v1" });
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    In = ParameterLocation.Header,
-                    Description = "JWT Authorization header using the Bearer scheme.",
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey,
-                    BearerFormat = "JWT",
-                    Scheme = "Bearer"
-                });
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        Array.Empty<string>()
-                    }
-                });
-            });
+            var key = Encoding.UTF8.GetBytes(jwtSettings.SecretKey);
 
-
-            var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]);
             services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme; 
-                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;   
+                // Default schemes for both authentication systems
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme; // Default for MVC
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;  // Default for API
             })
-             .AddCookie(options =>
+            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
             {
-                options.LoginPath = "/Account/Login"; // Redirect to login page
+                // Cookie settings for the MVC app
+                options.LoginPath = "/Account/Login";
                 options.LogoutPath = "/Account/Logout";
                 options.AccessDeniedPath = "/Account/AccessDenied";
             })
-            .AddJwtBearer(options =>
+            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
+                var jwtSettings = Configuration.GetSection("JwtSettings").Get<JwtSettings>();
+                var key = Encoding.UTF8.GetBytes(jwtSettings.SecretKey);
+            
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtSettings["Issuer"],
-                    ValidAudience = jwtSettings["Audience"],
+                    ValidIssuer = jwtSettings.Issuer,
+                    ValidAudience = jwtSettings.Audience,
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
+            
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                        if (string.IsNullOrEmpty(token))
+                        {
+                            Console.WriteLine("No token provided in request.");
+                        }
+                        return Task.CompletedTask;
+                    },
+                    OnTokenValidated = context =>
+                    {
+                        Console.WriteLine("Token validated successfully.");
+                        return Task.CompletedTask;
+                    },
+                    OnAuthenticationFailed = context =>
+                    {
+                        Console.WriteLine($"Authentication failed: {context.Exception.Message}");
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+                {
+                    Title = "Mobi API",
+                    Version = "v1"
+                });
+
+                // Add JWT Authentication to Swagger
+                c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+                    Description = "Enter 'Bearer' [space] and then your valid token."
+                });
+
+                c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+                {
+                    {
+                        new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                        {
+                            Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                            {
+                                Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] {}
+                    }
+                });
             });
 
-            //services.AddAuthorization(options =>
-            //{
-            //    // Web Policy for Cookie Authentication (applied globally to MVC controllers)
-            //    options.AddPolicy("WebPolicy", policy =>
-            //    {
-            //        policy.RequireAuthenticatedUser()
-            //              .AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme);
-            //    });
-
-            //    // API Policy for JWT Authentication (applied globally to API controllers)
-            //    options.AddPolicy("ApiPolicy", policy =>
-            //    {
-            //        policy.RequireAuthenticatedUser()
-            //              .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
-            //    });
-            //});
 
 
+            // Authorization Policies
+            services.AddAuthorization(options =>
+            {
+                // Web Policy for MVC using Cookie Authentication
+                options.AddPolicy("WebPolicy", policy =>
+                    policy.RequireAuthenticatedUser()
+                          .AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme));
 
-            // Register Repository and Services
+                // API Policy for JWT Authentication
+                options.AddPolicy("ApiPolicy", policy =>
+                    policy.RequireAuthenticatedUser()
+                          .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme));
+            });
+
+            // Register Repositories and Services
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<ISystemUserService, SystemUserService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IResourceService, ResourceService>();
             services.AddScoped<ILocationBeaconService, LocationBeaconService>();
-            
+
             // Register Factories
             services.AddScoped<ISystemUserFactory, SystemUserFactory>();
             services.AddScoped<IEmployeeFactory, EmployeeFactory>();
             services.AddScoped<ILocationFactory, LocationFactory>();
             services.AddScoped<ILocationBeaconFactory, LocationBeaconFactory>();
-            
+
             // Register Helpers
             services.AddSingleton<JwtTokenHelper>();
         }
-
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -188,32 +222,16 @@ namespace Mobi.Web
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
-                var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
-                try
-                {
-                    if (dbContext.Database.EnsureCreated())
-                    {
-                        runner.MigrateUp();
-                        Console.WriteLine("Database created and Migrations applied successfully.");
-                    }
-                    else
-                    {
-                        runner.MigrateUp();
-                        Console.WriteLine("Migrations applied successfully.");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error during migration: {ex.Message}");
-                }
+                runner.MigrateUp();
             }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
             app.UseRouting();
 
-            app.UseAuthentication(); // Enables Authentication
-            app.UseAuthorization();  // Enables Authorization
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
@@ -224,8 +242,9 @@ namespace Mobi.Web
                 endpoints.MapControllerRoute(
                     name: "areas",
                     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapControllers(); // For API endpoints
             });
         }
-
     }
 }

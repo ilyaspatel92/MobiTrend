@@ -2,7 +2,7 @@
 
 namespace Mobi.Web.Controllers
 {
-    public class LanguageController : ControllerBase
+    public class LanguageController : BasePublicController
     {
         [HttpPost]
         public IActionResult SetLanguage([FromBody] string language)

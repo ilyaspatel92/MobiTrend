@@ -6,13 +6,13 @@ using Mobi.Web.Models.APIModels;
 
 namespace Mobi.Web.Areas.Admin.Controllers
 {
-    public class MobiAPIController : BaseAPIController
+    public class DashboardController2 : BaseAPIController
     {
 
         private readonly IEmployeeService _employeeService;
         private readonly IEmployeeFactory _employeeFactory;
 
-        public MobiAPIController(IEmployeeService employeeService, IEmployeeFactory employeeFactory)
+        public DashboardController2(IEmployeeService employeeService, IEmployeeFactory employeeFactory)
         {
             _employeeService = employeeService;
             _employeeFactory = employeeFactory;
@@ -22,6 +22,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
         public IActionResult Index()
         {
             ResponseModel<string> response = new ResponseModel<string>();
+
             try
             {
 
@@ -81,45 +82,6 @@ namespace Mobi.Web.Areas.Admin.Controllers
             }
 
         }
-
-
-        [HttpGet]
-        public IActionResult VerifyQrCode(int langId, string qrCode)
-        {
-            ResponseModel<List<Employee>> response = new ResponseModel<List<Employee>>();
-
-            try
-            {
-                var employees = _employeeService.GetAllEmployees().ToList();
-                if (employees == null)
-                {
-                    response.Success = false;
-                    response.Message = "Item not found.";
-                    return NotFound(response);  //OR return response
-                }
-
-                response.Success = true;
-                response.Message = "Item retrieved successfully.";
-                response.Data = employees;
-                return Ok(response);           //OR return response
-            }
-            catch (Exception ex)
-            {
-                response.Success = false;
-                response.Message = "Failure";
-                response.Exception = ex;
-                return StatusCode(500, response);  //OR return response
-            }
-
-        }
-
-        #region Common 
-
-        #endregion
-
-        #region MyRegion
-
-        #endregion
     }
 
 }
