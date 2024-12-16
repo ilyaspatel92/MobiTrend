@@ -158,7 +158,7 @@
         </nav> <!--end::Header--> <!--begin::Sidebar-->
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
             <!--begin::Sidebar Brand-->
-            <div class="sidebar-brand"> <!--begin::Brand Link--> <a href="./index.html" class="brand-link"> <!--begin::Brand Image--> <img src="../../dist/assets/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image opacity-75 shadow"> <!--end::Brand Image--> <!--begin::Brand Text--> <span class="brand-text fw-light">Admin</span> <!--end::Brand Text--> </a> <!--end::Brand Link--> </div> <!--end::Sidebar Brand--> <!--begin::Sidebar Wrapper-->
+            <div class="sidebar-brand"> <!--begin::Brand Link--> <a href="/" class="brand-link"> <!--begin::Brand Image--> <img src="../../dist/assets/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image opacity-75 shadow"> <!--end::Brand Image--> <!--begin::Brand Text--> <span class="brand-text fw-light">Admin</span> <!--end::Brand Text--> </a> <!--end::Brand Link--> </div> <!--end::Sidebar Brand--> <!--begin::Sidebar Wrapper-->
             <div class="sidebar-wrapper">
                 <nav class="mt-2">
                     <!--begin::Sidebar Menu-->
@@ -415,27 +415,35 @@
     @* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> *@
 
     <script>
-        $('#language-switcher').change(function() {
-            var selectedLanguage = $(this).val();
-            $.ajax({
-                url: 'Language/SetLanguage',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(selectedLanguage),
-                success: function(response) {
-                    // alert('Language preference updated');
-                    location.reload();
+        // Add an event listener to detect changes in the language switcher dropdown
+        document.getElementById('language-switcher').addEventListener('change', function () {
+            var selectedLanguage = this.value;
+
+            // Use the Fetch API to send a POST request
+            fetch('Language/SetLanguage', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
                 },
-                error: function(err) {
-                    alert('Error setting language preference.');
+                body: JSON.stringify(selectedLanguage)
+            })
+            .then(function (response) {
+                if (response.ok) {
+                    // If successful, reload the page
+                    location.reload();
+                } else {
+                    throw new Error('Error setting language preference.');
                 }
+            })
+            .catch(function (error) {
+                alert(error.message);
             });
         });
 
-             // Assuming you have currentLanguage value from the server or cookie
-        var currentLanguage = '@currentLanguage';  // Server-side Razor variable
+        // Assuming you have a currentLanguage value from the server or cookie
+        var currentLanguage = '@currentLanguage'; // Server-side Razor variable
 
-        // Set the selected option based on the current language
+        // Set the selected option in the dropdown based on the current language
         document.getElementById("language-switcher").value = currentLanguage;
     </script>
 </body><!--end::Body-->

@@ -1,4 +1,6 @@
-﻿using Mobi.Data.Domain.Employees;
+﻿using System.IdentityModel.Tokens.Jwt;
+using Azure.Core;
+using Mobi.Data.Domain.Employees;
 using Mobi.Repository;
 
 namespace Mobi.Service.Employees
@@ -22,15 +24,6 @@ namespace Mobi.Service.Employees
             return _employeeRepository.GetById(id);
         }
 
-        public Employee GetEmployeeByEmailOrUserName(string email)
-        {
-            return _employeeRepository
-                .GetAll()
-                .FirstOrDefault(e => e.Email.Equals(email, StringComparison.OrdinalIgnoreCase) ||
-                                     e.UserName.Equals(email, StringComparison.OrdinalIgnoreCase));
-        }
-
-
         public void AddEmployee(Employee employee)
         {
             _employeeRepository.Insert(employee);
@@ -51,11 +44,39 @@ namespace Mobi.Service.Employees
             return _employeeRepository.GetAll().Any(e => e.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
         }
 
-        public Employee GetEmployeeByEmail(string email) 
+        public Employee GetEmployeeByEmail(string email)
         {
             return _employeeRepository
                 .GetAll()
                 .FirstOrDefault(e => e.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public Employee GetCurrentEmployee(string token)
+        {
+            var employeeId = GetEmployeeIdFromToken(token);
+
+            if (string.IsNullOrEmpty(employeeId))
+                return null;
+
+            var employee = GetEmployeeById(Convert.ToInt32(employeeId));
+
+            return employee;
+
+        }
+
+        public string GetEmployeeIdFromToken(string token)
+        {
+            // Create a new instance of JwtSecurityTokenHandler to read the token
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            // Read the token
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+
+            // Retrieve the 'EmployeeId' claim
+            var employeeIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "EmployeeId");
+
+            // Return the value of 'EmployeeId', or null if not found
+            return employeeIdClaim?.Value;
         }
     }
 }

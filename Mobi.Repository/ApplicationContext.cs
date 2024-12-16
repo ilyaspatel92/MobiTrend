@@ -64,14 +64,14 @@ public class ApplicationContext : DbContext
             {
                 Id = 1,
                 ResourceName = "Mobi.Test",
-                ResourceValue = "This is English",
+                ResourceValue = "This is English : Welcome to Mobi",
                 LanguageId = 1
             },
             new LocaleStringResource
             {
                 Id = 2,
                 ResourceName = "Mobi.Test",
-                ResourceValue = "This is Arabic",
+                ResourceValue = "This is Arabic : مرحبا بكم في موبي",
                 LanguageId = 2
             }
         );

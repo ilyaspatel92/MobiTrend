@@ -7,8 +7,7 @@ using Mobi.Web.Models.Locations;
 
 namespace Mobi.Web.Controllers.Locations
 {
-    [Authorize]
-    public class LocationController : Controller
+    public class LocationController : BasePublicController
     {
         private readonly ILocationService _locationService;
         private readonly ILocationFactory _locationFactory;
