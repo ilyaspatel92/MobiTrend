@@ -222,7 +222,24 @@ namespace Mobi.Web
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
-                runner.MigrateUp();
+                var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+                try
+                {
+                    if (dbContext.Database.EnsureCreated())
+                    {
+                        runner.MigrateUp();
+                        Console.WriteLine("Database created and Migrations applied successfully.");
+                    }
+                    else
+                    {
+                        runner.MigrateUp();
+                        Console.WriteLine("Migrations applied successfully.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error during migration: {ex.Message}");
+                }
             }
 
             app.UseHttpsRedirection();
