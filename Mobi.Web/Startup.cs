@@ -21,6 +21,7 @@ using Mobi.Web.Factories.Employees;
 using Mobi.Web.Factories.LocationBeacons;
 using Mobi.Web.Factories.Locations;
 using Mobi.Web.Utilities;
+using Mobi.Web.Utilities.Filters;
 using System.Text;
 
 namespace Mobi.Web
@@ -40,17 +41,18 @@ namespace Mobi.Web
         public void ConfigureServices(IServiceCollection services)
         {
             // Add Controllers with Views (Web Application)
-            services.AddControllersWithViews(options =>
-            {
-                options.Filters.Add(new AuthorizeFilter("WebPolicy"));
-            }).AddRazorRuntimeCompilation();
+            //services.AddControllersWithViews(options =>
+            //{
+            //    options.Filters.Add(new AuthorizeFilter("WebPolicy"));
+            //}).AddRazorRuntimeCompilation();
 
-            // Add API Controllers (Admin API)
-            services.AddControllers(options =>
-            {
-                options.Filters.Add(new AuthorizeFilter("ApiPolicy"));
-            });
-
+            //// Add API Controllers (Admin API)
+            //services.AddControllers(options =>
+            //{
+            //    options.Filters.Add(new AuthorizeFilter("ApiPolicy"));
+            //});
+            services.AddControllers();
+            services.AddControllersWithViews();
             services.AddHttpContextAccessor();
 
             // Configure Kestrel's request limits
@@ -128,6 +130,13 @@ namespace Mobi.Web
                     {
                         Console.WriteLine($"Authentication failed: {context.Exception.Message}");
                         return Task.CompletedTask;
+                    },
+                    OnChallenge = context =>
+                    {
+                        context.HandleResponse();
+                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        context.Response.ContentType = "application/json";
+                        return context.Response.WriteAsync("{\"error\":\"Unauthorized - Invalid or missing JWT token.\"}");
                     }
                 };
             });
@@ -143,7 +152,7 @@ namespace Mobi.Web
                 c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
                 {
                     Name = "Authorization",
-                    Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+                    Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
                     Scheme = "Bearer",
                     BearerFormat = "JWT",
                     In = Microsoft.OpenApi.Models.ParameterLocation.Header,
@@ -164,6 +173,9 @@ namespace Mobi.Web
                         new string[] {}
                     }
                 });
+
+                // Ensure Swagger doesn't redirect to the login page for unauthorized responses
+                c.OperationFilter<RemoveUnauthorizedRedirectFilter>();
             });
 
 
@@ -195,7 +207,8 @@ namespace Mobi.Web
             services.AddScoped<IEmployeeFactory, EmployeeFactory>();
             services.AddScoped<ILocationFactory, LocationFactory>();
             services.AddScoped<ILocationBeaconFactory, LocationBeaconFactory>();
-
+            // Add memory cache service
+            services.AddMemoryCache();
             // Register Helpers
             services.AddSingleton<JwtTokenHelper>();
         }
@@ -217,6 +230,13 @@ namespace Mobi.Web
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
+            // Apply FluentMigrator Migrations
+            //using (var scope = app.ApplicationServices.CreateScope())
+            //{
+            //    var runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
+            //    runner.MigrateUp();
+            //}
 
             // Apply FluentMigrator Migrations
             using (var scope = app.ApplicationServices.CreateScope())
