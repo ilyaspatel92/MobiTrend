@@ -9,8 +9,8 @@ using Mobi.Web.Models.APIModels;
 
 namespace Mobi.Web.Areas.Admin.Controllers
 {
-    [ApiController]
-    [Route("api/admin/auth")]
+    //[ApiController]
+    //[Route("api/admin/auth")]
     public class AuthenticateController : ControllerBase
     {
         private readonly ISystemUserService _systemUserService;
