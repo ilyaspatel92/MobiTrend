@@ -19,21 +19,21 @@
             <div class="row g-3">
                 <!-- Name (English) -->
                 <div class="col-md-6">
-                    <label asp-for="NameEng" class="form-label"></label>
+                    <label asp-for="NameEng" class="form-label">Name (English)</label><span class="text-danger">*</span>
                     <input asp-for="NameEng" class="form-control" placeholder="Enter Name (English)" required>
                     <span asp-validation-for="NameEng" class="text-danger"></span>
                 </div>
 
                 <!-- Name (Arabic) -->
                 <div class="col-md-6">
-                    <label asp-for="NameArabic" class="form-label"></label>
+                    <label asp-for="NameArabic" class="form-label">Name (Arabic)</label><span class="text-danger">*</span>
                     <input asp-for="NameArabic" class="form-control" placeholder="Enter Name (Arabic)">
                     <span asp-validation-for="NameArabic" class="text-danger"></span>
                 </div>
 
                 <!-- Status -->
                 <div class="col-md-6">
-                    <label asp-for="Status" class="form-label"></label>
+                    <label asp-for="Status" class="form-label">Employee Status</label>
                     <select asp-for="Status" class="form-select" required>
                         <option selected value="true">Active</option>
                         <option value="false">Inactive</option>
@@ -43,31 +43,31 @@
 
                 <!-- File Number -->
                 <div class="col-md-6">
-                    <label asp-for="FileNumber" class="form-label"></label>
+                    <label asp-for="FileNumber" class="form-label">File Number</label>
                     <input asp-for="FileNumber" class="form-control" placeholder="Enter File Number">
                     <span asp-validation-for="FileNumber" class="text-danger"></span>
                 </div>
 
                 <!-- Mobile Number -->
                 <div class="col-md-6">
-                    <label asp-for="MobileNumber" class="form-label"></label>
+                    <label asp-for="MobileNumber" class="form-label">Mobile Number</label><span class="text-danger">*</span>
                     <input asp-for="MobileNumber" class="form-control" placeholder="Enter Mobile Number">
                     <span asp-validation-for="MobileNumber" class="text-danger"></span>
                 </div>
 
                 <!-- Email -->
                 <div class="col-md-6">
-                    <label asp-for="Email" class="form-label"></label>
+                    <label asp-for="Email" class="form-label"></label><span class="text-danger">*</span>
                     <input asp-for="Email" type="email" class="form-control" placeholder="Enter Email Address">
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
 
                 <!-- Password -->
-                <div class="col-md-6">
+                @* <div class="col-md-6">
                     <label asp-for="Password" class="form-label"></label>
                     <input asp-for="Password" type="password" class="form-control" placeholder="Enter Password" required>
                     <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
+                </div> *@
 
                 <!-- Username -->
                @*  <div class="col-md-6">
@@ -77,10 +77,10 @@
                 </div> *@
 
                 <!-- Company ID -->
-                <div class="col-md-6">
+               @*  <div class="col-md-6">
                     <label asp-for="CompanyId" class="form-label"></label>
                     <input asp-for="CompanyId" class="form-control" placeholder="Enter Company ID" required>
-                </div>
+                </div> *@
             </div>
         </div>
         <div class="card-footer text-center">

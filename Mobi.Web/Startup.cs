@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Mobi.Repository;
 using Mobi.Repository.Migrations;
+using Mobi.Service.Compnay;
 using Mobi.Service.Employees;
 using Mobi.Service.Factories;
 using Mobi.Service.Helpers;
@@ -189,6 +190,7 @@ namespace Mobi.Web
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IResourceService, ResourceService>();
             services.AddScoped<ILocationBeaconService, LocationBeaconService>();
+            services.AddScoped<ICompanyService, CompanyService>();
 
             // Register Factories
             services.AddScoped<ISystemUserFactory, SystemUserFactory>();
@@ -222,7 +224,24 @@ namespace Mobi.Web
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
-                runner.MigrateUp();
+                var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+                try
+                {
+                    if (dbContext.Database.EnsureCreated())
+                    {
+                        runner.MigrateUp();
+                        Console.WriteLine("Database created and Migrations applied successfully.");
+                    }
+                    else
+                    {
+                        runner.MigrateUp();
+                        Console.WriteLine("Migrations applied successfully.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error during migration: {ex.Message}");
+                }
             }
 
             app.UseHttpsRedirection();

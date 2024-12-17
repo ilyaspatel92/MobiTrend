@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mobi.Data.Domain.Employees;
+using Mobi.Service.Compnay;
 using Mobi.Service.Employees;
 using Mobi.Service.Helpers;
 using Mobi.Web.Factories.Employees;
@@ -12,11 +13,16 @@ namespace Mobi.Web.Controllers.Employees
     {
         private readonly IEmployeeService _employeeService;
         private readonly IEmployeeFactory _employeeFactory;
+        private readonly ICompanyService _companyService;
 
-        public EmployeeController(IEmployeeService employeeService, IEmployeeFactory employeeFactory)
+
+        public EmployeeController(IEmployeeService employeeService,
+                                  IEmployeeFactory employeeFactory,
+                                  ICompanyService companyService)
         {
             _employeeService = employeeService;
             _employeeFactory = employeeFactory;
+            _companyService = companyService;
         }
 
         [HttpGet]
@@ -94,8 +100,8 @@ namespace Mobi.Web.Controllers.Employees
                     MobileNumber = model.MobileNumber,
                     Email = model.Email,
                     UserName = model.Email,
-                    Password = PasswordHelper.HashPassword(model.Password),
-                    CompanyId = model.CompanyId,
+                    Password = PasswordHelper.HashPassword("Pass@word"),
+                    CompanyId = _companyService.GetCompanies(string.Empty).FirstOrDefault()?.CompanyId,
                     CreatedDate = DateTime.Now
                 };
 

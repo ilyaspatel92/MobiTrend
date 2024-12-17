@@ -42,17 +42,17 @@
                 </div>
             </div>
 
-            <!-- Proof Type (Checkboxes) -->
+            <!-- Proof Type (Radio Buttons) -->
             <div class="form-group mb-4">
                 <label>Proof Type</label>
                 <div>
-                    <!-- GPS Proof Checkbox -->
-                    <input id="gpsProofCheckbox" type="checkbox" class="form-check-input" />
-                    <label for="gpsProofCheckbox" class="form-check-label">GPS Proof</label>
+                    <!-- GPS Proof Radio Button -->
+                    <input id="gpsProofRadio" type="radio" name="ProofType" value="2" class="form-check-input" checked />
+                    <label for="gpsProofRadio" class="form-check-label">GPS Proof</label>
 
-                    <!-- Beacon Proof Checkbox -->
-                    <input id="beaconProofCheckbox" type="checkbox" class="form-check-input ms-3" />
-                    <label for="beaconProofCheckbox" class="form-check-label">Beacon Proof</label>
+                    <!-- Beacon Proof Radio Button -->
+                    <input id="beaconProofRadio" type="radio" name="ProofType" value="1" class="form-check-input ms-3" />
+                    <label for="beaconProofRadio" class="form-check-label">Beacon Proof</label>
                 </div>
             </div>
 
@@ -92,8 +92,8 @@
     <!-- JavaScript to control collapsibles and beacon management -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const gpsCheckbox = document.getElementById("gpsProofCheckbox");
-            const beaconCheckbox = document.getElementById("beaconProofCheckbox");
+            const gpsRadio = document.getElementById("gpsProofRadio");
+            const beaconRadio = document.getElementById("beaconProofRadio");
             const gpsSection = document.getElementById("gpsProofSection");
             const beaconSection = document.getElementById("beaconProofSection");
 
@@ -101,21 +101,26 @@
             const gpsCollapse = new bootstrap.Collapse(gpsSection, { toggle: false });
             const beaconCollapse = new bootstrap.Collapse(beaconSection, { toggle: false });
 
+            // Show the correct section based on the default checked radio button
+            if (beaconRadio.checked) {
+                beaconCollapse.show();
+            } else if (gpsRadio.checked) {
+                gpsCollapse.show();
+            }
+
             // Toggle GPS Proof Section
-            gpsCheckbox.addEventListener("change", function () {
-                if (gpsCheckbox.checked) {
+            gpsRadio.addEventListener("change", function () {
+                if (gpsRadio.checked) {
                     gpsCollapse.show(); // Show GPS section
-                } else {
-                    gpsCollapse.hide(); // Hide GPS section
+                    beaconCollapse.hide(); // Hide Beacon section
                 }
             });
 
             // Toggle Beacon Proof Section
-            beaconCheckbox.addEventListener("change", function () {
-                if (beaconCheckbox.checked) {
+            beaconRadio.addEventListener("change", function () {
+                if (beaconRadio.checked) {
                     beaconCollapse.show(); // Show Beacon section
-                } else {
-                    beaconCollapse.hide(); // Hide Beacon section
+                    gpsCollapse.hide(); // Hide GPS section
                 }
             });
         });
@@ -134,7 +139,6 @@
                     .then((response) => response.json())
                     .then((beacons) => {
                         tableBody.innerHTML = "";
-                        console.log(beacons);
                         beacons.forEach((beacon) => {
                             const row = createRow(beacon);
                             tableBody.appendChild(row);
@@ -260,21 +264,13 @@
 
         // Function to extract the LocationId from the current URL
         function getLocationIdFromUrl() {
-            // Get the current URL
             const url = window.location.href;
-
-            // Split the URL into segments using '/' as the delimiter
             const urlSegments = url.split('/');
-
-            // The last segment is the LocationId (in this case, it will be "1")
-            const locationId = urlSegments[urlSegments.length - 1];
-
-            return locationId;
+            return urlSegments[urlSegments.length - 1];
         }
     </script>
 
     <script>
-        // Initialize Google Maps if needed
         function initMap() {
             const map = new google.maps.Map(document.getElementById("map"), {
                 center: { lat: 40.7128, lng: -74.0060 },
@@ -283,6 +279,5 @@
         }
     </script>
 
-    <!-- Include Google Maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
 }

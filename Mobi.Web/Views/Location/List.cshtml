@@ -47,9 +47,7 @@
                                     <th>ID</th>
                                     <th>Location Name (English)</th>
                                     <th>Location Name (Arabic)</th>
-                                    <th>Status</th>
-                                    <th>Latitude</th>
-                                    <th>Longitude</th>
+                                    <th>ProofType</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -61,9 +59,7 @@
                                         <td>@location.Id</td>
                                         <td>@location.LocationNameEnglish</td>
                                         <td>@location.LocationNameArabic</td>
-                                        <td>@(location.Status ? "Active" : "Inactive")</td>
-                                        <td>@location.Latitude</td>
-                                        <td>@location.Longitude</td>
+                                        <td>@Enum.GetName(typeof(ProofType), location.ProofType)</td>
                                         <td>
                                             <a href="@Url.Action("Details", "Location", new { id = location.Id })" class="btn btn-info btn-sm">Details</a>
                                             <a href="@Url.Action("Edit", "Location", new { id = location.Id })" class="btn btn-primary btn-sm">Edit</a>
@@ -98,6 +94,7 @@
                     },
                     dataType: 'json',
                     dataSrc: function (json) {
+                        console.log(json.data);
                         return json.data;
                     }
                 },
@@ -105,9 +102,7 @@
                     { data: 'id' },
                     { data: 'locationNameEnglish' },
                     { data: 'locationNameArabic' },
-                    { data: 'status' },
-                    { data: 'latitude' },
-                    { data: 'longitude' },
+                    { data: 'proofTypeName' },
                     {
                         data: null,
                         render: function (data) {
