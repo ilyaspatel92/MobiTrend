@@ -227,7 +227,13 @@ namespace Mobi.Web
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Mobi API V1");
+                    c.RoutePrefix = "swagger";
+                });
+                //app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
 
