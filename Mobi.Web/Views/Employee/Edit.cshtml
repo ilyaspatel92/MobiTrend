@@ -4,17 +4,23 @@
     ViewData["Title"] = "Edit Employee";
 }
 
-<div class="card card-info card-outline mb-4">
-    <div class="card-header">
-        <!-- Back to List Button on the left side -->
-        <a href="@Url.Action("List", "Employee")" class="btn btn-secondary btn-sm">
-            <i class="fas fa-arrow-left"></i> Back to List
-        </a>
-    </div>
-    <div class="card-header">
-        <h4 class="card-title">Edit Employee</h4>
-    </div>
-    <form asp-action="Edit" method="post" class="needs-validation" novalidate>
+<form asp-action="Edit" method="post" class="needs-validation custom-top-spacing" novalidate>
+    <div class="card card-info card-outline mb-4 mx-3">
+        <!-- Header Section -->
+        <div class="card-header bg-white py-3 border-bottom">
+            <div class="d-flex justify-content-between align-items-center">
+                <!-- Title -->
+                <h5 class="fw-bold mb-0">Edit Employee</h5>
+                <!-- Buttons -->
+                <div class="d-flex gap-2">
+                    <a href="@Url.Action("List", "Employee")" class="btn btn-info btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                    <button type="submit" class="btn btn-info btn-sm"><i class="fas fa-plus"></i> Update Employee</button>
+                </div>
+            </div>
+        </div>
+
         <div class="card-body">
             <div class="row g-3">
                 <!-- Name (English) -->
@@ -78,27 +84,24 @@
                 </div>
             </div>
         </div>
-        <div class="card-footer text-center">
-            <button type="submit" class="btn btn-info">Update Employee</button>
-        </div>
-    </form>
-
-    <!-- QR Code Section -->
-    <div class="card-body mt-4">
-        <h4 class="card-title">QR Code</h4>
-        <div class="text-center">
-            @if (!string.IsNullOrEmpty(Model.QrCode))
-            {
-                <img src="@Model.QrCode" alt="QR Code" style="width: 150px; height: 150px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);" />
-            }
-            else
-            {
-                <p class="text-muted">No QR Code available</p>
-            }
+      
+        <div class="card-body mt-4">
+            <h4 class="card-title">QR Code</h4>
+            <div class="text-center">
+                @if (!string.IsNullOrEmpty(Model.QrCode))
+                {
+                    <img src="@Model.QrCode" alt="QR Code" style="width: 150px; height: 150px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);" />
+                }
+                else
+                {
+                    <p class="text-muted">No QR Code available</p>
+                }
+            </div>
         </div>
     </div>
-</div>
+</form>
 
+<!-- QR Code Section -->
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>

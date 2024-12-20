@@ -43,7 +43,7 @@ namespace Mobi.Web.Models.Employees
         public string DeviceId { get; set; }
 
         public bool RegisterStatus { get; set; }
-        public string CompanyId { get; set; }
+        public int CompanyId { get; set; }
 
         public DateTime CreatedDate { get; set; }
 

@@ -9,7 +9,7 @@ namespace Mobi.Repository.Migrations
         {
             if (!Schema.Table("Company").Exists())
             {
-                // Create the Companys table
+                // Create the Company table
                 Create.Table("Company")
                     .WithColumn("Id").AsInt32().PrimaryKey().Identity()
                     .WithColumn("CompanyName").AsString(255).NotNullable()
@@ -31,9 +31,9 @@ namespace Mobi.Repository.Migrations
                     .WithColumn("Deleted").AsBoolean().NotNullable();
 
                 // Add foreign key only if the table was created
-                Create.ForeignKey("FK_SystemUsers_Companys")
+                Create.ForeignKey("FK_SystemUsers_Company")
                     .FromTable("SystemUsers").ForeignColumn("CompanyID")
-                    .ToTable("Companys").PrimaryColumn("Id");
+                    .ToTable("Company").PrimaryColumn("Id");
             }
 
             // Create Employee table
@@ -44,11 +44,11 @@ namespace Mobi.Repository.Migrations
                     .WithColumn("NameEng").AsString(255).NotNullable()
                     .WithColumn("NameArabic").AsString(255).Nullable()
                     .WithColumn("Status").AsBoolean().NotNullable().WithDefaultValue(true)
-                    .WithColumn("CompanyId").AsString(255).NotNullable()
+                    .WithColumn("CompanyId").AsInt32().NotNullable()
                     .WithColumn("FileNumber").AsString(100).Nullable()
                     .WithColumn("MobileNumber").AsString(20).Nullable()
                     .WithColumn("Email").AsString(255).Nullable()
-                    .WithColumn("PhotoPath").AsString(500).Nullable()
+                    .WithColumn("PictureId").AsInt32().Nullable()
                     .WithColumn("Password").AsString(255).NotNullable()
                     .WithColumn("UserName").AsString(255).NotNullable()
                     .WithColumn("MobileType").AsInt32().Nullable() // Enum for mobile type
@@ -59,9 +59,9 @@ namespace Mobi.Repository.Migrations
                     .WithColumn("CID").AsString(255).Nullable()
                     .WithColumn("CreatedDate").AsDateTime().NotNullable();
 
-                Create.ForeignKey("FK_Employee_Companys")
+                Create.ForeignKey("FK_Employee_Company")
                     .FromTable("Employee").ForeignColumn("CompanyId")
-                    .ToTable("Companys").PrimaryColumn("Id");
+                    .ToTable("Company").PrimaryColumn("Id");
             }
 
             if (!Schema.Table("Location").Exists())
@@ -83,7 +83,7 @@ namespace Mobi.Repository.Migrations
                 // Add foreign key only if the table was created
                 Create.ForeignKey("FK_Location_CompanyId")
                     .FromTable("Location").ForeignColumn("CompanyId")
-                    .ToTable("Companys").PrimaryColumn("Id");
+                    .ToTable("Company").PrimaryColumn("Id");
             }
 
             if (!Schema.Table("LocationBeaconMapping").Exists())
@@ -194,9 +194,9 @@ namespace Mobi.Repository.Migrations
                 Delete.Table("SystemUsers");
             }
 
-            if (Schema.Table("Companys").Exists())
+            if (Schema.Table("Company").Exists())
             {
-                Delete.Table("Companys");
+                Delete.Table("Company");
             }
 
             if (Schema.Table("Employee").Exists())

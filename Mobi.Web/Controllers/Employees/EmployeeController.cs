@@ -86,8 +86,8 @@ namespace Mobi.Web.Controllers.Employees
                 ModelState.AddModelError("Email", "The email address is already in use.");
             }
 
-            if (string.IsNullOrEmpty(model.CompanyId))
-                model.CompanyId = "1";
+            if (model.CompanyId == 0)
+                model.CompanyId = _companyService.GetCompanies(string.Empty).FirstOrDefault()?.Id ?? 1;
 
             if (ModelState.IsValid)
             {
@@ -101,7 +101,7 @@ namespace Mobi.Web.Controllers.Employees
                     Email = model.Email,
                     UserName = model.Email,
                     Password = PasswordHelper.HashPassword("Pass@word"),
-                    CompanyId = _companyService.GetCompanies(string.Empty).FirstOrDefault()?.CompanyId,
+                    CompanyId = _companyService.GetCompanies(string.Empty).FirstOrDefault()?.Id ?? 1,
                     CreatedDate = DateTime.Now
                 };
 
@@ -174,31 +174,19 @@ namespace Mobi.Web.Controllers.Employees
             return View(model);
         }
 
-
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
             var employee = _employeeService.GetEmployeeById(id);
             if (employee == null)
             {
-                return NotFound();
+                return Json(new { success = false, message = "Employee not found." });
             }
-            var EmployeeModel = _employeeFactory.PrepareEmployeeViewModel(employee);
 
-            return View(EmployeeModel);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
-        {
-            var employee = _employeeService.GetEmployeeById(id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
             _employeeService.RemoveEmployee(employee);
 
-            return RedirectToAction(nameof(Index));
+            return Json(new { success = true, message = "Employee deleted successfully." });
         }
 
         public IActionResult Details(int id)

@@ -144,6 +144,8 @@ namespace Mobi.Web.Controllers.Locations
             return View(model);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
             var location = _locationService.GetLocationById(id);
@@ -155,20 +157,6 @@ namespace Mobi.Web.Controllers.Locations
             var locationModel = _locationFactory.PrepareLocationViewModel(location);
 
             return View(locationModel);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
-        {
-            var location = _locationService.GetLocationById(id);
-            if (location == null)
-            {
-                return NotFound();
-            }
-
-            _locationService.RemoveLocation(location);
-            return RedirectToAction(nameof(List));
         }
 
         public IActionResult Details(int id)

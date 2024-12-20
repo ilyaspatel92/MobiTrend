@@ -2,7 +2,6 @@
 {
     public class Location : BaseEntity
     {
-        public int Id { get; set; }
         public string LocationNameEnglish { get; set; }
         public string LocationNameArabic { get; set; }
         public bool Status { get; set; }
