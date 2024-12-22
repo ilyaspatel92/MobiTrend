@@ -9,5 +9,6 @@ namespace Mobi.Service.LocationBeacons
         void AddLocationBeaconMapping(LocationBeaconMapping location);
         void UpdateLocationBeaconMapping(LocationBeaconMapping location);
         void RemoveLocationBeaconMapping(LocationBeaconMapping location);
+        IEnumerable<LocationBeaconMapping> GetAllLocationBeaconMappingsByLocationId(int locationId);
     }
 }

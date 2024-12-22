@@ -37,5 +37,10 @@ namespace Mobi.Service.LocationBeaconMappings
         {
             _locationRepository.Delete(location);
         }
+
+        public IEnumerable<LocationBeaconMapping> GetAllLocationBeaconMappingsByLocationId(int locationId)
+        {
+            return _locationRepository.GetAll().Where(x => x.LocationId == locationId).ToList();
+        }
     }
 }
