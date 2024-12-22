@@ -365,3 +365,4 @@ __pycache__/
 /.vs/Mobi/v17/.futdcache.v2
 /.vs/Mobi/v17/DocumentLayout.backup.json
 /Mobi.Web/appsettings.json
+/Mobi.Web/appsettings.Development.json
