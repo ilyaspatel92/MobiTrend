@@ -14,6 +14,7 @@ using Mobi.Service.Helpers;
 using Mobi.Service.LocationBeaconMappings;
 using Mobi.Service.LocationBeacons;
 using Mobi.Service.Locations;
+using Mobi.Service.Pictures;
 using Mobi.Service.ResourceService;
 using Mobi.Service.SystemUser;
 using Mobi.Web.Areas.Admin.Utilities;
@@ -207,6 +208,7 @@ namespace Mobi.Web
             services.AddScoped<IEmployeeFactory, EmployeeFactory>();
             services.AddScoped<ILocationFactory, LocationFactory>();
             services.AddScoped<ILocationBeaconFactory, LocationBeaconFactory>();
+            services.AddScoped<IPictureService, PictureService>();
             // Add memory cache service
             services.AddMemoryCache();
             // Register Helpers
