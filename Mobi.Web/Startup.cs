@@ -15,8 +15,10 @@ using Mobi.Service.Helpers;
 using Mobi.Service.LocationBeaconMappings;
 using Mobi.Service.LocationBeacons;
 using Mobi.Service.Locations;
+using Mobi.Service.Pictures;
 using Mobi.Service.ResourceService;
 using Mobi.Service.SystemUser;
+using Mobi.Web.Areas.Admin.Factories;
 using Mobi.Web.Areas.Admin.Utilities;
 using Mobi.Web.Factories.Employees;
 using Mobi.Web.Factories.LocationBeacons;
@@ -203,12 +205,15 @@ namespace Mobi.Web
             services.AddScoped<IResourceService, ResourceService>();
             services.AddScoped<ILocationBeaconService, LocationBeaconService>();
             services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<IPictureService, PictureService>();
 
             // Register Factories
             services.AddScoped<ISystemUserFactory, SystemUserFactory>();
             services.AddScoped<IEmployeeFactory, EmployeeFactory>();
             services.AddScoped<ILocationFactory, LocationFactory>();
             services.AddScoped<ILocationBeaconFactory, LocationBeaconFactory>();
+            services.AddScoped<IBeaconLocationFactory, BeaconLocationFactory>();
+            
             // Add memory cache service
             services.AddMemoryCache();
             // Register Helpers
@@ -229,7 +234,13 @@ namespace Mobi.Web
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Mobi API V1");
+                    c.RoutePrefix = "swagger";
+                });
+                //app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
 

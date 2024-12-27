@@ -20,6 +20,7 @@ public class ApplicationContext : DbContext
     public DbSet<LocationBeaconMapping> LocationBeaconMapping { get; set; }
     public DbSet<Language> Language { get; set; }
     public DbSet<LocaleStringResource> LocaleStringResource { get; set; }
+    public DbSet<Picture> Picture { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -37,6 +38,7 @@ public class ApplicationContext : DbContext
         new EmployeeLocationMap(modelBuilder.Entity<EmployeeLocation>());
         new LanguageMap(modelBuilder.Entity<Language>());
         new LocaleStringResourceMap(modelBuilder.Entity<LocaleStringResource>());
+        new PictureMap(modelBuilder.Entity<Picture>());
 
         modelBuilder.Entity<Company>().HasData(
            new Company

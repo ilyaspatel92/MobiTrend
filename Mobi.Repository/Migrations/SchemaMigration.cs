@@ -184,6 +184,16 @@ namespace Mobi.Repository.Migrations
                     .ToTable("Language").PrimaryColumn("Id");
             }
 
+            // Create Picture table
+            if (!Schema.Table("Picture").Exists())
+            {
+                Create.Table("Picture")
+                    .WithColumn("Id").AsInt32().PrimaryKey().Identity()
+                    .WithColumn("Path").AsString(255).NotNullable()
+                    .WithColumn("Name").AsString(255).NotNullable()
+                    .WithColumn("CreatedOn").AsDateTime().NotNullable();
+            }
+
         }
 
         public override void Down()
@@ -231,6 +241,11 @@ namespace Mobi.Repository.Migrations
             if (Schema.Table("LocaleStringResource").Exists())
             {
                 Delete.Table("LocaleStringResource");
+            }
+
+            if (Schema.Table("Picture").Exists())
+            {
+                Delete.Table("Picture");
             }
         }
     }
