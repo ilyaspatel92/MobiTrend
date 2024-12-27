@@ -2,6 +2,7 @@
 using Mobi.Service.Locations;
 using Mobi.Web.Factories.LocationBeacons;
 using Mobi.Web.Models.APIModels;
+using Mobi.Web.Utilities.Enums;
 
 namespace Mobi.Web.Areas.Admin.Factories
 {
@@ -39,11 +40,11 @@ namespace Mobi.Web.Areas.Admin.Factories
 
                 return new LocationModel
                 {
-                    BeaconProof = location.BeaconProof,
+                    BeaconProof = (ProofType)location.ProofType == ProofType.Beacon,
                     CompanyId = location.CompanyId,
                     CreatedDate = location.CreatedDate,
                     GPSLocationAddress = location.GPSLocationAddress,
-                    GPSProof = location.GPSProof,
+                    GPSProof = (ProofType)location.ProofType == ProofType.GPS,
                     Id = location.Id,
                     Latitude = location.Latitude,
                     LocationNameArabic = location.LocationNameArabic,

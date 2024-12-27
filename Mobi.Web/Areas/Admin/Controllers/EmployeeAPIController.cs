@@ -95,7 +95,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     empObject.FileNumber = employee.FileNumber;
                     empObject.MobileNumber = employee.MobileNumber;
                     empObject.Email = employee.Email;
-                    empObject.PhotoPath = employee.PhotoPath;
+                    //empObject.PhotoPath = employee.PhotoPath;
                     empObject.UserName = employee.UserName;
                     empObject.MobileType = employee.UserName;
                     empObject.RegistrationType = employee.RegistrationType;
