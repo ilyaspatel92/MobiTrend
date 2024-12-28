@@ -1,6 +1,6 @@
 ﻿using Mobi.Data.Domain;
+using Mobi.Data.Enums;
 using Mobi.Web.Models.Locations;
-using Mobi.Web.Utilities.Enums;
 
 namespace Mobi.Web.Factories.Locations
 {

@@ -1,8 +1,8 @@
-﻿using Mobi.Service.LocationBeacons;
+﻿using Mobi.Data.Enums;
+using Mobi.Service.LocationBeacons;
 using Mobi.Service.Locations;
 using Mobi.Web.Factories.LocationBeacons;
 using Mobi.Web.Models.APIModels;
-using Mobi.Web.Utilities.Enums;
 
 namespace Mobi.Web.Areas.Admin.Factories
 {

@@ -1,4 +1,4 @@
-﻿namespace Mobi.Web.Utilities.Enums
+﻿namespace Mobi.Data.Enums
 {
     public enum BeaconProofGPSProofEnum
     {

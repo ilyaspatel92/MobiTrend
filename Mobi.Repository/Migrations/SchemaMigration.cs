@@ -56,7 +56,7 @@ namespace Mobi.Repository.Migrations
                     .WithColumn("DeviceId").AsString(255).Nullable()
                     .WithColumn("RegisterStatus").AsString(50).Nullable()
                     .WithColumn("NameEng").AsString(255).NotNullable()
-                    .WithColumn("CID").AsString(255).Nullable()
+                    .WithColumn("CID").AsString(12).Nullable()
                     .WithColumn("CreatedDate").AsDateTime().NotNullable();
 
                 Create.ForeignKey("FK_Employee_Company")
@@ -109,13 +109,15 @@ namespace Mobi.Repository.Migrations
                     .WithColumn("Id").AsInt32().PrimaryKey().Identity() // Auto-increment primary key
                     .WithColumn("EmployeeId").AsInt32().NotNullable()
                     .WithColumn("DateandTime").AsDateTime().NotNullable()
-                    .WithColumn("TransTypeId").AsInt32().NotNullable()
+                    .WithColumn("ActionTypeId").AsInt32().NotNullable()
+                    .WithColumn("ActionTypeModeId").AsInt32().NotNullable()
+                    .WithColumn("IsVerifiedLocation").AsBoolean().NotNullable().WithDefaultValue(false)
                     .WithColumn("CurrentLocation").AsString(255).NotNullable()
                     .WithColumn("ProofTypeId").AsInt32().NotNullable()
                     .WithColumn("Latitude").AsDecimal().NotNullable()
                     .WithColumn("Longtitude").AsDecimal().NotNullable()
                     .WithColumn("MobileSerialNumber").AsString().NotNullable()
-                    .WithColumn("Photo").AsString().NotNullable()
+                    .WithColumn("PictureId").AsInt32().NotNullable()
                     .WithColumn("LocationId").AsInt32().NotNullable()
                     .WithColumn("Transferred").AsBoolean().NotNullable().WithDefaultValue(false)
                     .WithColumn("TransferTime").AsDateTime().NotNullable()

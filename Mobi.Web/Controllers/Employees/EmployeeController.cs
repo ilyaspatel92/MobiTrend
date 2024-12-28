@@ -34,7 +34,7 @@ namespace Mobi.Web.Controllers.Employees
             // Apply filters if the parameters are provided
             if (!string.IsNullOrEmpty(name))
             {
-                employees = employees.Where(e => e.NameEng.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
+                employees = employees.Where(e => e.NameEng.Contains(name, StringComparison.OrdinalIgnoreCase) || e.NameArabic.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
             }
             if (id.HasValue)
             {
@@ -54,7 +54,7 @@ namespace Mobi.Web.Controllers.Employees
 
             if (!string.IsNullOrEmpty(name))
             {
-                employees = employees.Where(e => e.NameEng.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
+                employees = employees.Where(e => e.NameEng.Contains(name, StringComparison.OrdinalIgnoreCase) || e.NameArabic.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
             }
             if (id.HasValue)
             {
@@ -102,6 +102,7 @@ namespace Mobi.Web.Controllers.Employees
                     UserName = model.Email,
                     Password = PasswordHelper.HashPassword("Pass@word"),
                     CompanyId = _companyService.GetCompanies(string.Empty).FirstOrDefault()?.Id ?? 1,
+                    CID = model.CID,
                     CreatedDate = DateTime.Now
                 };
 

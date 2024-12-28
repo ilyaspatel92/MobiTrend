@@ -33,6 +33,11 @@ namespace Mobi.Web.Models.Employees
         
         public string PhotoPath { get; set; }
 
+        [Required(ErrorMessage = "Cid is required.")]
+        [RegularExpression(@"^\d{12}$", ErrorMessage = "CID Should have 12 characters.")]
+        public string CID { get; set; }
+
+
         //[Required(ErrorMessage = "Password is required.")]
         //[StringLength(50, MinimumLength = 6, ErrorMessage = "Password must be between 6 and 50 characters.")]
         public string Password { get; set; }

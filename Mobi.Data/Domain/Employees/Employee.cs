@@ -16,7 +16,7 @@
         public int RegistrationType { get; set; } 
         public string DeviceId { get; set; }
         public bool RegisterStatus { get; set; }
-        public int CID { get; set; }
+        public string CID { get; set; }
         public bool IsQrVerify { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? MobRegistrationDate { get; set; }
