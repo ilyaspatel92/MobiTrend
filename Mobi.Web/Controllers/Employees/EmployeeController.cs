@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Mobi.Data.Domain.Employees;
+using Mobi.Data.Enums;
 using Mobi.Service.Compnay;
 using Mobi.Service.Employees;
 using Mobi.Service.Helpers;
@@ -99,11 +99,12 @@ namespace Mobi.Web.Controllers.Employees
                     FileNumber = model.FileNumber,
                     MobileNumber = model.MobileNumber,
                     Email = model.Email,
-                    UserName = model.Email,
                     Password = PasswordHelper.HashPassword("Pass@word"),
                     CompanyId = _companyService.GetCompanies(string.Empty).FirstOrDefault()?.Id ?? 1,
                     CID = model.CID,
-                    CreatedDate = DateTime.Now
+                    CreatedDate = DateTime.Now,
+                    UserName= model.NameEng,
+                    RegistrationType =(int)RegistrationType.Web
                 };
 
                 _employeeService.AddEmployee(employee);
@@ -165,7 +166,7 @@ namespace Mobi.Web.Controllers.Employees
                 existingEmployee.MobileNumber = model.MobileNumber;
                 existingEmployee.Email = model.Email;
                 existingEmployee.UserName = model.Email;
-                existingEmployee.CompanyId = model.CompanyId;
+                //existingEmployee.CompanyId = model.CompanyId;
 
                 // Update the record
                 _employeeService.UpdateEmployee(existingEmployee);

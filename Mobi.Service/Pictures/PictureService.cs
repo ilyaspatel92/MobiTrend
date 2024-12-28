@@ -62,7 +62,7 @@ namespace Mobi.Service.Pictures
             _pictureRepository.Update(picture);
         }
 
-        public async Task<string> SaveFileAsync(IFormFile imageFile)
+        public async Task<Picture> SaveFileAsync(IFormFile imageFile)
         {
             if (imageFile == null)
             {
@@ -95,7 +95,7 @@ namespace Mobi.Service.Pictures
             };
             InsertPicture(picture);
 
-            return picture.Path;
+            return picture;
         }
 
         public void DeleteFile(string fileNameWithExtension)

@@ -10,7 +10,10 @@ namespace Mobi.Service.Employees
         void UpdateEmployee(Employee employee);
         void RemoveEmployee(Employee employee);
         bool IsEmailExists(string email);
+        bool IsDeviceIdExists(string deviceId);
         Employee GetEmployeeByEmail(string email);
+
+        Employee GetEmployeeByEmail(string email,int companyId);
         Employee GetCurrentEmployee(string token);
         IList<Employee> GetEmployeeByName(string name);
     }

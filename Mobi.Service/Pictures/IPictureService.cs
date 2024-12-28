@@ -48,7 +48,7 @@ namespace Mobi.Service.Pictures
         /// Save a Picture to the file system.
         /// </summary>
         /// <param name="Picture">The Picture to save.</param>
-        Task<string> SaveFileAsync(IFormFile imageFile);
+        Task<Picture> SaveFileAsync(IFormFile imageFile);
 
         /// <summary>
         /// Delete a Picture from the file system.

@@ -1,6 +1,4 @@
-﻿
-using Mobi.Data.Domain;
-using Mobi.Data.Domain.Employees;
+﻿using Mobi.Data.Domain;
 using Mobi.Repository;
 
 namespace Mobi.Service.EmployeeLocationServices

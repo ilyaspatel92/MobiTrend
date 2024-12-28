@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Dynamic;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Mobi.Service.Pictures;
 using Mobi.Web.Models.APIModels;
 
@@ -27,13 +29,18 @@ namespace Mobi.Web.Areas.Admin.Controllers
         #region Methods
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> SavePicture([FromForm] PictureAPIModel pictureToAdd)
         {
+            var response = new ResponseModel<ExpandoObject>();
+
             try
             {
                 if (pictureToAdd.ImageFile?.Length > 1 * 1024 * 1024)
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest, "File size should not exceed 1 MB");
+                    response.Success = false;
+                    response.Message = "File size should not exceed 1 MB";
+                    return BadRequest(response);
                 }
 
                 // Check the allowed extenstions
@@ -41,40 +48,66 @@ namespace Mobi.Web.Areas.Admin.Controllers
                 var ext = Path.GetExtension(pictureToAdd.ImageFile.FileName);
                 if (!allowedFileExtentions.Contains(ext))
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest, $"Only {string.Join(",", allowedFileExtentions)} are allowed.");
+                    response.Success = false;
+                    response.Message = $"Only {string.Join(",", allowedFileExtentions)} are allowed.";
+                    return BadRequest(response);
                 }
                 
-                string createdImagePath = await _pictureService.SaveFileAsync(pictureToAdd.ImageFile);
+               var picture = await _pictureService.SaveFileAsync(pictureToAdd.ImageFile);
 
-                return Ok(createdImagePath);
+                var url= $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/";
+
+                dynamic pictureObject = new ExpandoObject();
+                pictureObject.Id = picture.Id;
+                pictureObject.Name = picture.Name;
+                pictureObject.Path = url+ picture.Path;
+
+                response.Success = true;
+                response.Message = "Item retrieved successfully.";
+                response.Data = pictureObject;
+                return Ok(response);
+
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                response.Success = false;
+                response.Message = ex.Message;
+                response.Exception = ex;
+                return BadRequest(response);
             }
         }
 
         [HttpDelete("{id}")]
+        [AllowAnonymous]
         public IActionResult DeletePicture(int id)
         {
+            var response = new ResponseModel<ExpandoObject>();
+
             try
             {
                 var existingPicture = _pictureService.GetPictureById(id);
                 if (existingPicture == null)
                 {
-                    return StatusCode(StatusCodes.Status404NotFound, $"Picture with id: {id} does not found");
+                    response.Success = false;
+                    response.Message = $"Picture with id: {id} does not found";
+                    return BadRequest(response);
                 }
 
                 _pictureService.DeletePicture(existingPicture);
                 // After deleting Picture from database,remove file from directory.
                 _pictureService.DeleteFile(existingPicture.Name);
-                return NoContent();  // return 204
+                response.Success = true;
+                response.Message = "picture deleted successfully";
+                return Ok(response);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                response.Success = false;
+                response.Message = ex.Message;
+                response.Exception = ex;
+                return BadRequest(response);
             }
         }
 

@@ -2,13 +2,16 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mobi.Data.Domain.Employees;
+using Mobi.Data.Enums;
 using Mobi.Service.Employees;
 using Mobi.Service.Helpers;
+using Mobi.Service.Pictures;
 using Mobi.Web.Areas.Admin.Utilities;
 using Mobi.Web.Factories.Employees;
 using Mobi.Web.Models;
 using Mobi.Web.Models.APIModels;
 using Mobi.Web.Models.Employees;
+using Newtonsoft.Json.Linq;
 
 namespace Mobi.Web.Areas.Admin.Controllers
 {
@@ -18,13 +21,15 @@ namespace Mobi.Web.Areas.Admin.Controllers
         private readonly IEmployeeService _employeeService;
         private readonly IEmployeeFactory _employeeFactory;
         private readonly JwtTokenHelper _jwtTokenHelper;
+        private readonly IPictureService _pictureService;
 
         public EmployeeAPIController(IEmployeeService employeeService, IEmployeeFactory employeeFactory,
-            JwtTokenHelper jwtTokenHelper)
+            JwtTokenHelper jwtTokenHelper, IPictureService pictureService)
         {
             _employeeService = employeeService;
             _employeeFactory = employeeFactory;
             _jwtTokenHelper = jwtTokenHelper;
+            _pictureService = pictureService;
         }
 
         [HttpPost]
@@ -43,7 +48,14 @@ namespace Mobi.Web.Areas.Admin.Controllers
                         return BadRequest(response);
                     }
 
-                    var employee = _employeeService.GetEmployeeByEmail(queryModel.Email.Trim());
+                    if (queryModel.CompanyId<=0)
+                    {
+                        response.Success = false;
+                        response.Message = "Company ID is required";
+                        return BadRequest(response);
+                    }
+
+                    var employee = _employeeService.GetEmployeeByEmail(queryModel.Email.Trim(), queryModel.CompanyId);
                     if (employee is null)
                     {
                         response.Success = false;
@@ -58,14 +70,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                         return BadRequest(response);
                     }
 
-                    //if (employee.CompanyId== queryModel.CompanyId)
-                    //{
-                    //    response.Success = false;
-                    //    response.Message = "Company Id is not matched";
-                    //    return BadRequest(response);  //OR return response
-                    //}
-
-                    if(queryModel.RequestType.ToLower() != "web")
+                    if (queryModel.RequestType.ToLower() != "web")
                     {
                         if (employee.DeviceId is null)
                         {
@@ -74,7 +79,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                             return BadRequest(response);  //OR return response
                         }
 
-                        if (employee.DeviceId != queryModel.DeviceId)
+                        if (!employee.DeviceId.Equals(queryModel.DeviceId, StringComparison.OrdinalIgnoreCase))
                         {
                             response.Success = false;
                             response.Message = "Account Device Id Not Match";
@@ -87,23 +92,28 @@ namespace Mobi.Web.Areas.Admin.Controllers
 
                     dynamic empObject = new ExpandoObject();
                     empObject.Id = employee.Id;
-                    empObject.CompanyId = employee.CompanyId;
-                    empObject.UserName = employee.UserName;
                     empObject.NameEng = employee.NameEng;
                     empObject.NameArabic = employee.NameArabic;
                     empObject.Status = employee.Status;
+                    empObject.CompanyId = employee.CompanyId;
+                    empObject.UserName = employee.UserName;
                     empObject.FileNumber = employee.FileNumber;
                     empObject.MobileNumber = employee.MobileNumber;
                     empObject.Email = employee.Email;
-                    //empObject.PhotoPath = employee.PhotoPath;
-                    empObject.UserName = employee.UserName;
-                    empObject.MobileType = employee.UserName;
-                    empObject.RegistrationType = employee.RegistrationType;
+                    empObject.MobileType = Enum.GetName((MobileType)employee.MobileType);
+                    empObject.RegistrationType = Enum.GetName((RegistrationType)employee.MobileType);
                     empObject.DeviceId = employee.DeviceId;
                     empObject.RegisterStatus=employee.RegisterStatus;
                     empObject.CID=employee.CID;
                     empObject.MobRegistrationDate=employee.MobRegistrationDate;
                     empObject.Token = token;
+
+                    var picture = _pictureService.GetPictureById(employee?.PictureId??0);
+                    if (picture is not null)
+                    {
+                        var url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/";
+                        empObject.Path = url + picture.Path;
+                    }
 
                     response.Success = true;
                     response.Message = "Login Successfully";
@@ -150,6 +160,13 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     return BadRequest(response);  //OR return response
                 }
 
+                if(employee.IsQrVerify)
+                {
+                    response.Success = false;
+                    response.Message = "QR code is already scanned";
+                    return BadRequest(response);  //OR return response
+                }
+
                 // update the employee for verify the QR code 
                 employee.IsQrVerify = true;
                 _employeeService.UpdateEmployee(employee);
@@ -159,6 +176,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                 empObject.CompanyId = employee.CompanyId;
                 empObject.UserName = employee.UserName;
                 empObject.FullName = employee.NameEng;
+                empObject.email = employee.Email;
 
                 response.Success = true;
                 response.Message = "Item retrieved successfully.";
@@ -174,48 +192,47 @@ namespace Mobi.Web.Areas.Admin.Controllers
             }
         }
 
-        [HttpPost]
-        [AllowAnonymous]
-        public IActionResult UploadPhoto(int langId, [FromBody] PhotoModel queryModel)
-        {
-            var response = new ResponseModel<List<Employee>>();
-            try
-            {
-                if (string.IsNullOrEmpty(queryModel.Profilebase64))
-                {
-                    response.Success = false;
-                    response.Message = "Base 64 is required";
-                    return BadRequest(response);
-                }
+        //[HttpPost]
+        //[AllowAnonymous]
+        //public IActionResult UploadPhoto(int langId, [FromBody] PhotoModel queryModel)
+        //{
+        //    var response = new ResponseModel<List<Employee>>();
+        //    try
+        //    {
+        //        if (string.IsNullOrEmpty(queryModel.Profilebase64))
+        //        {
+        //            response.Success = false;
+        //            response.Message = "Base 64 is required";
+        //            return BadRequest(response);
+        //        }
 
-                var employee = GetTokenEmployeeDetails;
-                if (employee is null)
-                {
-                    response.Success = false;
-                    response.Message = "Using QR code record are not found";
-                    return NotFound(response);  //OR return response
-                }
+        //        var employee = GetTokenEmployeeDetails;
+        //        if (employee is null)
+        //        {
+        //            response.Success = false;
+        //            response.Message = "Using QR code record are not found";
+        //            return NotFound(response);  //OR return response
+        //        }
 
-                //dynamic empObject = new object();
+        //        //dynamic empObject = new object();
 
-                //empObject.Id = employee.Id;
-                //empObject.CompanyId = employee.CompanyId;
-                //empObject.UserName = employee.UserName;
-                //empObject.Email = employee.Email;
+        //        //empObject.Id = employee.Id;
+        //        //empObject.CompanyId = employee.CompanyId;
+        //        //empObject.UserName = employee.UserName;
+        //        //empObject.Email = employee.Email;
 
-                response.Success = true;
-                response.Message = "Item retrieved successfully.";
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                response.Success = false;
-                response.Message = "Failure";
-                response.Exception = ex;
-                return StatusCode(500, response);  //OR return response
-            }
-
-        }
+        //        response.Success = true;
+        //        response.Message = "Item retrieved successfully.";
+        //        return Ok(response);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.Success = false;
+        //        response.Message = "Failure";
+        //        response.Exception = ex;
+        //        return StatusCode(500, response);  //OR return response
+        //    }
+        //}
 
         [HttpPost]
         [AllowAnonymous]
@@ -224,7 +241,6 @@ namespace Mobi.Web.Areas.Admin.Controllers
             var response = new ResponseModel<ExpandoObject>();
             try
             {
-
                 if (string.IsNullOrEmpty(empModel.Password))
                 {
                     response.Success = false;
@@ -241,11 +257,21 @@ namespace Mobi.Web.Areas.Admin.Controllers
                 }
 
                 employee.Password = PasswordHelper.HashPassword(empModel.Password);
-                _employeeService.UpdateEmployee(employee);
-
-                //employee.PhotoPath
 
                 dynamic empObject = new ExpandoObject();
+                //employee.PhotoPath
+                var picture = _pictureService.GetPictureById(empModel.PictureId);
+                if (picture is not null)
+                {
+                    employee.PictureId = empModel.PictureId;
+                    var url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/";
+                    empObject.Path = url + picture.Path;
+                }
+
+                _employeeService.UpdateEmployee(employee);
+
+               
+
                 empObject.Id = employee.Id;
                 empObject.CompanyId = employee.CompanyId;
                 empObject.UserName = employee.UserName;
@@ -264,7 +290,6 @@ namespace Mobi.Web.Areas.Admin.Controllers
             }
 
         }
-
         [HttpPost]
         [AllowAnonymous]
         public IActionResult SaveDeviceDetail(int langId, [FromBody] DeviceDetailModel queryModel)
@@ -272,7 +297,14 @@ namespace Mobi.Web.Areas.Admin.Controllers
             var response = new ResponseModel<ExpandoObject>();
             try
             {
-                var employee = GetTokenEmployeeDetails();
+                var employee = _employeeService.GetEmployeeById(queryModel.EmpId);
+                if (employee is null)
+                {
+                    response.Success = false;
+                    response.Message = "Using QR code record are not found";
+                    return BadRequest(response);  //OR return response
+                }
+
                 if (employee is null)
                 {
                     response.Success = false;
@@ -280,10 +312,33 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     return BadRequest(response);  //OR return response
                 }
 
+                if (string.IsNullOrEmpty(employee.DeviceId))
+                {
+                    var deviceExist = _employeeService.IsDeviceIdExists(queryModel.DeviceId);
+                    if (deviceExist)
+                    {
+                        response.Success = false;
+                        response.Message = "the given Device Id is already Exist with other employee";
+                        return BadRequest(response);
+                    }
+                }
+                else
+                {
+                    if (!employee.DeviceId.Equals(queryModel.DeviceId, StringComparison.OrdinalIgnoreCase))
+                    {
+                        response.Success = false;
+                        response.Message = "the given Device Id is not mapped with current employee ";
+                        return BadRequest(response);
+                    }
+                }
+
                 // update the employee 
                 employee.DeviceId = queryModel.DeviceId;
                 employee.MobileType = queryModel.MobileTypeId;
                 employee.MobRegistrationDate = DateTime.UtcNow;
+                employee.RegisterStatus=true;
+                employee.RegistrationType=(int)RegistrationType.Mobile;
+
                 _employeeService.UpdateEmployee(employee);
 
                 dynamic empObject = new ExpandoObject();
@@ -301,7 +356,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                 response.Success = false;
                 response.Message = "Failure";
                 response.Exception = ex;
-                return BadRequest( response);  //OR return response
+                return BadRequest(response);  //OR return response
             }
         }
 
@@ -336,6 +391,61 @@ namespace Mobi.Web.Areas.Admin.Controllers
             return employee;
         }
 
+        #region Sign / sign Out 
+
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult SignInOut(int langId, [FromBody] EmployeeAttendanceModel queryModel)
+        {
+            var response = new ResponseModel<ExpandoObject>();
+            try
+            {
+                //if (string.IsNullOrEmpty(queryModel.QrCode))
+                //{
+                //    response.Success = false;
+                //    response.Message = "Qr code text is required";
+                //    return BadRequest(response);
+                //}
+
+                //var employee = _employeeService.GetEmployeeByEmail(queryModel.QrCode);
+                //if (employee is null)
+                //{
+                //    response.Success = false;
+                //    response.Message = "Using QR code record are not found";
+                //    return BadRequest(response);  //OR return response
+                //}
+
+                //if (employee.IsQrVerify)
+                //{
+                //    response.Success = false;
+                //    response.Message = "QR code is already scanned";
+                //    return BadRequest(response);  //OR return response
+                //}
+
+                //// update the employee for verify the QR code 
+                //employee.IsQrVerify = true;
+                //_employeeService.UpdateEmployee(employee);
+
+                //dynamic empObject = new ExpandoObject();
+                //empObject.Id = employee.Id;
+                //empObject.CompanyId = employee.CompanyId;
+                //empObject.UserName = employee.UserName;
+                //empObject.FullName = employee.NameEng;
+
+                response.Success = true;
+                response.Message = "Item retrieved successfully.";
+                //response.Data = empObject;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+                response.Exception = ex;
+                return BadRequest(response);  //OR return response
+            }
+        }
+        #endregion
 
         #region My account / Change password
 

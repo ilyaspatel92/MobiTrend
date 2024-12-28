@@ -41,14 +41,27 @@ namespace Mobi.Service.Employees
 
         public bool IsEmailExists(string email)
         {
-            return _employeeRepository.GetAll().Any(e => e.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+            return _employeeRepository.GetAll().Any(e => e.Email is not null && e.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
         }
+
+        public bool IsDeviceIdExists(string deviceId)
+        {
+            return _employeeRepository.GetAll().Any(e => e.DeviceId is not null && e.DeviceId.Equals(deviceId, StringComparison.OrdinalIgnoreCase));
+        }
+
 
         public Employee GetEmployeeByEmail(string email)
         {
             return _employeeRepository
                 .GetAll()
                 .FirstOrDefault(e => e.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public Employee GetEmployeeByEmail(string email, int companyId)
+        {
+            return _employeeRepository
+                .GetAll()
+                .FirstOrDefault(e => e.Email.Equals(email, StringComparison.OrdinalIgnoreCase) && e.CompanyId==companyId);
         }
 
         public IList<Employee> GetEmployeeByName(string name)
