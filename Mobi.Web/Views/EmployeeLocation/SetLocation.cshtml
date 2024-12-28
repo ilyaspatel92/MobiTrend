@@ -1,0 +1,215 @@
+﻿@{
+    ViewData["Title"] = "Employee Locations";
+}
+<div class="card card-info card-outline mb-4 mx-3 custom-top-spacing">
+    <!-- Header Section -->
+    <div class="card-header bg-white py-3 border-bottom">
+        <div class="d-flex justify-content-between align-items-center">
+            <!-- Title -->
+            <h5 class="fw-bold mb-0">Set Employee Locations</h5>
+        </div>
+            <!-- begin::Card Body -->
+            <div class="card-body">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label for="employeeName" class="form-label">Employee Name</label>
+                        <div class="input-group position-relative">
+                            <input type="text" id="employeeName" class="form-control" placeholder="Search Employee Name" autocomplete="off">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                            </div>
+                        </div>
+                        <ul id="autocomplete-results" class="list-group position-absolute w-100" style="max-height: 200px; overflow-y: auto; z-index: 1000; display: none; left: 0;"></ul>
+                    </div>
+
+                    <!-- Employee ID -->
+                    <div class="col-md-6">
+                        <label for="employeeId" class="form-label">Employee ID</label>
+                        <input type="text" id="employeeId" class="form-control" readonly>
+                    </div>
+                </div> 
+
+                <div class="row g-4">
+                    <div class="col">
+                        <label class="form-label">Select Locations</label>
+                        <div class="d-flex justify-content-between mb-2">
+                            <div>
+                                <input type="checkbox" id="selectAll">
+                                <label for="selectAll" class="form-check-label">Select All</label>
+                            </div>
+                        </div>
+                        <div id="locationList" class="border p-3" style="max-height: 300px; overflow-y: auto;">
+                            <!-- Dynamic location checkboxes will render here -->
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- end::Card Body -->
+            <!-- begin::Card Footer -->
+            <div class="card-footer d-flex justify-content-end">
+                <button id="saveButton" class="btn btn-primary px-4">Save</button>
+            </div> <!-- end::Card Footer -->
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const employeeNameInput = document.getElementById("employeeName");
+        const employeeIdInput = document.getElementById("employeeId");
+        const autocompleteResults = document.getElementById("autocomplete-results");
+
+        let typingTimer; // Timer to handle debounce
+        const typingInterval = 500; // Wait 500ms after typing stops
+
+        // Initialize autocomplete for employee name
+        employeeNameInput.addEventListener("input", function () {
+            const query = employeeNameInput.value.trim();
+            if (query.length >= 2) {
+                clearTimeout(typingTimer);
+                typingTimer = setTimeout(function () {
+                    fetch(`/EmployeeLocation/GetEmployeeSuggestions?term=${query}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            showAutocompleteResults(data);
+                        })
+                        .catch(error => {
+                            console.error("Error fetching employee suggestions:", error);
+                        });
+                }, typingInterval);
+            } else {
+                autocompleteResults.style.display = "none";
+            }
+        });
+
+        // Show autocomplete suggestions
+        function showAutocompleteResults(employees) {
+            autocompleteResults.innerHTML = ""; // Clear previous suggestions
+            if (employees.length === 0) {
+                autocompleteResults.style.display = "none";
+                return;
+            }
+
+            employees.forEach(employee => {
+                const li = document.createElement("li");
+                li.classList.add("list-group-item", "cursor-pointer");
+                li.textContent = employee.label;
+                li.addEventListener("click", function () {
+                    selectEmployee(employee);
+                });
+                autocompleteResults.appendChild(li);
+            });
+
+            // Position and show the dropdown
+            const rect = employeeNameInput.getBoundingClientRect();
+            autocompleteResults.style.left = `${rect.left}px`; // Align to left of input
+            autocompleteResults.style.top = `${rect.bottom}px`; // Position below the input
+            autocompleteResults.style.width = `${employeeNameInput.offsetWidth}px`; // Match input width
+            autocompleteResults.style.display = "block"; // Show results
+        }
+
+        // Handle employee selection from the autocomplete results
+        function selectEmployee(employee) {
+            employeeNameInput.value = employee.label; // Set employee name
+            employeeIdInput.value = employee.id; // Set employee ID
+
+            // Load locations for the selected employee
+            loadLocations(employee.id);
+
+            // Hide the autocomplete dropdown after selection
+            autocompleteResults.style.display = "none";
+        }
+
+        // Load Locations by Employee ID
+        function loadLocations(employeeId) {
+            fetch(`/EmployeeLocation/GetLocationsByEmployeeId?employeeId=${employeeId}`)
+                .then(response => response.json())
+                .then(locations => {
+                    renderLocationList(locations);
+                })
+                .catch(error => {
+                    alert("Error loading locations.");
+                });
+        }
+
+        // Render locations as checkboxes
+        function renderLocationList(locations) {
+            const locationList = document.getElementById("locationList");
+            locationList.innerHTML = ""; // Clear previous locations
+
+            if (locations.length === 0) {
+                locationList.innerHTML = "<p>No locations available for this employee.</p>";
+                return;
+            }
+
+            locations.forEach(location => {
+                console.log(location);
+                const checkboxDiv = document.createElement("div");
+                checkboxDiv.classList.add("form-check");
+
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.classList.add("form-check-input", "location-checkbox");
+                checkbox.value = location.id;
+                checkbox.id = `location-${location.id}`;
+                checkbox.checked = location.isSelected;
+                const label = document.createElement("label");
+                label.classList.add("form-check-label");
+                label.setAttribute("for", `location-${location.id}`);
+                label.textContent = location.name;
+
+                checkboxDiv.appendChild(checkbox);
+                checkboxDiv.appendChild(label);
+
+                locationList.appendChild(checkboxDiv);
+            });
+
+            // Handle Select All functionality
+            const selectAll = document.getElementById("selectAll");
+            selectAll.addEventListener("change", function () {
+                const checkboxes = document.querySelectorAll(".location-checkbox");
+                checkboxes.forEach(checkbox => checkbox.checked = selectAll.checked);
+            });
+        }
+
+        // Save selected locations
+        const saveButton = document.getElementById("saveButton");
+        saveButton.addEventListener("click", function () {
+            const employeeId = employeeIdInput.value;
+
+            // Collect selected location IDs
+            const selectedLocations = Array.from(document.querySelectorAll(".location-checkbox:checked"))
+                .map(checkbox => checkbox.value);  // Get location IDs from checked checkboxes
+
+            if (!employeeId) {
+                alert("Please select an employee.");
+                return;
+            }
+
+            if (selectedLocations.length === 0) {
+                alert("Please select at least one location.");
+                return;
+            }
+
+            // Send the selected locations and employee ID to the server
+            fetch("/EmployeeLocation/SaveEmployeeLocations", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    employeeId: employeeId,         // Send employee ID
+                    locationIds: selectedLocations  // Send the array of selected location IDs
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Locations saved successfully!");
+                } else {
+                    alert("Error saving locations.");
+                }
+            })
+            .catch(error => {
+                alert("Error saving locations.");
+            });
+        });
+    });
+</script>

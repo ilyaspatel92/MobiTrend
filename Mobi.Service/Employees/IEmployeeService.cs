@@ -12,6 +12,7 @@ namespace Mobi.Service.Employees
         bool IsEmailExists(string email);
         Employee GetEmployeeByEmail(string email);
         Employee GetCurrentEmployee(string token);
+        IList<Employee> GetEmployeeByName(string name);
     }
 }
 

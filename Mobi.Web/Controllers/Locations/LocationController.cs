@@ -154,9 +154,9 @@ namespace Mobi.Web.Controllers.Locations
                 return NotFound();
             }
 
-            var locationModel = _locationFactory.PrepareLocationViewModel(location);
+            _locationService.RemoveLocation(location);
 
-            return View(locationModel);
+            return RedirectToAction(nameof(List));
         }
 
         public IActionResult Details(int id)
