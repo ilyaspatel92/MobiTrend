@@ -368,6 +368,37 @@ namespace Mobi.Web.Areas.Admin.Controllers
             var employee = _employeeService.GetCurrentEmployee(token);
             try
             {
+                if (employee is null)
+                {
+                    response.Success = false;
+                    response.Message = "Using employeeEmail record are not found";
+                    return BadRequest(response);  //OR return response
+                }
+
+                dynamic empObject = new ExpandoObject();
+                empObject.Id = employee.Id;
+                empObject.NameEng = employee.NameEng;
+                empObject.NameArabic = employee.NameArabic;
+                empObject.Status = employee.Status;
+                empObject.CompanyId = employee.CompanyId;
+                empObject.UserName = employee.UserName;
+                empObject.FileNumber = employee.FileNumber;
+                empObject.MobileNumber = employee.MobileNumber;
+                empObject.Email = employee.Email;
+                empObject.MobileType = Enum.GetName((MobileType)employee.MobileType);
+                empObject.RegistrationType = Enum.GetName((RegistrationType)employee.MobileType);
+                empObject.DeviceId = employee.DeviceId;
+                empObject.RegisterStatus = employee.RegisterStatus;
+                empObject.CID = employee.CID;
+                empObject.MobRegistrationDate = employee.MobRegistrationDate;
+                empObject.Token = token;
+
+                var picture = _pictureService.GetPictureById(employee?.PictureId ?? 0);
+                if (picture is not null)
+                {
+                    var url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/";
+                    empObject.Path = url + picture.Path;
+                }
 
                 response.Success = true;
                 response.Message = "success";
