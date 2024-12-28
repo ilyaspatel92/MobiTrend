@@ -20,6 +20,7 @@ public class ApplicationContext : DbContext
     public DbSet<LocationBeaconMapping> LocationBeaconMapping { get; set; }
     public DbSet<Language> Language { get; set; }
     public DbSet<LocaleStringResource> LocaleStringResource { get; set; }
+    public DbSet<Picture> Picture { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -30,33 +31,43 @@ public class ApplicationContext : DbContext
         new CompanysMap(modelBuilder.Entity<Company>());
         new SystemUsersMap(modelBuilder.Entity<SystemUsers>());
         new EmployeeMap(modelBuilder.Entity<Employee>());
+        new LocationMap(modelBuilder.Entity<Location>());
+        new LocationBeaconMappingMap(modelBuilder.Entity<LocationBeaconMapping>());
         new EmployeeAttendanceLogsMap(modelBuilder.Entity<EmployeeAttendanceLogs>());
         new SystemUserAuthorityMappingMap(modelBuilder.Entity<SystemUserAuthorityMapping>());
         new EmployeeLocationMap(modelBuilder.Entity<EmployeeLocation>());
-        new LocationMap(modelBuilder.Entity<Location>());
-        new LocationBeaconMappingMap(modelBuilder.Entity<LocationBeaconMapping>());
         new LanguageMap(modelBuilder.Entity<Language>());
         new LocaleStringResourceMap(modelBuilder.Entity<LocaleStringResource>());
+        new PictureMap(modelBuilder.Entity<Picture>());
 
+        modelBuilder.Entity<Company>().HasData(
+           new Company
+           {
+               Id=1,
+               CompanyName="Mobi",
+               CompanyId="1",
+               CreatedDate= DateTime.Now
+           }
+        );
         // Seed data for Language
         modelBuilder.Entity<Language>().HasData(
-            new Language
-            {
-                Id = 1,
-                LanguageName = "English",
-                UniqueSeoCode = "en",
-                Published = true,
-                DisplayOrder = 1
-            },
-            new Language
-            {
-                Id = 2,
-                LanguageName = "Arabic",
-                UniqueSeoCode = "ar",
-                Published = true,
-                DisplayOrder = 2
-            }
-        );
+             new Language
+             {
+                 Id = 1,
+                 LanguageName = "English",
+                 UniqueSeoCode = "en",
+                 Published = true,
+                 DisplayOrder = 1
+             },
+             new Language
+             {
+                 Id = 2,
+                 LanguageName = "Arabic",
+                 UniqueSeoCode = "ar",
+                 Published = true,
+                 DisplayOrder = 2
+             }
+         );
 
         // Seed data for LocaleStringResource
         modelBuilder.Entity<LocaleStringResource>().HasData(

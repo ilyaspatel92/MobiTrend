@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Mobi.Data.Domain;
 using Mobi.Service.Locations;
 using Mobi.Web.Factories.Locations;
@@ -19,7 +18,7 @@ namespace Mobi.Web.Controllers.Locations
         }
 
         [HttpGet]
-        public IActionResult List(string name, int? id)
+        public IActionResult List(string name, bool? status)
         {
             var locations = _locationService.GetAllLocations();
 
@@ -29,9 +28,9 @@ namespace Mobi.Web.Controllers.Locations
                                                  l.LocationNameArabic.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
-            if (id.HasValue)
+            if (status.HasValue)
             {
-                locations = locations.Where(l => l.Id == id.Value).ToList();
+                locations = locations.Where(l => l.Status == status.Value).ToList();
             }
 
             var locationViewModels = _locationFactory.PrepareLocationViewModels(locations);
@@ -40,7 +39,7 @@ namespace Mobi.Web.Controllers.Locations
         }
 
         [HttpGet]
-        public IActionResult GetLocations(string name, int? id)
+        public IActionResult GetLocations(string name, bool? status)
         {
             var locations = _locationService.GetAllLocations();
 
@@ -50,19 +49,19 @@ namespace Mobi.Web.Controllers.Locations
                                                  l.LocationNameArabic.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
-            if (id.HasValue)
+            if (status.HasValue)
             {
-                locations = locations.Where(l => l.Id == id.Value).ToList();
+                locations = locations.Where(l => l.Status == status.Value).ToList();
             }
 
             var locationViewModels = _locationFactory.PrepareLocationViewModels(locations);
 
             return Json(new
             {
-                draw = Request.Query["draw"], // DataTables 'draw' parameter
-                recordsTotal = locations.Count(), // Total records before filtering
-                recordsFiltered = locations.Count(), // Filtered records after applying search
-                data = locationViewModels // The filtered data
+                draw = Request.Query["draw"],
+                recordsTotal = locations.Count(),
+                recordsFiltered = locations.Count(),
+                data = locationViewModels
             });
         }
         public IActionResult Create()
@@ -81,8 +80,7 @@ namespace Mobi.Web.Controllers.Locations
                     LocationNameEnglish = model.LocationNameEnglish,
                     LocationNameArabic = model.LocationNameArabic,
                     Status = model.Status,
-                    BeaconProof = model.IsBeaconProofSelected,
-                    GPSProof = model.IsGPSProofSelected,
+                    ProofType = model.ProofType,
                     Latitude = model.Latitude,
                     Longitude = model.Longitude,
                     SetRadius = model.SetRadius,
@@ -132,8 +130,7 @@ namespace Mobi.Web.Controllers.Locations
                 existingLocation.LocationNameEnglish = model.LocationNameEnglish;
                 existingLocation.LocationNameArabic = model.LocationNameArabic;
                 existingLocation.Status = model.Status;
-                existingLocation.BeaconProof = model.IsBeaconProofSelected;
-                existingLocation.GPSProof = model.IsGPSProofSelected;
+                existingLocation.ProofType = model.ProofType;
                 existingLocation.Latitude = model.Latitude;
                 existingLocation.Longitude = model.Longitude;
                 existingLocation.SetRadius = model.SetRadius;
@@ -147,6 +144,8 @@ namespace Mobi.Web.Controllers.Locations
             return View(model);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
             var location = _locationService.GetLocationById(id);
@@ -155,22 +154,8 @@ namespace Mobi.Web.Controllers.Locations
                 return NotFound();
             }
 
-            var locationModel = _locationFactory.PrepareLocationViewModel(location);
-
-            return View(locationModel);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
-        {
-            var location = _locationService.GetLocationById(id);
-            if (location == null)
-            {
-                return NotFound();
-            }
-
             _locationService.RemoveLocation(location);
+
             return RedirectToAction(nameof(List));
         }
 

@@ -8,14 +8,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Mobi.Repository;
 using Mobi.Repository.Migrations;
+using Mobi.Service.Compnay;
+using Mobi.Service.EmployeeLocationServices;
 using Mobi.Service.Employees;
 using Mobi.Service.Factories;
 using Mobi.Service.Helpers;
 using Mobi.Service.LocationBeaconMappings;
 using Mobi.Service.LocationBeacons;
 using Mobi.Service.Locations;
+using Mobi.Service.Pictures;
 using Mobi.Service.ResourceService;
 using Mobi.Service.SystemUser;
+using Mobi.Web.Areas.Admin.Factories;
 using Mobi.Web.Areas.Admin.Utilities;
 using Mobi.Web.Factories.Employees;
 using Mobi.Web.Factories.LocationBeacons;
@@ -201,12 +205,17 @@ namespace Mobi.Web
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IResourceService, ResourceService>();
             services.AddScoped<ILocationBeaconService, LocationBeaconService>();
+            services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<IPictureService, PictureService>();
+            services.AddScoped<IEmployeeLocationService, EmployeeLocationService>();
 
             // Register Factories
             services.AddScoped<ISystemUserFactory, SystemUserFactory>();
             services.AddScoped<IEmployeeFactory, EmployeeFactory>();
             services.AddScoped<ILocationFactory, LocationFactory>();
             services.AddScoped<ILocationBeaconFactory, LocationBeaconFactory>();
+            services.AddScoped<IBeaconLocationFactory, BeaconLocationFactory>();
+            
             // Add memory cache service
             services.AddMemoryCache();
             // Register Helpers

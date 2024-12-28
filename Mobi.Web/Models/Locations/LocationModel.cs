@@ -13,6 +13,9 @@ namespace Mobi.Web.Models.Locations
 
         public bool Status { get; set; }
 
+        public int ProofType { get; set; }
+        public string ProofTypeName { get; set; }
+
         //[Required(ErrorMessage = "Latitude is required.")]
         public decimal Latitude { get; set; }
 
@@ -24,8 +27,7 @@ namespace Mobi.Web.Models.Locations
         public int CompanyId { get; set; }
         public DateTime CreatedDate { get; set; }
 
-        public bool IsGPSProofSelected { get; set; }
-        public bool IsBeaconProofSelected { get; set; }
+        
 
     }
 }

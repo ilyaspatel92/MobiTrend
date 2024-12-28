@@ -20,8 +20,9 @@ namespace Mobi.Web.Models.Employees
         [StringLength(50, ErrorMessage = "File Number cannot exceed 50 characters.")]
         public string FileNumber { get; set; }
 
-        [Required(ErrorMessage = "Mobile Number is required.")]
-        [Phone(ErrorMessage = "Please provide a valid mobile number.")]
+        [Required(ErrorMessage = "Please Enter Mobile Number.")]        
+        [RegularExpression(@"^\d{8}$", ErrorMessage = "Please provide a valid mobile number.")]
+
         public string MobileNumber { get; set; }
 
         [Required(ErrorMessage = "Email is required.")]
@@ -32,8 +33,13 @@ namespace Mobi.Web.Models.Employees
         
         public string PhotoPath { get; set; }
 
-        [Required(ErrorMessage = "Password is required.")]
-        [StringLength(50, MinimumLength = 6, ErrorMessage = "Password must be between 6 and 50 characters.")]
+        [Required(ErrorMessage = "Cid is required.")]
+        [RegularExpression(@"^\d{12}$", ErrorMessage = "CID Should have 12 characters.")]
+        public string CID { get; set; }
+
+
+        //[Required(ErrorMessage = "Password is required.")]
+        //[StringLength(50, MinimumLength = 6, ErrorMessage = "Password must be between 6 and 50 characters.")]
         public string Password { get; set; }
 
         public int MobileType { get; set; }
@@ -42,7 +48,7 @@ namespace Mobi.Web.Models.Employees
         public string DeviceId { get; set; }
 
         public bool RegisterStatus { get; set; }
-        public string CompanyId { get; set; }
+        public int CompanyId { get; set; }
 
         public DateTime CreatedDate { get; set; }
 

@@ -22,8 +22,8 @@ namespace Mobi.Web.Factories.Employees
                 FileNumber = employee.FileNumber,
                 MobileNumber = employee.MobileNumber,
                 Email = employee.Email,
-                PhotoPath = employee.PhotoPath,
-                Password = employee.Password, // Map the password for initial creation or edit
+                PhotoPath = "",
+                Password = employee.Password,
                 MobileType = employee.MobileType,
                 DeviceId = employee.DeviceId,
                 RegistrationVia = employee.RegistrationType,

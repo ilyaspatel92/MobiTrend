@@ -1,283 +1,117 @@
 ﻿@model LocationModel
+
 <form asp-action="Create" method="post" class="needs-validation" novalidate>
-	<div class="card card-info card-outline mb-4">
-		<div class="card-header">
-			<div class="d-flex justify-content-between align-items-center">
-				<!-- Add Location Title on the Left -->
-				<h4 class="card-title mb-0">Add Location</h4>
+    <div class="card card-info card-outline mb-4">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <!-- Add Location Title on the Left -->
+                <h4 class="card-title mb-0">Add Location</h4>
 
-				<!-- Buttons (Back to List & Save Location) on the Right -->
-				<div class="d-flex">
-					<!-- Back to List Button -->
-					<a href="@Url.Action("List", "Location")" class="btn btn-secondary">
-						<i class="fas fa-arrow-left"></i>  Back to List
-					</a>
-					<button type="submit" class="btn btn-primary" id="saveLocationButton">
-						Save Location
-					</button>
-				</div>
-			</div>
-		</div>
-		<div class="card-body">
-			<div class="row g-3">
-				<!-- Location Name (English) -->
-				<div class="col-md-6">
-					<label asp-for="LocationNameEnglish" class="form-label">Location Name (English)</label>
-					<input asp-for="LocationNameEnglish" class="form-control" placeholder="Enter Location Name (English)" required>
-					<span asp-validation-for="LocationNameEnglish" class="text-danger"></span>
-				</div>
+                <!-- Buttons (Back to List & Save Location) on the Right -->
+                <div class="d-flex">
+                    <!-- Back to List Button -->
+                    <a href="@Url.Action("List", "Location")" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                    <button type="submit" class="btn btn-primary" id="saveLocationButton">
+                        Save Location
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <!-- Location Name (English) -->
+                <div class="col-md-6">
+                    <label asp-for="LocationNameEnglish" class="form-label">Location Name (English)</label>
+                    <input asp-for="LocationNameEnglish" class="form-control" placeholder="Enter Location Name (English)" required>
+                    <span asp-validation-for="LocationNameEnglish" class="text-danger"></span>
+                </div>
 
-				<!-- Location Name (Arabic) -->
-				<div class="col-md-6">
-					<label asp-for="LocationNameArabic" class="form-label">Location Name (Arabic)</label>
-					<input asp-for="LocationNameArabic" class="form-control" placeholder="Enter Location Name (Arabic)">
-					<span asp-validation-for="LocationNameArabic" class="text-danger"></span>
-				</div>
+                <!-- Location Name (Arabic) -->
+                <div class="col-md-6">
+                    <label asp-for="LocationNameArabic" class="form-label">Location Name (Arabic)</label>
+                    <input asp-for="LocationNameArabic" class="form-control" placeholder="Enter Location Name (Arabic)">
+                    <span asp-validation-for="LocationNameArabic" class="text-danger"></span>
+                </div>
 
-				<!-- Status -->
-				<div class="col-md-6">
-					<label asp-for="Status" class="form-label">Status</label>
-					<select asp-for="Status" class="form-select" required>
-						<option value="true" selected>Active</option>
-						<option value="false">Inactive</option>
-					</select>
-					<span asp-validation-for="Status" class="text-danger"></span>
-				</div>
-			</div>
+                <!-- Status -->
+                <div class="col-md-6">
+                    <label asp-for="Status" class="form-label">Status</label>
+                    <select asp-for="Status" class="form-select" required>
+                        <option value="true" selected>Active</option>
+                        <option value="false">Inactive</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+            </div>
 
-			<!-- Proof Type (Checkboxes) -->
-			<div class="form-group mb-4">
-				<label>Proof Type</label>
-				<div>
-					<!-- GPS Proof Checkbox -->
-					<input id="gpsProofCheckbox" type="checkbox" class="form-check-input" />
-					<label for="gpsProofCheckbox" class="form-check-label">GPS Proof</label>
+            <!-- Proof Type (Radio Buttons) -->
+            <div class="form-group mb-4">
+                <label>Proof Type</label>
+                <div>
+                    <!-- GPS Proof Radio Button (default selected) -->
+                    <input id="gpsProofRadio" name="proofType" type="radio" class="form-check-input" value="1" checked />
+                    <label for="gpsProofRadio" class="form-check-label">GPS Proof</label>
 
-					<!-- Beacon Proof Checkbox -->
-					<input id="beaconProofCheckbox" type="checkbox" class="form-check-input ms-3" />
-					<label for="beaconProofCheckbox" class="form-check-label">Beacon Proof</label>
-				</div>
-			</div>
+                    <!-- Beacon Proof Radio Button -->
+                    <input id="beaconProofRadio" name="proofType" type="radio" class="form-check-input ms-3" value="2" />
+                    <label for="beaconProofRadio" class="form-check-label">Beacon Proof</label>
+                </div>
+            </div>
 
-			<!-- Collapsible Section for GPS Proof -->
-			<div id="gpsProofSection" class="collapse mt-3">
-				<h4>Map Coordination</h4>
-				<p>
-					You need to save the location before you can add beacon for this location.
-				</p>
-			</div>
+            <!-- Collapsible Section for GPS Proof -->
+            <div id="gpsProofSection" class="collapse mt-3 show">
+                <h4>Map Coordination</h4>
+                <p>
+                    You need to save the location before you can add beacon for this location.
+                </p>
+            </div>
 
-			<!-- Collapsible Section for Beacon Proof -->
-			<div id="beaconProofSection" class="collapse mt-3">
-				<h4>Beacon List</h4>
-				<p>You need to save the location before you can add beacon for this location.</p>
-			</div>
-		</div>
+            <!-- Collapsible Section for Beacon Proof -->
+            <div id="beaconProofSection" class="collapse mt-3">
+                <h4>Beacon List</h4>
+                <p>You need to save the location before you can add beacon for this location.</p>
+            </div>
+        </div>
+    </div>
 </form>
-</div>
 
 @section Scripts {
-	<!-- JavaScript to control the visibility of collapsibles based on checkbox -->
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			const gpsCheckbox = document.getElementById("gpsProofCheckbox");
-			const beaconCheckbox = document.getElementById("beaconProofCheckbox");
-			const gpsSection = document.getElementById("gpsProofSection");
-			const beaconSection = document.getElementById("beaconProofSection");
+    <!-- JavaScript to control the visibility of collapsibles based on radio button -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const gpsRadio = document.getElementById("gpsProofRadio");
+            const beaconRadio = document.getElementById("beaconProofRadio");
+            const gpsSection = document.getElementById("gpsProofSection");
+            const beaconSection = document.getElementById("beaconProofSection");
 
-			// Initialize Bootstrap Collapse for each section
-			const gpsCollapse = new bootstrap.Collapse(gpsSection, { toggle: false });
-			const beaconCollapse = new bootstrap.Collapse(beaconSection, { toggle: false });
+            // Initialize Bootstrap Collapse for each section
+            const gpsCollapse = new bootstrap.Collapse(gpsSection, { toggle: false });
+            const beaconCollapse = new bootstrap.Collapse(beaconSection, { toggle: false });
 
-			// Toggle GPS Proof Section
-			gpsCheckbox.addEventListener("change", function () {
-				if (gpsCheckbox.checked) {
-					gpsCollapse.show(); // Show GPS section
-				} else {
-					gpsCollapse.hide(); // Hide GPS section
-				}
-			});
+            // Toggle GPS Proof Section
+            gpsRadio.addEventListener("change", function () {
+                if (gpsRadio.checked) {
+                    gpsCollapse.show(); // Show GPS section
+                    beaconCollapse.hide(); // Hide Beacon section
+                }
+            });
 
-			// Toggle Beacon Proof Section
-			beaconCheckbox.addEventListener("change", function () {
-				if (beaconCheckbox.checked) {
-					beaconCollapse.show(); // Show Beacon section
-				} else {
-					beaconCollapse.hide(); // Hide Beacon section
-				}
-			});
-		});
+            // Toggle Beacon Proof Section
+            beaconRadio.addEventListener("change", function () {
+                if (beaconRadio.checked) {
+                    beaconCollapse.show(); // Show Beacon section
+                    gpsCollapse.hide(); // Hide GPS section
+                }
+            });
 
-		// Initialize Google Maps if needed
-		function initMap() {
-			const map = new google.maps.Map(document.getElementById("map"), {
-				center: { lat: 40.7128, lng: -74.0060 }, // New York Coordinates as default
-				zoom: 12
-			});
-		}
-	</script>
-
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			const tableBody = document.querySelector("#beaconListTable tbody");
-			const addNewBeaconBtn = document.getElementById("addNewBeacon");
-
-			// Load existing beacons on page load
-			loadBeaconList();
-
-			// Add New Beacon Row
-			addNewBeaconBtn.addEventListener("click", function () {
-				const newRow = document.createElement("tr");
-				newRow.innerHTML = `
-					<td><input type="text" class="form-control" placeholder="Enter Beacon Name"></td>
-					<td><input type="text" class="form-control" placeholder="Enter UUID"></td>
-					<td>
-						<select class="form-select">
-							<option value="true">Active</option>
-							<option value="false">Inactive</option>
-						</select>
-					</td>
-					<td>
-						<button type="button" class="btn btn-primary saveBeacon">Save</button>
-						<button type="button" class="btn btn-danger deleteBeacon ms-2">Cancel</button>
-					</td>
-				`;
-				tableBody.appendChild(newRow);
-
-				// Attach Save and Cancel functionality to the new row
-				attachRowEventListeners(newRow);
-			});
-
-			// Attach Save and Cancel functionality to the row
-			function attachRowEventListeners(row) {
-				const saveBtn = row.querySelector(".saveBeacon");
-				const deleteBtn = row.querySelector(".deleteBeacon");
-
-				// Save Beacon
-				saveBtn.addEventListener("click", function () {
-					const inputs = row.querySelectorAll("input");
-					const select = row.querySelector("select");
-					let isValid = true;
-
-					// Validate inputs
-					inputs.forEach(input => {
-						if (!input.value.trim()) {
-							isValid = false;
-							input.classList.add("is-invalid");
-						} else {
-							input.classList.remove("is-invalid");
-						}
-					});
-
-					if (isValid) {
-						const data = {
-							beaconName: inputs[0].value.trim(),
-							uuid: inputs[1].value.trim(),
-							status: select.value === "true",
-						};
-
-						// AJAX Call to Save Beacon
-						$.ajax({
-							url: '/LocationBeacon/SaveBeacon', // Replace with your controller action
-							method: 'POST',
-							contentType: 'application/json',
-							data: JSON.stringify(data),
-							success: function (response) {
-								// Replace the editable row with the saved data row
-								row.innerHTML = `
-									<td>${response.beaconName}</td>
-									<td>${response.uuid}</td>
-									<td>${response.status ? "Active" : "Inactive"}</td>
-									<td>
-										<button type="button" class="btn btn-warning editBeacon">Edit</button>
-										<button type="button" class="btn btn-danger deleteBeacon ms-2">Delete</button>
-									</td>
-								`;
-
-								attachRowEventListeners(row); // Reattach listeners for Edit/Delete
-							},
-							error: function (error) {
-								console.error("Error saving beacon:", error);
-								alert("Failed to save the beacon. Please try again.");
-							},
-						});
-					}
-				});
-
-				// Cancel/Remove Row
-				deleteBtn.addEventListener("click", function () {
-					row.remove();
-				});
-			}
-
-			// Inline Edit Functionality
-			tableBody.addEventListener("click", function (event) {
-				const target = event.target;
-
-				if (target.classList.contains("editBeacon")) {
-					const row = target.closest("tr");
-					const cells = row.querySelectorAll("td");
-
-					// Convert row to editable fields
-					const beaconName = cells[0].textContent.trim();
-					const uuid = cells[1].textContent.trim();
-					const status = cells[2].textContent.trim() === "Active";
-
-					row.innerHTML = `
-						<td><input type="text" class="form-control" value="${beaconName}"></td>
-						<td><input type="text" class="form-control" value="${uuid}"></td>
-						<td>
-							<select class="form-select">
-								<option value="true" ${status ? "selected" : ""}>Active</option>
-								<option value="false" ${!status ? "selected" : ""}>Inactive</option>
-							</select>
-						</td>
-						<td>
-							<button type="button" class="btn btn-primary saveBeacon">Save</button>
-							<button type="button" class="btn btn-danger deleteBeacon ms-2">Cancel</button>
-						</td>
-					`;
-
-					attachRowEventListeners(row); // Reattach listeners for Save/Delete
-				}
-			});
-
-			// Load Beacon List from the Server
-			function loadBeaconList() {
-				$.ajax({
-					url: '/LocationBeacon/GetBeaconList', // Replace with your controller action
-					method: 'GET',
-					success: function (response) {
-						tableBody.innerHTML = ''; // Clear existing rows
-
-						response.forEach(beacon => {
-							const row = document.createElement("tr");
-							row.innerHTML = `
-								<td>${beacon.beaconName}</td>
-								<td>${beacon.uuid}</td>
-								<td>${beacon.status ? "Active" : "Inactive"}</td>
-								<td>
-									<button type="button" class="btn btn-warning editBeacon">Edit</button>
-									<button type="button" class="btn btn-danger deleteBeacon ms-2">Delete</button>
-								</td>
-							`;
-							tableBody.appendChild(row);
-						});
-
-						// Attach Edit/Delete functionality to loaded rows
-						tableBody.querySelectorAll("tr").forEach(row => attachRowEventListeners(row));
-					},
-					error: function (error) {
-						console.error("Error loading beacon list:", error);
-						alert("Failed to load beacon list. Please try again.");
-					},
-				});
-			}
-		});
-
-	</script>
-
-
-	<!-- Include Google Maps API -->
-	<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+            // Set the default radio button selection if none are selected
+            if (gpsRadio.checked) {
+                gpsCollapse.show();
+            } else if (beaconRadio.checked) {
+                beaconCollapse.show();
+            }
+        });
+    </script>
 }

@@ -1,6 +1,6 @@
 ﻿@model LocationModel
 
-<form asp-action="Create" method="post" class="needs-validation" novalidate>
+<form asp-action="Edit" method="post" class="needs-validation" novalidate>
     <div class="card card-info card-outline mb-4">
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
@@ -42,17 +42,17 @@
                 </div>
             </div>
 
-            <!-- Proof Type (Checkboxes) -->
+            <!-- Proof Type (Radio Buttons) -->
             <div class="form-group mb-4">
                 <label>Proof Type</label>
                 <div>
-                    <!-- GPS Proof Checkbox -->
-                    <input id="gpsProofCheckbox" type="checkbox" class="form-check-input" />
-                    <label for="gpsProofCheckbox" class="form-check-label">GPS Proof</label>
+                    <!-- GPS Proof Radio Button -->
+                    <input id="gpsProofRadio" type="radio" name="ProofType" value="2" class="form-check-input" @(Model.ProofType == (int)ProofType.GPS ? "checked" : "") />
+                    <label for="gpsProofRadio" class="form-check-label">GPS Proof</label>
 
-                    <!-- Beacon Proof Checkbox -->
-                    <input id="beaconProofCheckbox" type="checkbox" class="form-check-input ms-3" />
-                    <label for="beaconProofCheckbox" class="form-check-label">Beacon Proof</label>
+                    <!-- Beacon Proof Radio Button -->
+                    <input id="beaconProofRadio" type="radio" name="ProofType" value="1" class="form-check-input ms-3" @(Model.ProofType == (int)ProofType.Beacon ? "checked" : "") />
+                    <label for="beaconProofRadio" class="form-check-label">Beacon Proof</label>
                 </div>
             </div>
 
@@ -92,8 +92,8 @@
     <!-- JavaScript to control collapsibles and beacon management -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const gpsCheckbox = document.getElementById("gpsProofCheckbox");
-            const beaconCheckbox = document.getElementById("beaconProofCheckbox");
+            const gpsRadio = document.getElementById("gpsProofRadio");
+            const beaconRadio = document.getElementById("beaconProofRadio");
             const gpsSection = document.getElementById("gpsProofSection");
             const beaconSection = document.getElementById("beaconProofSection");
 
@@ -101,21 +101,26 @@
             const gpsCollapse = new bootstrap.Collapse(gpsSection, { toggle: false });
             const beaconCollapse = new bootstrap.Collapse(beaconSection, { toggle: false });
 
+            // Show the correct section based on the default checked radio button
+            if (beaconRadio.checked) {
+                beaconCollapse.show();
+            } else if (gpsRadio.checked) {
+                gpsCollapse.show();
+            }
+
             // Toggle GPS Proof Section
-            gpsCheckbox.addEventListener("change", function () {
-                if (gpsCheckbox.checked) {
+            gpsRadio.addEventListener("change", function () {
+                if (gpsRadio.checked) {
                     gpsCollapse.show(); // Show GPS section
-                } else {
-                    gpsCollapse.hide(); // Hide GPS section
+                    beaconCollapse.hide(); // Hide Beacon section
                 }
             });
 
             // Toggle Beacon Proof Section
-            beaconCheckbox.addEventListener("change", function () {
-                if (beaconCheckbox.checked) {
+            beaconRadio.addEventListener("change", function () {
+                if (beaconRadio.checked) {
                     beaconCollapse.show(); // Show Beacon section
-                } else {
-                    beaconCollapse.hide(); // Hide Beacon section
+                    gpsCollapse.hide(); // Hide GPS section
                 }
             });
         });
@@ -134,7 +139,6 @@
                     .then((response) => response.json())
                     .then((beacons) => {
                         tableBody.innerHTML = "";
-                        console.log(beacons);
                         beacons.forEach((beacon) => {
                             const row = createRow(beacon);
                             tableBody.appendChild(row);
@@ -177,38 +181,127 @@
                 return row;
             }
 
-            // Create an editable row for adding or editing a beacon
-            function createEditableRow(beacon = {}) {
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td><input type="text" class="form-control" value="${beacon.beaconName || ""}" placeholder="Enter Beacon Name"></td>
-                    <td><input type="text" class="form-control" value="${beacon.uuid || ""}" placeholder="Enter UUID"></td>
-                    <td>
-                        <select class="form-select">
-                            <option value="true" ${beacon.status ? "selected" : ""}>Active</option>
-                            <option value="false" ${!beacon.status ? "selected" : ""}>Inactive</option>
-                        </select>
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-primary saveBeacon">Save</button>
-                        <button type="button" class="btn btn-danger cancelBeacon ms-2">Cancel</button>
-                    </td>
-                `;
+            // // Create an editable row for adding or editing a beacon
+            // function createEditableRow(beacon = {}) {
+            //     const row = document.createElement("tr");
+            //     row.innerHTML = `
+            //         <td><input type="text" class="form-control" value="${beacon.beaconName || ""}" placeholder="Enter Beacon Name"></td>
+            //         <td><input type="text" class="form-control" value="${beacon.uuid || ""}" placeholder="Enter UUID"></td>
+            //         <td>
+            //             <select class="form-select">
+            //                 <option value="true" ${beacon.status ? "selected" : ""}>Active</option>
+            //                 <option value="false" ${!beacon.status ? "selected" : ""}>Inactive</option>
+            //             </select>
+            //         </td>
+            //         <td>
+            //             <button type="button" class="btn btn-primary saveBeacon">Save</button>
+            //             <button type="button" class="btn btn-danger cancelBeacon ms-2">Cancel</button>
+            //         </td>
+            //     `;
 
-                row.querySelector(".saveBeacon").addEventListener("click", function () {
+            //     row.querySelector(".saveBeacon").addEventListener("click", function () {
+            //         saveBeacon(row, beacon.id);
+            //     });
+
+            //     row.querySelector(".cancelBeacon").addEventListener("click", function () {
+            //         if (beacon.id) {
+            //             row.replaceWith(createRow(beacon));
+            //         } else {
+            //             row.remove();
+            //         }
+            //     });
+
+            //     return row;
+            // }
+
+                    // Create an editable row for adding or editing a beacon
+        function createEditableRow(beacon = {}) {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>
+                    <input type="text" class="form-control" value="${beacon.beaconName || ""}" placeholder="Enter Beacon Name">
+                </td>
+                <td>
+                    <div class="input-group">
+                        <input type="text" class="form-control uuidInput" value="${beacon.uuid || ""}" placeholder="Enter UUID">
+                        <button type="button" class="btn btn-secondary generateGuidButton">Generate GUID</button>
+                    </div>
+                    <small class="text-danger uuidError" style="display: none;">Invalid GUID format.</small>
+                </td>
+                <td>
+                    <select class="form-select">
+                        <option value="true" ${beacon.status !== false ? "selected" : ""}>Active</option>
+                        <option value="false" ${beacon.status === false ? "selected" : ""}>Inactive</option>
+                    </select>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-primary saveBeacon">Save</button>
+                    <button type="button" class="btn btn-danger cancelBeacon ms-2">Cancel</button>
+                </td>
+            `;
+
+            // Generate GUID button functionality
+            row.querySelector(".generateGuidButton").addEventListener("click", function () {
+                const uuidInput = row.querySelector(".uuidInput");
+                uuidInput.value = generateGUID();
+                hideGuidError(row); // Clear any previous error
+            });
+
+            // Save functionality
+            row.querySelector(".saveBeacon").addEventListener("click", function () {
+                if (validateGuid(row)) {
                     saveBeacon(row, beacon.id);
-                });
+                }
+            });
 
-                row.querySelector(".cancelBeacon").addEventListener("click", function () {
-                    if (beacon.id) {
-                        row.replaceWith(createRow(beacon));
-                    } else {
-                        row.remove();
-                    }
-                });
+            // Cancel functionality
+            row.querySelector(".cancelBeacon").addEventListener("click", function () {
+                if (beacon.id) {
+                    row.replaceWith(createRow(beacon));
+                } else {
+                    row.remove();
+                }
+            });
 
-                return row;
+            return row;
+        }
+
+        // Generate a GUID
+        function generateGUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                const r = (Math.random() * 16) | 0;
+                const v = c === 'x' ? r : (r & 0x3) | 0x8;
+                return v.toString(16);
+            });
+        }
+
+        // Validate GUID format
+        function validateGuid(row) {
+            const uuidInput = row.querySelector(".uuidInput");
+            const uuidError = row.querySelector(".uuidError");
+            const guidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+            if (!guidPattern.test(uuidInput.value.trim())) {
+                showGuidError(row);
+                return false;
             }
+
+            hideGuidError(row);
+            return true;
+        }
+
+        // Show GUID error
+        function showGuidError(row) {
+            const uuidError = row.querySelector(".uuidError");
+            uuidError.style.display = "block";
+        }
+
+        // Hide GUID error
+        function hideGuidError(row) {
+            const uuidError = row.querySelector(".uuidError");
+            uuidError.style.display = "none";
+        }
+
 
             // Save a beacon via AJAX (Add or Update)
             function saveBeacon(row, id) {
@@ -260,21 +353,13 @@
 
         // Function to extract the LocationId from the current URL
         function getLocationIdFromUrl() {
-            // Get the current URL
             const url = window.location.href;
-
-            // Split the URL into segments using '/' as the delimiter
             const urlSegments = url.split('/');
-
-            // The last segment is the LocationId (in this case, it will be "1")
-            const locationId = urlSegments[urlSegments.length - 1];
-
-            return locationId;
+            return urlSegments[urlSegments.length - 1];
         }
     </script>
 
     <script>
-        // Initialize Google Maps if needed
         function initMap() {
             const map = new google.maps.Map(document.getElementById("map"), {
                 center: { lat: 40.7128, lng: -74.0060 },
@@ -283,6 +368,5 @@
         }
     </script>
 
-    <!-- Include Google Maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
 }

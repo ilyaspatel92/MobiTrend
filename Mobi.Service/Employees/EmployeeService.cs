@@ -51,6 +51,16 @@ namespace Mobi.Service.Employees
                 .FirstOrDefault(e => e.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
         }
 
+        public IList<Employee> GetEmployeeByName(string name)
+        {
+            if(name == null)
+                return new List<Employee>();
+
+            return _employeeRepository
+                .GetAll()
+                .Where(e => e.NameEng.Contains(name, StringComparison.OrdinalIgnoreCase) || e.NameArabic.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
         public Employee GetCurrentEmployee(string token)
         {
             var employeeId = GetEmployeeIdFromToken(token);

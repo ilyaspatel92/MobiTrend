@@ -1,18 +1,57 @@
-﻿@model LocationModel
+﻿@model Mobi.Web.Models.Locations.LocationModel
 
 @{
-    ViewData["Title"] = "Employee Details";
+    ViewData["Title"] = "Location Details";
 }
 
-<h2>Location Details</h2>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <!-- Title Section -->
+        <h2 class="mb-0">Location Details</h2>
+        <div class="btn-group">
+            <div class="d-flex justify-content-end mt-4">
+                <a asp-action="List" class="btn btn-secondary btn-sm me-2">Back to List</a>
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm me-2">Edit</a>
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-sm">Delete</a>
+            </div>
+        </div>
+    </div>
 
-<div>
-    <h4>@Model.LocationNameEnglish</h4>
-    <p><strong>Arabic Name:</strong> @Model.LocationNameArabic</p>
-    <p><strong>Status:</strong> @(Model.Status ? "Active" : "Inactive")</p>
-    <p><strong>Latitude:</strong> @Model.Latitude</p>
-    <p><strong>Longitude:</strong> @Model.Longitude</p>
-    <p><strong>Radius:</strong> @Model.SetRadius</p>
+    <!-- Card for Location Information -->
+    <div class="card card-outline card-info">
+        <div class="card-body">
+            <!-- Location Information -->
+            <dl class="row">
+                <dt class="col-sm-3">Location Name (English):</dt>
+                <dd class="col-sm-9">@Model.LocationNameEnglish</dd>
+
+                <dt class="col-sm-3">Location Name (Arabic):</dt>
+                <dd class="col-sm-9">@Model.LocationNameArabic</dd>
+
+                <dt class="col-sm-3">Status:</dt>
+                <dd class="col-sm-9">@(Model.Status ? "Active" : "Inactive")</dd>
+
+                <dt class="col-sm-3">Proof Type:</dt>
+                <dd class="col-sm-9">@Model.ProofTypeName</dd>
+
+                <dt class="col-sm-3">Latitude:</dt>
+                <dd class="col-sm-9">@Model.Latitude</dd>
+
+                <dt class="col-sm-3">Longitude:</dt>
+                <dd class="col-sm-9">@Model.Longitude</dd>
+
+                <dt class="col-sm-3">Set Radius:</dt>
+                <dd class="col-sm-9">@Model.SetRadius</dd>
+
+                <dt class="col-sm-3">GPS Location Address:</dt>
+                <dd class="col-sm-9">@Model.GPSLocationAddress</dd>
+
+                <dt class="col-sm-3">Company ID:</dt>
+                <dd class="col-sm-9">@Model.CompanyId</dd>
+
+                <dt class="col-sm-3">Created Date:</dt>
+                <dd class="col-sm-9">@Model.CreatedDate.ToString("dd/MM/yyyy")</dd>
+            </dl>
+        </div>
+    </div>
 </div>
-
-<a asp-action="List" class="btn btn-primary">Back to List</a>

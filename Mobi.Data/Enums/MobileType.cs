@@ -1,4 +1,4 @@
-namespace Mobi.Data.Domain.Employees
+namespace Mobi.Data.Enums
 {
     /// <summary>
     /// Represents a Mobile Type

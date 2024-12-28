@@ -1,4 +1,5 @@
 ﻿using Mobi.Data.Domain;
+using Mobi.Data.Enums;
 using Mobi.Web.Models.Locations;
 
 namespace Mobi.Web.Factories.Locations
@@ -18,8 +19,8 @@ namespace Mobi.Web.Factories.Locations
                 LocationNameEnglish = location.LocationNameEnglish,
                 LocationNameArabic = location.LocationNameArabic,
                 Status = location.Status,
-                IsBeaconProofSelected = location.BeaconProof,
-                IsGPSProofSelected = location.GPSProof,
+                ProofType = location.ProofType,
+                ProofTypeName = Enum.GetName(typeof(ProofType), location.ProofType),
                 CreatedDate = location.CreatedDate,
                 GPSLocationAddress = location.GPSLocationAddress,
                 Latitude = location.Latitude,

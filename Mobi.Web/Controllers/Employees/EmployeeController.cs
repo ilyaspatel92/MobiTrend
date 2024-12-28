@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mobi.Data.Domain.Employees;
+using Mobi.Service.Compnay;
 using Mobi.Service.Employees;
 using Mobi.Service.Helpers;
 using Mobi.Web.Factories.Employees;
@@ -12,11 +13,16 @@ namespace Mobi.Web.Controllers.Employees
     {
         private readonly IEmployeeService _employeeService;
         private readonly IEmployeeFactory _employeeFactory;
+        private readonly ICompanyService _companyService;
 
-        public EmployeeController(IEmployeeService employeeService, IEmployeeFactory employeeFactory)
+
+        public EmployeeController(IEmployeeService employeeService,
+                                  IEmployeeFactory employeeFactory,
+                                  ICompanyService companyService)
         {
             _employeeService = employeeService;
             _employeeFactory = employeeFactory;
+            _companyService = companyService;
         }
 
         [HttpGet]
@@ -28,7 +34,7 @@ namespace Mobi.Web.Controllers.Employees
             // Apply filters if the parameters are provided
             if (!string.IsNullOrEmpty(name))
             {
-                employees = employees.Where(e => e.NameEng.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
+                employees = employees.Where(e => e.NameEng.Contains(name, StringComparison.OrdinalIgnoreCase) || e.NameArabic.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
             }
             if (id.HasValue)
             {
@@ -48,7 +54,7 @@ namespace Mobi.Web.Controllers.Employees
 
             if (!string.IsNullOrEmpty(name))
             {
-                employees = employees.Where(e => e.NameEng.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
+                employees = employees.Where(e => e.NameEng.Contains(name, StringComparison.OrdinalIgnoreCase) || e.NameArabic.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
             }
             if (id.HasValue)
             {
@@ -80,8 +86,8 @@ namespace Mobi.Web.Controllers.Employees
                 ModelState.AddModelError("Email", "The email address is already in use.");
             }
 
-            if (string.IsNullOrEmpty(model.CompanyId))
-                model.CompanyId = "1";
+            if (model.CompanyId == 0)
+                model.CompanyId = _companyService.GetCompanies(string.Empty).FirstOrDefault()?.Id ?? 1;
 
             if (ModelState.IsValid)
             {
@@ -94,8 +100,9 @@ namespace Mobi.Web.Controllers.Employees
                     MobileNumber = model.MobileNumber,
                     Email = model.Email,
                     UserName = model.Email,
-                    Password = PasswordHelper.HashPassword(model.Password),
-                    CompanyId = model.CompanyId,
+                    Password = PasswordHelper.HashPassword("Pass@word"),
+                    CompanyId = _companyService.GetCompanies(string.Empty).FirstOrDefault()?.Id ?? 1,
+                    CID = model.CID,
                     CreatedDate = DateTime.Now
                 };
 
@@ -168,31 +175,19 @@ namespace Mobi.Web.Controllers.Employees
             return View(model);
         }
 
-
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
             var employee = _employeeService.GetEmployeeById(id);
             if (employee == null)
             {
-                return NotFound();
+                return Json(new { success = false, message = "Employee not found." });
             }
-            var EmployeeModel = _employeeFactory.PrepareEmployeeViewModel(employee);
 
-            return View(EmployeeModel);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
-        {
-            var employee = _employeeService.GetEmployeeById(id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
             _employeeService.RemoveEmployee(employee);
 
-            return RedirectToAction(nameof(Index));
+            return Json(new { success = true, message = "Employee deleted successfully." });
         }
 
         public IActionResult Details(int id)
