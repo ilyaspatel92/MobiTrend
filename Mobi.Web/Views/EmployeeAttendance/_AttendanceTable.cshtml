@@ -1,0 +1,26 @@
+﻿@model List<EmployeeAttendanceLogModel>
+
+@if (Model != null && Model.Any())
+{
+    int index = 1;
+    foreach (var log in Model)
+    {
+        <tr>
+            <td>@index</td>
+            <td>@log.EmployeeName</td>
+            <td>@log.DateAndTime</td>
+            <td>
+                <span class="badge @log.ActionTypeClass">@log.ActionTypeName</span>
+            </td>
+            <td>@log.ProofType</td>
+            <td>@log.Location</td>
+        </tr>
+        index++;
+    }
+}
+else
+{
+    <tr>
+        <td colspan="6" class="text-center">No records found</td>
+    </tr>
+}

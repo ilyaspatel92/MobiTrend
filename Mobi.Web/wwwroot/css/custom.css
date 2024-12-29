@@ -3,3 +3,70 @@
     padding-left: 0px; 
     padding-right: 0px;
 }
+
+/* Custom Badge Styles for Action Types */
+.badge-custom-in {
+    background-color: #28a745; /* Green for "IN" */
+    color: white;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+}
+
+.badge-custom-out {
+    background-color: #dc3545; /* Red for "OUT" */
+    color: white;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+}
+
+.badge-custom-rejected {
+    background-color: #17a2b8; /* Info color for "Rejected" */
+    color: white;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+}
+
+.badge-custom {
+    font-size: 14px; /* Adjust the size of the badges */
+    padding: 6px 12px; /* Adjust the padding */
+}
+
+/* Optional: Hover Effect */
+.badge-custom-in:hover, .badge-custom-out:hover, .badge-custom-rejected:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+#autocomplete-results {
+    position: absolute; /* Fix dropdown position */
+    background-color: white; /* Ensure visibility */
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    max-height: 200px; /* Constrain height */
+    overflow-y: auto; /* Add scroll if needed */
+    z-index: 1050; /* Ensure it sits above other elements */
+}
+
+    #autocomplete-results .list-group-item {
+        padding: 10px; /* Add spacing for better appearance */
+        cursor: pointer; /* Indicate interactivity */
+    }
+
+        #autocomplete-results .list-group-item:hover {
+            background-color: #f1f1f1; /* Highlight on hover */
+        }
+
+.position-relative {
+    position: relative; /* Ensure relative parent for dropdown alignment */
+}
+
+.input-group-append .input-group-text {
+    border-left: 0; /* Remove border overlap */
+}

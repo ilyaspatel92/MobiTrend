@@ -45,7 +45,7 @@ public class ApplicationContext : DbContext
            {
                Id=1,
                CompanyName="Mobi",
-               CompanyId="1",
+               CompanyId= "3232cb15-cd04-4a57-b8ea-46dfda925f98",
                CreatedDate= DateTime.Now
            }
         );

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using Mobi.Data;
+using Mobi.Web.Utilities.Validations;
 
 namespace Mobi.Web.Models.Employees
 {
@@ -26,12 +27,12 @@ namespace Mobi.Web.Models.Employees
         public string MobileNumber { get; set; }
 
         [Required(ErrorMessage = "Email is required.")]
-        [EmailAddress(ErrorMessage = "Please provide a valid email address.")]
+        [CustomEmail(ErrorMessage = "Please provide a valid email address.")]
         [StringLength(150, ErrorMessage = "Email cannot exceed 150 characters.")]
         public string Email { get; set; }
-        public string UserName { get; set; }
+        public string? UserName { get; set; }
         
-        public string PhotoPath { get; set; }
+        public string? PhotoPath { get; set; }
 
         [Required(ErrorMessage = "Cid is required.")]
         [RegularExpression(@"^\d{12}$", ErrorMessage = "CID Should have 12 characters.")]
@@ -40,19 +41,19 @@ namespace Mobi.Web.Models.Employees
 
         //[Required(ErrorMessage = "Password is required.")]
         //[StringLength(50, MinimumLength = 6, ErrorMessage = "Password must be between 6 and 50 characters.")]
-        public string Password { get; set; }
+        public string? Password { get; set; }
 
         public int MobileType { get; set; }
         public int RegistrationVia { get; set; }
 
-        public string DeviceId { get; set; }
+        public string? DeviceId { get; set; }
 
         public bool RegisterStatus { get; set; }
-        public int CompanyId { get; set; }
+        public string CompanyId { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
-        public string QrCode { get; set; }
+        public string? QrCode { get; set; }
 
     }
 }

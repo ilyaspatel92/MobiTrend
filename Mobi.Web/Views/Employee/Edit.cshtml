@@ -77,11 +77,17 @@
                 </div>*@
 
                 <!-- Company ID -->
-                <div class="col-md-6">
+                @* <div class="col-md-6">
                     <label asp-for="CompanyId" class="form-label">Company ID</label>
                     <input asp-for="CompanyId" class="form-control" placeholder="Enter Company ID" required>
                     <span asp-validation-for="CompanyId" class="text-danger"></span>
+                </div> *@
+                 <div class="col-md-6">
+                    <label asp-for="CID" class="form-label">CID</label><span class="text-danger">*</span>
+                    <input asp-for="CID" type="CID" class="form-control" placeholder="Enter CID">
+                    <span asp-validation-for="CID" class="text-danger"></span>
                 </div>
+
             </div>
         </div>
       

@@ -1,10 +1,19 @@
 ﻿using Mobi.Data.Domain.Employees;
+using Mobi.Service.Compnay;
+using Mobi.Service.Employees;
 using Mobi.Web.Models.Employees;
 using QRCoder;
 namespace Mobi.Web.Factories.Employees
 {
     public class EmployeeFactory : IEmployeeFactory
     {
+        private readonly ICompanyService _companyService;
+
+        public EmployeeFactory(ICompanyService companyService)
+        {
+           _companyService = companyService;
+        }
+
         /// <summary>
         /// Prepares the EmployeeModel ViewModel from the Employee domain object.
         /// </summary>
@@ -12,25 +21,31 @@ namespace Mobi.Web.Factories.Employees
         /// <returns>The ViewModel EmployeeModel.</returns>
         public EmployeeModel PrepareEmployeeViewModel(Employee employee)
         {
-            return new EmployeeModel
+            var emp = new EmployeeModel
             {
                 Id = employee.Id,
                 NameEng = employee.NameEng,
                 NameArabic = employee.NameArabic,
                 Status = employee.Status,
-                CompanyId = employee.CompanyId,
                 FileNumber = employee.FileNumber,
                 MobileNumber = employee.MobileNumber,
                 Email = employee.Email,
                 PhotoPath = "",
+                CompanyId = "3232cb15-cd04-4a57-b8ea-46dfda925f98",
                 Password = employee.Password,
                 MobileType = employee.MobileType,
                 DeviceId = employee.DeviceId,
                 RegistrationVia = employee.RegistrationType,
                 RegisterStatus = employee.RegisterStatus,
                 CreatedDate = employee.CreatedDate,
+                CID = employee.CID,
+                UserName = employee.UserName,
                 QrCode = GenerateQrCode(employee.Email)
             };
+
+            //emp.CompanyId = _companyService.GetCompanyById(employee.CompanyId)?.CompanyId;
+
+            return emp;
         }
 
         /// <summary>
