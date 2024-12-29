@@ -1,8 +1,10 @@
 ﻿using System.Dynamic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Mobi.Data.Domain;
 using Mobi.Data.Domain.Employees;
 using Mobi.Data.Enums;
+using Mobi.Service.EmployeeAttendances;
 using Mobi.Service.Employees;
 using Mobi.Service.Helpers;
 using Mobi.Service.Pictures;
@@ -22,14 +24,20 @@ namespace Mobi.Web.Areas.Admin.Controllers
         private readonly IEmployeeFactory _employeeFactory;
         private readonly JwtTokenHelper _jwtTokenHelper;
         private readonly IPictureService _pictureService;
+        private readonly IEmployeeAttendanceService _employeeAttendanceService;
 
-        public EmployeeAPIController(IEmployeeService employeeService, IEmployeeFactory employeeFactory,
-            JwtTokenHelper jwtTokenHelper, IPictureService pictureService)
+
+        public EmployeeAPIController(IEmployeeService employeeService,
+                                     IEmployeeFactory employeeFactory,
+                                     JwtTokenHelper jwtTokenHelper,
+                                     IPictureService pictureService,
+                                     IEmployeeAttendanceService employeeAttendanceService)
         {
             _employeeService = employeeService;
             _employeeFactory = employeeFactory;
             _jwtTokenHelper = jwtTokenHelper;
             _pictureService = pictureService;
+            _employeeAttendanceService = employeeAttendanceService;
         }
 
         [HttpPost]
@@ -48,7 +56,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                         return BadRequest(response);
                     }
 
-                    if (queryModel.CompanyId<=0)
+                    if (queryModel.CompanyId <= 0)
                     {
                         response.Success = false;
                         response.Message = "Company ID is required";
@@ -103,12 +111,12 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     empObject.MobileType = Enum.GetName((MobileType)employee.MobileType);
                     empObject.RegistrationType = Enum.GetName((RegistrationType)employee.MobileType);
                     empObject.DeviceId = employee.DeviceId;
-                    empObject.RegisterStatus=employee.RegisterStatus;
-                    empObject.CID=employee.CID;
-                    empObject.MobRegistrationDate=employee.MobRegistrationDate;
+                    empObject.RegisterStatus = employee.RegisterStatus;
+                    empObject.CID = employee.CID;
+                    empObject.MobRegistrationDate = employee.MobRegistrationDate;
                     empObject.Token = token;
 
-                    var picture = _pictureService.GetPictureById(employee?.PictureId??0);
+                    var picture = _pictureService.GetPictureById(employee?.PictureId ?? 0);
                     if (picture is not null)
                     {
                         var url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/";
@@ -134,13 +142,13 @@ namespace Mobi.Web.Areas.Admin.Controllers
                 response.Success = false;
                 response.Message = ex.Message;
                 response.Exception = ex;
-                return BadRequest( response);  //OR return response
+                return BadRequest(response);  //OR return response
             }
         }
 
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult VerifyQrCode(int langId,[FromBody] QrCodeModel queryModel)
+        public IActionResult VerifyQrCode(int langId, [FromBody] QrCodeModel queryModel)
         {
             var response = new ResponseModel<ExpandoObject>();
             try
@@ -149,7 +157,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                 {
                     response.Success = false;
                     response.Message = "Qr code text is required";
-                    return BadRequest( response);
+                    return BadRequest(response);
                 }
 
                 var employee = _employeeService.GetEmployeeByEmail(queryModel.QrCode);
@@ -160,7 +168,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     return BadRequest(response);  //OR return response
                 }
 
-                if(employee.IsQrVerify)
+                if (employee.IsQrVerify)
                 {
                     response.Success = false;
                     response.Message = "QR code is already scanned";
@@ -270,7 +278,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
 
                 _employeeService.UpdateEmployee(employee);
 
-               
+
 
                 empObject.Id = employee.Id;
                 empObject.CompanyId = employee.CompanyId;
@@ -336,8 +344,8 @@ namespace Mobi.Web.Areas.Admin.Controllers
                 employee.DeviceId = queryModel.DeviceId;
                 employee.MobileType = queryModel.MobileTypeId;
                 employee.MobRegistrationDate = DateTime.UtcNow;
-                employee.RegisterStatus=true;
-                employee.RegistrationType=(int)RegistrationType.Mobile;
+                employee.RegisterStatus = true;
+                employee.RegistrationType = (int)RegistrationType.Mobile;
 
                 _employeeService.UpdateEmployee(employee);
 
@@ -431,37 +439,17 @@ namespace Mobi.Web.Areas.Admin.Controllers
             var response = new ResponseModel<ExpandoObject>();
             try
             {
-                //if (string.IsNullOrEmpty(queryModel.QrCode))
-                //{
-                //    response.Success = false;
-                //    response.Message = "Qr code text is required";
-                //    return BadRequest(response);
-                //}
-
-                //var employee = _employeeService.GetEmployeeByEmail(queryModel.QrCode);
-                //if (employee is null)
-                //{
-                //    response.Success = false;
-                //    response.Message = "Using QR code record are not found";
-                //    return BadRequest(response);  //OR return response
-                //}
-
-                //if (employee.IsQrVerify)
-                //{
-                //    response.Success = false;
-                //    response.Message = "QR code is already scanned";
-                //    return BadRequest(response);  //OR return response
-                //}
-
-                //// update the employee for verify the QR code 
-                //employee.IsQrVerify = true;
-                //_employeeService.UpdateEmployee(employee);
-
-                //dynamic empObject = new ExpandoObject();
-                //empObject.Id = employee.Id;
-                //empObject.CompanyId = employee.CompanyId;
-                //empObject.UserName = employee.UserName;
-                //empObject.FullName = employee.NameEng;
+                _employeeAttendanceService.AddLog(new EmployeeAttendanceLogs()
+                {
+                    LocationId = queryModel.LocationId,
+                    LocationBeaconMappingId = queryModel.BeaconId,
+                    Latitude = queryModel.Latitude,
+                    Longtitude = queryModel.Longitude,
+                    PictureId = queryModel.PictureId,
+                    ActionTypeId = (int)queryModel.ActionType,
+                    ActionTypeModeId = (int)queryModel.ActionTypeMode,
+                    IsVerifiedLocation = queryModel.IsverifiedLocation
+                });
 
                 response.Success = true;
                 response.Message = "Item retrieved successfully.";
@@ -484,7 +472,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
         /// Prepare the change password model
         /// </summary>
         [HttpPost]
-        public virtual IActionResult ChangePassword(int langId,[FromBody] ChangePasswordModel queryModel)
+        public virtual IActionResult ChangePassword(int langId, [FromBody] ChangePasswordModel queryModel)
         {
             //if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
             //    return Unauthorized();

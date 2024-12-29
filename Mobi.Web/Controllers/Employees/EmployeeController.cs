@@ -28,23 +28,23 @@ namespace Mobi.Web.Controllers.Employees
         [HttpGet]
         public IActionResult List(string name, int? id)
         {
-            // Retrieve all employees
-            var employees = _employeeService.GetAllEmployees();
+            //// Retrieve all employees
+            //var employees = _employeeService.GetAllEmployees();
 
-            // Apply filters if the parameters are provided
-            if (!string.IsNullOrEmpty(name))
-            {
-                employees = employees.Where(e => e.NameEng.Contains(name, StringComparison.OrdinalIgnoreCase) || e.NameArabic.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
-            }
-            if (id.HasValue)
-            {
-                employees = employees.Where(e => e.Id == id.Value).ToList();
-            }
+            //// Apply filters if the parameters are provided
+            //if (!string.IsNullOrEmpty(name))
+            //{
+            //    employees = employees.Where(e => e.NameEng.Contains(name, StringComparison.OrdinalIgnoreCase) || e.NameArabic.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
+            //}
+            //if (id.HasValue)
+            //{
+            //    employees = employees.Where(e => e.Id == id.Value).ToList();
+            //}
 
-            // Convert to ViewModels and pass to the view
-            var employeeViewModels = _employeeFactory.PrepareEmployeeViewModels(employees);
+            //// Convert to ViewModels and pass to the view
+            //var employeeViewModels = _employeeFactory.PrepareEmployeeViewModels(employees);
 
-            return View(employeeViewModels);
+            return View(new List<EmployeeModel>());
         }
 
         [HttpGet]
@@ -86,8 +86,8 @@ namespace Mobi.Web.Controllers.Employees
                 ModelState.AddModelError("Email", "The email address is already in use.");
             }
 
-            if (model.CompanyId == 0)
-                model.CompanyId = _companyService.GetCompanies(string.Empty).FirstOrDefault()?.Id ?? 1;
+            if (string.IsNullOrEmpty(model.CompanyId))
+                model.CompanyId = _companyService.GetCompanies(string.Empty).FirstOrDefault()?.CompanyId ?? "";
 
             if (ModelState.IsValid)
             {

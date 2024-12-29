@@ -14,12 +14,12 @@
                     <div class="col-md-6">
                         <label for="employeeName" class="form-label">Employee Name</label>
                         <div class="input-group position-relative">
-                            <input type="text" id="employeeName" class="form-control" placeholder="Search Employee Name" autocomplete="off">
+                            <input type="text" id="employeeName" class="form-control" placeholder="Enter 3 Character for Search Employee" autocomplete="off">
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="bi bi-search"></i></span>
                             </div>
                         </div>
-                        <ul id="autocomplete-results" class="list-group position-absolute w-100" style="max-height: 200px; overflow-y: auto; z-index: 1000; display: none; left: 0;"></ul>
+                        <ul id="autocomplete-results" class="list-group position-absolute w-100" style="max-height: 200px; overflow-y: auto; z-index: 1000; display: none;"></ul>
                     </div>
 
                     <!-- Employee ID -->
@@ -50,6 +50,7 @@
             </div> <!-- end::Card Footer -->
     </div>
 </div>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const employeeNameInput = document.getElementById("employeeName");
@@ -62,7 +63,7 @@
         // Initialize autocomplete for employee name
         employeeNameInput.addEventListener("input", function () {
             const query = employeeNameInput.value.trim();
-            if (query.length >= 2) {
+            if (query.length >= 3) {
                 clearTimeout(typingTimer);
                 typingTimer = setTimeout(function () {
                     fetch(`/EmployeeLocation/GetEmployeeSuggestions?term=${query}`)
@@ -80,30 +81,33 @@
         });
 
         // Show autocomplete suggestions
-        function showAutocompleteResults(employees) {
-            autocompleteResults.innerHTML = ""; // Clear previous suggestions
-            if (employees.length === 0) {
-                autocompleteResults.style.display = "none";
-                return;
-            }
-
-            employees.forEach(employee => {
-                const li = document.createElement("li");
-                li.classList.add("list-group-item", "cursor-pointer");
-                li.textContent = employee.label;
-                li.addEventListener("click", function () {
-                    selectEmployee(employee);
-                });
-                autocompleteResults.appendChild(li);
-            });
-
-            // Position and show the dropdown
-            const rect = employeeNameInput.getBoundingClientRect();
-            autocompleteResults.style.left = `${rect.left}px`; // Align to left of input
-            autocompleteResults.style.top = `${rect.bottom}px`; // Position below the input
-            autocompleteResults.style.width = `${employeeNameInput.offsetWidth}px`; // Match input width
-            autocompleteResults.style.display = "block"; // Show results
+            function showAutocompleteResults(employees) {
+        autocompleteResults.innerHTML = ""; // Clear previous suggestions
+        if (employees.length === 0) {
+            autocompleteResults.style.display = "none";
+            return;
         }
+
+        employees.forEach(employee => {
+            const li = document.createElement("li");
+            li.classList.add("list-group-item", "cursor-pointer");
+            li.textContent = employee.label;
+            li.addEventListener("click", function () {
+                selectEmployee(employee);
+            });
+            autocompleteResults.appendChild(li);
+        });
+
+        // Get the position of the input field
+        const rect = employeeNameInput.getBoundingClientRect();
+
+        // // Set position and width of the dropdown
+        // autocompleteResults.style.left = `${rect.left + window.scrollX}px`; // Adjust for scrolling
+        // autocompleteResults.style.top = `${rect.bottom + window.scrollY}px`; // Position below input
+        autocompleteResults.style.width = `${rect.width}px`; // Match input width
+        autocompleteResults.style.display = "block"; // Show results
+    }
+
 
         // Handle employee selection from the autocomplete results
         function selectEmployee(employee) {
@@ -140,7 +144,6 @@
             }
 
             locations.forEach(location => {
-                console.log(location);
                 const checkboxDiv = document.createElement("div");
                 checkboxDiv.classList.add("form-check");
 
@@ -213,3 +216,4 @@
         });
     });
 </script>
+
