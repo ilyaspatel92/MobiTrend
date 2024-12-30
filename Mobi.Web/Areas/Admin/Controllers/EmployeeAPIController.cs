@@ -168,16 +168,9 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     return BadRequest(response);  //OR return response
                 }
 
-                if (employee.IsQrVerify)
-                {
-                    response.Success = false;
-                    response.Message = "QR code is already scanned";
-                    return BadRequest(response);  //OR return response
-                }
+               
 
-                // update the employee for verify the QR code 
-                employee.IsQrVerify = true;
-                _employeeService.UpdateEmployee(employee);
+              
 
                 dynamic empObject = new ExpandoObject();
                 empObject.Id = employee.Id;
@@ -340,13 +333,21 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     }
                 }
 
+                if (employee.IsQrVerify)
+                {
+                    response.Success = false;
+                    response.Message = "QR code is already scanned";
+                    return BadRequest(response);  //OR return response
+                }
+
                 // update the employee 
                 employee.DeviceId = queryModel.DeviceId;
                 employee.MobileType = queryModel.MobileTypeId;
                 employee.MobRegistrationDate = DateTime.UtcNow;
                 employee.RegisterStatus = true;
                 employee.RegistrationType = (int)RegistrationType.Mobile;
-
+                // update the employee for verify the QR code 
+                employee.IsQrVerify = true;
                 _employeeService.UpdateEmployee(employee);
 
                 dynamic empObject = new ExpandoObject();
@@ -410,7 +411,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
 
                 response.Success = true;
                 response.Message = "success";
-                response.Data = employee;
+                response.Data = empObject;
                 return Ok(response);
             }
             catch (Exception ex)

@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using Mobi.Repository;
 using Mobi.Repository.Migrations;
 using Mobi.Service.Compnay;
+using Mobi.Service.EmployeeAttendances;
 using Mobi.Service.EmployeeLocationServices;
 using Mobi.Service.Employees;
 using Mobi.Service.Factories;
@@ -208,6 +209,8 @@ namespace Mobi.Web
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IPictureService, PictureService>();
             services.AddScoped<IEmployeeLocationService, EmployeeLocationService>();
+            services.AddScoped<IEmployeeAttendanceService, EmployeeAttendanceService>();
+            
 
             // Register Factories
             services.AddScoped<ISystemUserFactory, SystemUserFactory>();

@@ -31,7 +31,7 @@ namespace Mobi.Web.Factories.Employees
                 MobileNumber = employee.MobileNumber,
                 Email = employee.Email,
                 PhotoPath = "",
-                CompanyId = "3232cb15-cd04-4a57-b8ea-46dfda925f98",
+                CompanyId = "1",
                 Password = employee.Password,
                 MobileType = employee.MobileType,
                 DeviceId = employee.DeviceId,
@@ -55,7 +55,9 @@ namespace Mobi.Web.Factories.Employees
         /// <returns>The collection of ViewModel EmployeeModels.</returns>
         public IEnumerable<EmployeeModel> PrepareEmployeeViewModels(IEnumerable<Employee> employees)
         {
-            return employees.Select(PrepareEmployeeViewModel);
+            return employees.Select(emp => PrepareEmployeeViewModel(emp));
+
+            //return employees.Select(PrepareEmployeeViewModel);
         }
 
         private string GenerateQrCode(string email)

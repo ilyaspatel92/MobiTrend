@@ -14,7 +14,7 @@ namespace Mobi.Web.Models.Locations
         public bool Status { get; set; }
 
         public int ProofType { get; set; }
-        public string ProofTypeName { get; set; }
+        public string? ProofTypeName { get; set; }
 
         //[Required(ErrorMessage = "Latitude is required.")]
         public decimal Latitude { get; set; }
