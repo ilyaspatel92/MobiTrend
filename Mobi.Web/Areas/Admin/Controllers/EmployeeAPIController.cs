@@ -333,13 +333,6 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     }
                 }
 
-                if (employee.IsQrVerify)
-                {
-                    response.Success = false;
-                    response.Message = "QR code is already scanned";
-                    return BadRequest(response);  //OR return response
-                }
-
                 // update the employee 
                 employee.DeviceId = queryModel.DeviceId;
                 employee.MobileType = queryModel.MobileTypeId;
@@ -440,21 +433,80 @@ namespace Mobi.Web.Areas.Admin.Controllers
             var response = new ResponseModel<ExpandoObject>();
             try
             {
+                var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                var employee = _employeeService.GetCurrentEmployee(token);
+
+                if (employee is null)
+                {
+                    response.Success = false;
+                    response.Message = "Using employeeEmail record are not found";
+                    return BadRequest(response);  //OR return response
+                }
+
+                if (string.IsNullOrEmpty(employee.DeviceId)==false && !employee.DeviceId.Equals(queryModel.MobileSerialNumber, StringComparison.OrdinalIgnoreCase))
+                {
+                    response.Success = false;
+                    response.Message = "the given Device Id is not mapped with current employee ";
+                    return BadRequest(response);
+                }
+
                 _employeeAttendanceService.AddLog(new EmployeeAttendanceLogs()
                 {
+                    EmployeeId= employee.Id,
+                    AttendanceDateTime =queryModel.AttendanceDateTime,
+                    TransferDateTime=queryModel.TransferDateTime,
+                    MobileSerialNumber=queryModel.MobileSerialNumber,
                     LocationId = queryModel.LocationId,
                     LocationBeaconMappingId = queryModel.BeaconId,
                     Latitude = queryModel.Latitude,
                     Longtitude = queryModel.Longitude,
                     PictureId = queryModel.PictureId,
-                    ActionTypeId = (int)queryModel.ActionType,
-                    ActionTypeModeId = (int)queryModel.ActionTypeMode,
+                    ActionTypeId = (int)queryModel.ActionType, //In and out enum 
+                    ProofTypeId = (int)queryModel.ActionTypeMode, // GPS or BEacon 
                     IsVerifiedLocation = queryModel.IsverifiedLocation
                 });
 
                 response.Success = true;
                 response.Message = "Item retrieved successfully.";
                 //response.Data = empObject;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+                response.Exception = ex;
+                return BadRequest(response);  //OR return response
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetEmployeeAttendance(int langId)
+        {
+            var response = new ResponseModel<List<EmployeeAttendanceLogs>>();
+            try
+            {
+                var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                var employee = _employeeService.GetCurrentEmployee(token);
+
+                if (employee is null)
+                {
+                    response.Success = false;
+                    response.Message = "Using employeeEmail record are not found";
+                    return BadRequest(response);  //OR return response
+                }
+
+               var employeeAttendance= _employeeAttendanceService.GetLogsByEmployeeId(employee.Id).ToList();
+                if (employeeAttendance is null)
+                {
+                    response.Success = false;
+                    response.Message = "No record are found";
+                    return BadRequest(response);  //OR return response
+                }
+
+                response.Success = true;
+                response.Message = "Item retrieved successfully.";
+                response.Data = employeeAttendance;
                 return Ok(response);
             }
             catch (Exception ex)

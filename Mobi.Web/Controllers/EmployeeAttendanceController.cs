@@ -34,7 +34,7 @@ namespace Mobi.Web.Controllers
          
             var joinedLogs = from log in attendanceLogs
                              join emp in employees on log.EmployeeId equals emp.Id
-                             where log.DateandTime >= startDate && log.DateandTime <= endDate
+                             where log.AttendanceDateTime >= startDate && log.AttendanceDateTime <= endDate
                              select new
                              {
                                  Log = log,
@@ -53,7 +53,7 @@ namespace Mobi.Web.Controllers
             var viewModel = joinedLogs.Select(entry => new EmployeeAttendanceLogModel
             {
                 EmployeeName = entry.EmployeeName,
-                DateAndTime = entry.Log.DateandTime.ToString("MM/dd/yyyy @ hh:mm tt"),
+                DateAndTime = entry.Log.AttendanceDateTime.ToString("MM/dd/yyyy @ hh:mm tt"),
                 ActionTypeName = GetActionTypeName(entry.Log.ActionTypeId),
                 ActionTypeClass = GetActionTypeClass(entry.Log.ActionTypeId),
                 ProofType = GetProofType(entry.Log.ProofTypeId),
