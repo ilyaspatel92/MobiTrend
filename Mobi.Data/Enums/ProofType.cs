@@ -2,7 +2,8 @@
 {
     public enum ProofType
     {
-        Beacon = 1,
-        GPS = 2
+        GPS = 1,
+        Beacon = 2
+        
     }
 }
