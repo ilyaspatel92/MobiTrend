@@ -22,6 +22,7 @@ using Mobi.Service.ResourceService;
 using Mobi.Service.SystemUser;
 using Mobi.Web.Areas.Admin.Factories;
 using Mobi.Web.Areas.Admin.Utilities;
+using Mobi.Web.Factories.EmployeeLocations;
 using Mobi.Web.Factories.Employees;
 using Mobi.Web.Factories.LocationBeacons;
 using Mobi.Web.Factories.Locations;
@@ -218,6 +219,7 @@ namespace Mobi.Web
             services.AddScoped<ILocationFactory, LocationFactory>();
             services.AddScoped<ILocationBeaconFactory, LocationBeaconFactory>();
             services.AddScoped<IBeaconLocationFactory, BeaconLocationFactory>();
+            services.AddScoped<IEmployeeLocationsFactory, EmployeeLocationsFactory>();
             
             // Add memory cache service
             services.AddMemoryCache();

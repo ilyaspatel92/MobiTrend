@@ -186,10 +186,10 @@
                 return;
             }
 
-            if (selectedLocations.length === 0) {
-                alert("Please select at least one location.");
-                return;
-            }
+            // if (selectedLocations.length === 0) {
+            //     alert("Please select at least one location.");
+            //     return;
+            // }
 
             // Send the selected locations and employee ID to the server
             fetch("/EmployeeLocation/SaveEmployeeLocations", {
@@ -199,7 +199,7 @@
                 },
                 body: JSON.stringify({
                     employeeId: employeeId,         // Send employee ID
-                    locationIds: selectedLocations  // Send the array of selected location IDs
+                    locationIds: selectedLocations.length > 0 ? selectedLocations : null  // Send the array of selected location IDs
                 })
             })
             .then(response => response.json())
@@ -211,7 +211,7 @@
                 }
             })
             .catch(error => {
-                alert("Error saving locations.");
+                alert("Error saving locations.",error);
             });
         });
     });
