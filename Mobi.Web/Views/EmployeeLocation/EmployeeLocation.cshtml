@@ -12,20 +12,17 @@
             <div class="row mb-4">
                 <div class="col-md-4">
                     <label for="employeeName" class="form-label">Employee Name</label>
-                    <input type="text" name="employeeName" id="employeeName" class="form-control" placeholder="Search by name" value="">
+                    <input type="text" name="employeeName" id="employeeName" class="form-control" placeholder="Search by name" value="@ViewData["EmployeeName"]">
                 </div>
                 <div class="col-md-2">
                     <label for="employeeId" class="form-label">ID</label>
-                    <input type="text" name="employeeId" id="employeeId" class="form-control" placeholder="ID" value="">
+                    <input type="text" name="employeeId" id="employeeId" class="form-control" placeholder="ID" value="@ViewData["EmployeeId"]">
                 </div>
                 <div class="col-md-3">
                     <label for="siteStatus" class="form-label">Site Status</label>
                     <select name="siteStatus" id="siteStatus" class="form-select">
-                         <option value="">All</option>
-                        <option value="active">Set</option>
-                        @* <option value="" @(Request.Query["siteStatus"] == "" ? "selected" : "")>All</option>
-                        <option value="active" @(Request.Query["siteStatus"] == "active" ? "selected" : "")>Active</option>
-                        <option value="inactive" @(Request.Query["siteStatus"] == "inactive" ? "selected" : "")>Inactive</option> *@
+                        <option value="" selected="@(ViewData["SiteStatus"]?.ToString() == "" ? "selected" : null)">All</option>
+                        <option value="set" selected="@(ViewData["SiteStatus"]?.ToString() == "set" ? "selected" : null)">Set</option>
                     </select>
                 </div>
                 <div class="col-md-3 d-flex align-items-end">
@@ -65,7 +62,14 @@
                                             <td>@employee.EmployeeName</td>
                                             <td>@employee.LocationNames</td>
                                             <td>
-                                                <button class="btn btn-link p-0">Edit</button>
+                                                @if (string.IsNullOrEmpty(employee.LocationNames))
+                                                {
+                                                    <a href="@Url.Action("SetLocation", "EmployeeLocation", new { employeeId = employee.EmployeeId })" class="btn btn-link p-0">Set Location</a>
+                                                }
+                                                else
+                                                {
+                                                    <a href="@Url.Action("SetLocation", "EmployeeLocation", new { employeeId = employee.EmployeeId })" class="btn btn-link p-0">Edit</a>
+                                                }
                                             </td>
                                         </tr>
                                     }

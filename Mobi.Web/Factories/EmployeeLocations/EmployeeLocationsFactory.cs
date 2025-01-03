@@ -1,4 +1,5 @@
-﻿using Mobi.Data.Domain;
+﻿using AutoMapper.Configuration.Annotations;
+using Mobi.Data.Domain;
 using Mobi.Data.Domain.Employees;
 using Mobi.Service.EmployeeLocationServices;
 using Mobi.Service.Employees;
@@ -21,15 +22,15 @@ namespace Mobi.Web.Factories.EmployeeLocations
             _employeeLocationService = employeeLocationService;
         }
 
-        public EmployeeLocationViewModel PrepareEmployeeLocationModel(EmployeeLocation employeeLocation)
+        public EmployeeLocationViewModel PrepareEmployeeLocationModel(Employee employee)
         {
             var emp = new EmployeeLocationViewModel
             {
-                EmployeeId = employeeLocation.Id,
-                EmployeeName = _employeeService.GetEmployeeById(employeeLocation.EmployeeId)?.NameArabic,
+                EmployeeId = employee.Id,
+                EmployeeName = employee.NameEng,
             };
 
-            var selectedLocations = _employeeLocationService.GetSelectedLocationsByEmployeeId(employeeLocation.EmployeeId);
+            var selectedLocations = _employeeLocationService.GetSelectedLocationsByEmployeeId(employee.Id);
 
             // Fetch locations for the employee
             var locations = _locationService.GetAllLocations().Where(x=> selectedLocations.Contains(x.Id))
@@ -40,7 +41,7 @@ namespace Mobi.Web.Factories.EmployeeLocations
             return emp;
         }
 
-        public IEnumerable<EmployeeLocationViewModel> PrepareEmployeeLocationModels(IEnumerable<EmployeeLocation> employees)
+        public IEnumerable<EmployeeLocationViewModel> PrepareEmployeeLocationModels(IEnumerable<Employee> employees)
         {
             return employees.Select(emp => PrepareEmployeeLocationModel(emp));
         }

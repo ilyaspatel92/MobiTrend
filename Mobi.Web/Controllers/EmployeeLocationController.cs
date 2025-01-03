@@ -30,8 +30,40 @@ namespace Mobi.Web.Controllers
 
         #region Set Employee Location
         [HttpGet]
-        public IActionResult SetLocation()
+        public IActionResult SetLocation(int? employeeId)
         {
+            if (employeeId.HasValue)
+            {
+                // Fetch employee details
+                var employee = _employeeService.GetEmployeeById(employeeId.Value);
+
+                if (employee == null)
+                    return RedirectToAction("EmployeeLocation"); // Redirect back if the employee doesn't exist
+
+                // Fetch selected locations for the employee
+                var selectedLocations = _employeeLocationService.GetSelectedLocationsByEmployeeId(employeeId.Value);
+
+                // Fetch all locations and set "IsSelected" for the selected ones
+                var locations = _locationService.GetAllLocations()
+                    .Select(l => new LocationViewModel
+                    {
+                        Id = l.Id,
+                        Name = l.LocationNameEnglish,
+                        IsSelected = selectedLocations.Contains(l.Id)
+                    })
+                    .ToList();
+
+                // Prepare the model
+                var model = new EmployeeLocationViewModel
+                {
+                    EmployeeId = employee.Id,
+                    EmployeeName = employee.NameEng,
+                    Locations = locations
+                };
+
+                return View(model); // Pass the model to the view
+            }
+
             return View();
         }
 
@@ -93,19 +125,27 @@ namespace Mobi.Web.Controllers
         [HttpGet]
         public IActionResult EmployeeLocation(string employeeName, int? employeeId, string siteStatus, int page = 1, int pageSize = 5)
         {
-            var query = _employeeLocationService.GetAllEmployeeLocations();
+            // Pass query string values to the view
+            ViewData["EmployeeName"] = employeeName;
+            ViewData["EmployeeId"] = employeeId?.ToString();
+            ViewData["SiteStatus"] = siteStatus;
+
+            var query = _employeeService.GetAllEmployees();
 
             //// Apply search filters
-            //if (!string.IsNullOrEmpty(employeeName))
-            //    query = query.Where(e => e.EmployeeName.Contains(employeeName, StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrEmpty(employeeName))
+                query = query.Where(e => e.NameEng.Contains(employeeName, StringComparison.OrdinalIgnoreCase) || e.NameArabic.Contains(employeeName, StringComparison.OrdinalIgnoreCase));
 
             if (employeeId.HasValue)
                 query = query.Where(e => e.Id == employeeId);
 
-            //if (!string.IsNullOrEmpty(siteStatus))
-            //    query = query.Where(e => e.SiteStatus.Equals(siteStatus, StringComparison.OrdinalIgnoreCase));
+            if (siteStatus =="set")
+            {
+                var alreadySetLocationEmp = _employeeLocationService.GetAllEmployeeLocations().DistinctBy(x=>x.EmployeeId).Select(x=>x.EmployeeId).ToList();
 
-            query = query.DistinctBy(x => x.EmployeeId);
+                if (alreadySetLocationEmp.Any())
+                    query = query.Where(e => !alreadySetLocationEmp.Contains(e.Id));
+            }
 
             // Pagination
             var totalItems = query.Count();
@@ -123,6 +163,41 @@ namespace Mobi.Web.Controllers
 
             return View(model);
         }
+
+
+        //[HttpGet]
+        //public IActionResult EmployeeLocation1(string employeeName, int? employeeId, string siteStatus, int page = 1, int pageSize = 5)
+        //{
+        //    var query = _employeeLocationService.GetAllEmployeeLocations();
+
+        //    //// Apply search filters
+        //    //if (!string.IsNullOrEmpty(employeeName))
+        //    //    query = query.Where(e => e.EmployeeName.Contains(employeeName, StringComparison.OrdinalIgnoreCase));
+
+        //    if (employeeId.HasValue)
+        //        query = query.Where(e => e.Id == employeeId);
+
+        //    //if (!string.IsNullOrEmpty(siteStatus))
+        //    //    query = query.Where(e => e.SiteStatus.Equals(siteStatus, StringComparison.OrdinalIgnoreCase));
+
+        //    query = query.DistinctBy(x => x.EmployeeId);
+
+        //    // Pagination
+        //    var totalItems = query.Count();
+        //    var items = query.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+        //    var employeeLocationViewModel = _employeeLocationsFactory.PrepareEmployeeLocationModels(items).ToList();
+
+        //    var model = new PaginatedList<EmployeeLocationViewModel>
+        //    {
+        //        Items = employeeLocationViewModel,
+        //        TotalItems = totalItems,
+        //        CurrentPage = page,
+        //        PageSize = pageSize
+        //    };
+
+        //    return View(model);
+        //}
 
         #endregion
 
