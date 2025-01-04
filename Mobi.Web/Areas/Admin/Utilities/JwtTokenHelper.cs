@@ -98,7 +98,7 @@ namespace Mobi.Web.Areas.Admin.Utilities
                 issuer: _jwtSettings.Issuer,
                 audience: _jwtSettings.Audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(30),
+                expires: DateTime.UtcNow.AddDays(7),
                 signingCredentials: credentials
             );
 
