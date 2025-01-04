@@ -1,20 +1,22 @@
-﻿@{
-    ViewData["Title"] = "MobileManage";
+﻿@model PaginatedList<EmployeeModel>
+
+@{
+    ViewData["Title"] = "Mobile Manage";
 }
 <div class="card card-info card-outline mb-4 mx-3 custom-top-spacing">
     <div class="card-header">
         <h3 class="card-title">Mobile Manage</h3>
     </div>
     <div class="card-body">
-        <form id="searchForm" method="get" action="#">
+        <form id="searchForm" method="get" action="@Url.Action("MobileManage", "MobileManage")">
             <div class="row mb-4">
                 <div class="col-md-4">
                     <label for="employeeName" class="form-label">Employee Name</label>
-                    <input type="text" name="employeeName" id="employeeName" class="form-control" placeholder="Search by name">
+                    <input type="text" name="name" id="employeeName" class="form-control" placeholder="Search by name" value="@ViewData["Name"]">
                 </div>
                 <div class="col-md-2">
                     <label for="employeeId" class="form-label">ID</label>
-                    <input type="text" name="employeeId" id="employeeId" class="form-control" placeholder="ID">
+                    <input type="text" name="id" id="employeeId" class="form-control" placeholder="ID" value="@ViewData["Id"]">
                 </div>
                 <div class="col-md-3 d-flex align-items-end">
                     <button type="submit" class="btn btn-primary w-100">Search</button>
@@ -33,44 +35,57 @@
                     <th>Reg Via</th>
                     <th>Admin</th>
                     <th>Reg Status</th>
-                    <th>Action</th>
+                    @* <th>Action</th> *@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>employee 1</td>
-                    <td>100</td>
-                    <td>Iphone</td>
-                    <td>20/2/2022</td>
-                    <td>web</td>
-                    <td>admin 1</td>
-                    <td>regited</td>
-                    <td><a href="#" class="btn btn-link">Edit</a></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>employee 2</td>
-                    <td>201</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>Non regited</td>
-                    <td><a href="#" class="btn btn-link">Register</a></td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>employee 3</td>
-                    <td>202</td>
-                    <td>Android</td>
-                    <td>01/01/2022</td>
-                    <td>web</td>
-                    <td>admin 2</td>
-                    <td>regited</td>
-                    <td><a href="#" class="btn btn-link">Edit</a></td>
-                </tr>
+                @if (Model.Items != null && Model.Items.Any())
+                {
+                    foreach (var employee in Model.Items)
+                    {
+                        <tr>
+                            <td>@employee.Id</td>
+                            <td>@employee.NameEng</td>
+                            <td>@employee.Id</td>
+                            <td>@Enum.GetName(typeof(MobileType), employee.MobileType)</td>
+                            <td>@employee.CreatedDate.ToString("dd/MM/yyyy")</td>
+                            <td>@Enum.GetName(typeof(RegistrationType), employee.RegistrationVia)</td>
+                            <td>@employee.UserName</td>
+                            <td>@(employee.RegisterStatus ? "Registered" : "Not Registered")</td>
+                           @*  <td>
+                                @if (string.IsNullOrEmpty(employee.MobileNumber))
+                                {
+                                    <a href="@Url.Action("RegisterMobile", "YourControllerName", new { id = employee.Id })" class="btn btn-link">Register</a>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("EditMobile", "YourControllerName", new { id = employee.Id })" class="btn btn-link">Edit</a>
+                                }
+                            </td> *@
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="9" class="text-center">No Records Found</td>
+                    </tr>
+                }
             </tbody>
         </table>
+
+        <!-- Pagination Section -->
+        <div class="card-footer">
+            <nav aria-label="Pagination">
+                <ul class="pagination justify-content-center">
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("MobileManage", "YourControllerName", new { page = i, name = ViewData["Name"], id = ViewData["Id"] })">@i</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
     </div>
 </div>
