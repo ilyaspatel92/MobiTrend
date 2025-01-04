@@ -427,7 +427,6 @@ namespace Mobi.Web.Areas.Admin.Controllers
         #region Sign / sign Out 
 
         [HttpPost]
-        [AllowAnonymous]
         public IActionResult SignInOut(int langId, [FromBody] EmployeeAttendanceModel queryModel)
         {
             var response = new ResponseModel<ExpandoObject>();
@@ -480,10 +479,10 @@ namespace Mobi.Web.Areas.Admin.Controllers
             }
         }
 
-        [HttpGet]
-        public IActionResult GetEmployeeAttendance(int langId)
+        [HttpPost]
+        public IActionResult GetEmployeeAttendance(int langId, [FromBody] EmployeeGetAttendanceModel queryModel)
         {
-            var response = new ResponseModel<List<EmployeeAttendanceLogs>>();
+            var response = new ResponseModel<EmployeeAttendanceResponseModel>();
             try
             {
                 var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
@@ -496,17 +495,26 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     return BadRequest(response);  //OR return response
                 }
 
-               var employeeAttendance= _employeeAttendanceService.GetLogsByEmployeeId(employee.Id).ToList();
-                if (employeeAttendance is null)
+               var employeeAttendanceList= _employeeAttendanceService.GetLogsByEmployeeId(employee.Id).ToList();
+                if (employeeAttendanceList.Any()==false)
                 {
                     response.Success = false;
                     response.Message = "No record are found";
                     return BadRequest(response);  //OR return response
                 }
 
+                if(queryModel.AttendanceDateTime.HasValue)
+                {
+                    var attendanceDateTime = queryModel.AttendanceDateTime.Value.Date;
+                    employeeAttendanceList= employeeAttendanceList.Where(x => x.AttendanceDateTime.Date == attendanceDateTime).ToList();
+                }
+
+                var model = new EmployeeAttendanceResponseModel();
+                model.employeeAttendanceModels = employeeAttendanceList;
+               
                 response.Success = true;
                 response.Message = "Item retrieved successfully.";
-                response.Data = employeeAttendance;
+                response.Data = model;
                 return Ok(response);
             }
             catch (Exception ex)

@@ -4,6 +4,10 @@ namespace Mobi.Web.Models.APIModels
 {
     public class LocationModel
     {
+        public LocationModel()
+        {
+            BeaconList = new List<LocationBeaconModel>();
+        }
         public int Id { get; set; }
         public string LocationNameEnglish { get; set; }
         public string LocationNameArabic { get; set; }

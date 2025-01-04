@@ -88,8 +88,8 @@ namespace Mobi.Web.Controllers
         {
             return proofTypeId switch
             {
-                1 => "Beacon",
-                2 => "GPS"
+                1 => "GPS",
+                2 => "Beacon"
             };
         }
 
