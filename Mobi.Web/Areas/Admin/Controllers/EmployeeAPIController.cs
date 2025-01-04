@@ -14,7 +14,6 @@ using Mobi.Web.Factories.Employees;
 using Mobi.Web.Models;
 using Mobi.Web.Models.APIModels;
 using Mobi.Web.Models.Employees;
-using Newtonsoft.Json.Linq;
 
 namespace Mobi.Web.Areas.Admin.Controllers
 {
@@ -521,7 +520,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     model.EmployeeId = item.EmployeeId;
                     model.Id = item.Id;
                     model.LocationId = item.LocationId;
-                    model.LocationName= _locationService.GetLocationById(item.LocationId).LocationNameEnglish;
+                    model.LocationName= _locationService.GetLocationById(item.LocationId)?.LocationNameEnglish??string.Empty;
                     model.ActionType = item.ActionTypeId;
                     model.ActionTypeMode = item.ProofTypeId;
                     model.TransferDateTime=item.TransferDateTime;
