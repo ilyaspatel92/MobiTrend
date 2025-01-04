@@ -1,9 +1,4 @@
 ﻿using Mobi.Data.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mobi.Service.Locations
 {
@@ -15,5 +10,7 @@ namespace Mobi.Service.Locations
         void UpdateLocation(Location location);
         void RemoveLocation(Location location);
         bool IsLocationNameExists(string locationNameEnglish);
+
+        IList<Location> GetAllEmployeeLocations(int employeeId); 
     }
 }

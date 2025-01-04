@@ -43,7 +43,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     return BadRequest(response);
                 }
 
-                var locationList = _beaconLocationFactory.PrepareLocationBeaconViewModel().ToList();
+                var locationList = _beaconLocationFactory.PrepareLocationBeaconViewModel(employee.Id).ToList();
                 response.Success = true;
                 response.Message = "Location List successfully";
                 response.Data = locationList;

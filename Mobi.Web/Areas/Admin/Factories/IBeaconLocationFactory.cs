@@ -4,6 +4,6 @@ namespace Mobi.Web.Areas.Admin.Factories
 {
     public interface IBeaconLocationFactory
     {
-        IEnumerable<LocationModel> PrepareLocationBeaconViewModel();
+        IEnumerable<LocationModel> PrepareLocationBeaconViewModel(int employeeId);
     }
 }

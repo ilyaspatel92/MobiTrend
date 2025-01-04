@@ -13,7 +13,6 @@ namespace Mobi.Web.Areas.Admin.Factories
         private readonly ILocationService _locationService;
         private readonly ILocationBeaconService _locationBeaconService;
         private readonly ILocationBeaconFactory _locationBeaconFactory;
-
         #endregion
 
         #region Ctor
@@ -31,9 +30,10 @@ namespace Mobi.Web.Areas.Admin.Factories
 
         #region Methods
 
-        public IEnumerable<LocationModel> PrepareLocationBeaconViewModel()
+        public IEnumerable<LocationModel> PrepareLocationBeaconViewModel(int employeeId)
         {
-            var locations = _locationService.GetAllLocations().ToList();
+            var locations = _locationService.GetAllEmployeeLocations(employeeId).ToList();
+
             return locations.Select(location =>
             {
                 var locationBeacons = _locationBeaconService.GetAllLocationBeaconMappingsByLocationId(location.Id);

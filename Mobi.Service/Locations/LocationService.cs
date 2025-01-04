@@ -6,10 +6,13 @@ namespace Mobi.Service.Locations
     public class LocationService : ILocationService
     {
         private readonly IRepository<Location> _locationRepository;
+        private readonly IRepository<EmployeeLocation> _employeeLocationRepository;
 
-        public LocationService(IRepository<Location> locationRepository)
+
+        public LocationService(IRepository<Location> locationRepository, IRepository<EmployeeLocation> employeeLocationRepository)
         {
             _locationRepository = locationRepository;
+            _employeeLocationRepository = employeeLocationRepository;
         }
 
         public IEnumerable<Location> GetAllLocations()
@@ -17,6 +20,18 @@ namespace Mobi.Service.Locations
             return _locationRepository.GetAll();
         }
 
+        public IList<Location> GetAllEmployeeLocations(int employeeId)
+        {
+            var query =
+                   from l in _locationRepository.GetAll()
+                   join elc in _employeeLocationRepository.GetAll() on l.Id equals elc.LocationId
+                   where elc.EmployeeId == employeeId
+                   select l;
+
+            return query.ToList();
+        }
+
+        
         public Location GetLocationById(int id)
         {
             return _locationRepository.GetById(id);

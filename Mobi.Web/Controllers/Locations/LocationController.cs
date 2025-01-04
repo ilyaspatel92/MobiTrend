@@ -85,7 +85,7 @@ namespace Mobi.Web.Controllers.Locations
                     Longitude = model.Longitude,
                     SetRadius = model.SetRadius,
                     GPSLocationAddress = model.GPSLocationAddress,
-                    CompanyId = model.CompanyId,
+                    CompanyId = 1,
                     CreatedDate = DateTime.Now
                 };
 
@@ -136,7 +136,6 @@ namespace Mobi.Web.Controllers.Locations
                 existingLocation.SetRadius = model.SetRadius;
                 existingLocation.SetPolygon = model.SetPolygon;
                 existingLocation.GPSLocationAddress = model.GPSLocationAddress;
-                existingLocation.CompanyId = model.CompanyId;
 
                 _locationService.UpdateLocation(existingLocation);
                 return RedirectToAction(nameof(List));
