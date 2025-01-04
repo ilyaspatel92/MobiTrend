@@ -7,6 +7,7 @@ using Mobi.Data.Enums;
 using Mobi.Service.EmployeeAttendances;
 using Mobi.Service.Employees;
 using Mobi.Service.Helpers;
+using Mobi.Service.Locations;
 using Mobi.Service.Pictures;
 using Mobi.Web.Areas.Admin.Utilities;
 using Mobi.Web.Factories.Employees;
@@ -25,19 +26,21 @@ namespace Mobi.Web.Areas.Admin.Controllers
         private readonly JwtTokenHelper _jwtTokenHelper;
         private readonly IPictureService _pictureService;
         private readonly IEmployeeAttendanceService _employeeAttendanceService;
-
+        private readonly ILocationService _locationService;
 
         public EmployeeAPIController(IEmployeeService employeeService,
                                      IEmployeeFactory employeeFactory,
                                      JwtTokenHelper jwtTokenHelper,
                                      IPictureService pictureService,
-                                     IEmployeeAttendanceService employeeAttendanceService)
+                                     IEmployeeAttendanceService employeeAttendanceService,
+                                     ILocationService locationService)
         {
             _employeeService = employeeService;
             _employeeFactory = employeeFactory;
             _jwtTokenHelper = jwtTokenHelper;
             _pictureService = pictureService;
             _employeeAttendanceService = employeeAttendanceService;
+            _locationService = locationService;
         }
 
         [HttpPost]
@@ -462,7 +465,8 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     PictureId = queryModel.PictureId,
                     ActionTypeId = (int)queryModel.ActionType, //In and out enum 
                     ProofTypeId = (int)queryModel.ActionTypeMode, // GPS or BEacon 
-                    IsVerifiedLocation = queryModel.IsverifiedLocation
+                    IsVerifiedLocation = queryModel.IsverifiedLocation,
+                    CreatedDateTime=DateTime.UtcNow
                 });
 
                 response.Success = true;
@@ -482,7 +486,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult GetEmployeeAttendance(int langId, [FromBody] EmployeeGetAttendanceModel queryModel)
         {
-            var response = new ResponseModel<EmployeeAttendanceResponseModel>();
+            var response = new ResponseModel<List<EmployeeAttendanceResponseModel>>();
             try
             {
                 var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
@@ -509,12 +513,27 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     employeeAttendanceList= employeeAttendanceList.Where(x => x.AttendanceDateTime.Date == attendanceDateTime).ToList();
                 }
 
-                var model = new EmployeeAttendanceResponseModel();
-                model.employeeAttendanceModels = employeeAttendanceList;
+                var employeeAttendanceResponseList = new List<EmployeeAttendanceResponseModel>();
+                foreach (var item in employeeAttendanceList)
+                {
+                    var model = new EmployeeAttendanceResponseModel();
+
+                    model.EmployeeId = item.EmployeeId;
+                    model.Id = item.Id;
+                    model.LocationId = item.LocationId;
+                    model.LocationName= _locationService.GetLocationById(item.LocationId).LocationNameEnglish;
+                    model.ActionType = item.ActionTypeId;
+                    model.ActionTypeMode = item.ProofTypeId;
+                    model.TransferDateTime=item.TransferDateTime;
+                    model.AttendanceDateTime = item.AttendanceDateTime;
+
+                    employeeAttendanceResponseList.Add(model);
+                }
+
                
                 response.Success = true;
                 response.Message = "Item retrieved successfully.";
-                response.Data = model;
+                response.Data = employeeAttendanceResponseList;
                 return Ok(response);
             }
             catch (Exception ex)

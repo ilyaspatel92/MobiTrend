@@ -17,5 +17,6 @@
         public bool Transferred { get; set; }
         public DateTime TransferDateTime { get; set; }
         public int LocationBeaconMappingId { get; set; }
+        public DateTime CreatedDateTime { get; set; }
     }
 }
