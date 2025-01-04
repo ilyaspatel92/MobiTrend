@@ -1,5 +1,6 @@
 ﻿using Mobi.Data;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mobi.Web.Models.Locations
 {
@@ -17,9 +18,11 @@ namespace Mobi.Web.Models.Locations
         public string? ProofTypeName { get; set; }
 
         //[Required(ErrorMessage = "Latitude is required.")]
+        [Column(TypeName = "decimal(18, 15)")]
         public decimal Latitude { get; set; }
 
         //[Required(ErrorMessage = "Longitude is required.")]
+        [Column(TypeName = "decimal(18, 15)")]
         public decimal Longitude { get; set; }
 
         public decimal SetRadius { get; set; }

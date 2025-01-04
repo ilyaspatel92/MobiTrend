@@ -75,8 +75,8 @@ namespace Mobi.Repository.Migrations
                     .WithColumn("ProofType").AsInt32().NotNullable()
                     .WithColumn("CreatedDate").AsDateTime().NotNullable()
                     .WithColumn("GPSLocationAddress").AsString(2000).Nullable()
-                    .WithColumn("Latitude").AsDecimal().Nullable()
-                    .WithColumn("Longtitude").AsDecimal().Nullable()
+                    .WithColumn("Latitude").AsDecimal(18, 6).Nullable()
+                    .WithColumn("Longtitude").AsDecimal(18, 6).Nullable()
                     .WithColumn("SetRadius").AsDecimal().Nullable()
                     .WithColumn("SetPolygon").AsString(2000).Nullable()
                     .WithColumn("CompanyId").AsDecimal().Nullable();
