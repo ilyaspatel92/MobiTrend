@@ -5,6 +5,7 @@
         public int EmployeeId { get; set; }
         public string EmployeeName { get; set; }
         public List<LocationViewModel> Locations { get; set; }
+        public string LocationNames { get; set; }
     }
 
     public class LocationViewModel

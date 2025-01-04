@@ -11,6 +11,7 @@
         public decimal Latitude { get; set; }
         public decimal Longitude { get; set; }
         public decimal SetRadius { get; set; }
+        public string SetPolygon { get; set; }
         public int CompanyId { get; set; }
     }
 }

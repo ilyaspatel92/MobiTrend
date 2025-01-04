@@ -78,6 +78,7 @@ namespace Mobi.Repository.Migrations
                     .WithColumn("Latitude").AsDecimal().Nullable()
                     .WithColumn("Longtitude").AsDecimal().Nullable()
                     .WithColumn("SetRadius").AsDecimal().Nullable()
+                    .WithColumn("SetPolygon").AsString(2000).Nullable()
                     .WithColumn("CompanyId").AsDecimal().Nullable();
 
                 // Add foreign key only if the table was created

@@ -1,0 +1,102 @@
+﻿@model PaginatedList<EmployeeLocationViewModel>
+@{
+    ViewData["Title"] = "Employee Locations";
+}
+<!-- Search Section -->
+<div class="card card-info card-outline mb-4 mx-3 custom-top-spacing">
+    <div class="card-header">
+        <h3 class="card-title">Search Employee</h3>
+    </div>
+    <form id="searchForm" method="get" action="@Url.Action("EmployeeLocation", "EmployeeLocation")">
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <label for="employeeName" class="form-label">Employee Name</label>
+                    <input type="text" name="employeeName" id="employeeName" class="form-control" placeholder="Search by name" value="@ViewData["EmployeeName"]">
+                </div>
+                <div class="col-md-2">
+                    <label for="employeeId" class="form-label">ID</label>
+                    <input type="text" name="employeeId" id="employeeId" class="form-control" placeholder="ID" value="@ViewData["EmployeeId"]">
+                </div>
+                <div class="col-md-3">
+                    <label for="siteStatus" class="form-label">Site Status</label>
+                    <select name="siteStatus" id="siteStatus" class="form-select">
+                        <option value="" selected="@(ViewData["SiteStatus"]?.ToString() == "" ? "selected" : null)">All</option>
+                        <option value="set" selected="@(ViewData["SiteStatus"]?.ToString() == "set" ? "selected" : null)">Set</option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button class="btn btn-primary w-100">Search</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Employee Locations Table -->
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-12">
+                    <div class="card-header">
+                        <h3 class="card-title">Employee Location Details</h3>
+                    </div>
+                    <div class="card-body table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>No</th>
+                                    <th>Employee Name</th>
+                                    <th>Location Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Items.Any())
+                                {
+                                    foreach (var employee in Model.Items)
+                                    {
+                                        <tr>
+                                            <td>@employee.EmployeeId</td>
+                                            <td>@employee.EmployeeName</td>
+                                            <td>@employee.LocationNames</td>
+                                            <td>
+                                                @if (string.IsNullOrEmpty(employee.LocationNames))
+                                                {
+                                                    <a href="@Url.Action("SetLocation", "EmployeeLocation", new { employeeId = employee.EmployeeId })" class="btn btn-link p-0">Set Location</a>
+                                                }
+                                                else
+                                                {
+                                                    <a href="@Url.Action("SetLocation", "EmployeeLocation", new { employeeId = employee.EmployeeId })" class="btn btn-link p-0">Edit</a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center">No Records Found</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <nav aria-label="Pagination">
+                            <ul class="pagination justify-content-center">
+                                @for (int i = 1; i <= Model.TotalPages; i++)
+                                {
+                                    <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                                        <a class="page-link" href="@Url.Action("EmployeeLocation", "EmployeeLocation", new { page = i })">@i</a>
+                                    </li>
+                                }
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

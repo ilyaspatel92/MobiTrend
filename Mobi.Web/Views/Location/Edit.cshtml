@@ -1,6 +1,6 @@
 ﻿@model LocationModel
 
-<form asp-action="Edit" method="post" class="needs-validation" novalidate>
+<form asp-action="Edit" method="post" class="needs-validation" novalidate id="locationForm">
     <div class="card card-info card-outline mb-4">
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
@@ -38,6 +38,7 @@
                         <option value="true" selected>Active</option>
                         <option value="false">Inactive</option>
                     </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
                 </div>
             </div>
 
@@ -46,11 +47,11 @@
                 <label>Proof Type</label>
                 <div>
                     <!-- GPS Proof Radio Button -->
-                    <input id="gpsProofRadio" type="radio" name="ProofType" value="2" class="form-check-input" @(Model.ProofType == (int)ProofType.GPS ? "checked" : "") />
+                    <input id="gpsProofRadio" type="radio" name="ProofType" value="1" class="form-check-input" @(Model.ProofType == (int)ProofType.GPS ? "checked" : "") />
                     <label for="gpsProofRadio" class="form-check-label">GPS Proof</label>
 
                     <!-- Beacon Proof Radio Button -->
-                    <input id="beaconProofRadio" type="radio" name="ProofType" value="1" class="form-check-input ms-3" @(Model.ProofType == (int)ProofType.Beacon ? "checked" : "") />
+                    <input id="beaconProofRadio" type="radio" name="ProofType" value="2" class="form-check-input ms-3" @(Model.ProofType == (int)ProofType.Beacon ? "checked" : "") />
                     <label for="beaconProofRadio" class="form-check-label">Beacon Proof</label>
                 </div>
             </div>
@@ -58,10 +59,38 @@
             <!-- Collapsible Section for GPS Proof -->
             <div id="gpsProofSection" class="collapse mt-3">
                 <h4>Map Coordination</h4>
-                <p>Include your map or related content here for GPS Proof.</p>
-                <div id="map" style="height: 400px; border: 1px solid #ccc;"></div>
-                <button type="button" class="btn btn-secondary mt-2">Draw Polygon</button>
-                <button type="button" class="btn btn-secondary mt-2">Set Radius</button>
+                <p>Search for a location or provide coordinates for GPS Proof.</p>
+
+                <!-- Address Input -->
+                <div class="mb-3">
+                    
+                    <input asp-for="GPSLocationAddress" id="autocomplete"  class="form-control" placeholder="search address">
+                    @* <input id="autocomplete" type="text" class="form-control" placeholder="search address"> *@
+                </div>
+
+                <!-- Coordinates Display -->
+                <div class="d-flex mb-3">
+                    <div class="me-2">
+                        <label for="latitude" class="form-label">Latitude</label>
+                        <input asp-for="Latitude" id="latitude" class="form-control" readonly>
+                    </div>
+                    <div>
+                        <label for="longitude" class="form-label">Longitude</label>
+                        <input asp-for="Longitude" id="longitude" class="form-control" readonly>
+                    </div>
+                   @*  <div>
+                        <label for="Radius" class="form-label">Radius</label>
+                        <input asp-for="SetRadius" id="SetRadius" class="form-control" name="SetRadius" readonly />
+                    </div> *@
+                </div>
+                <input asp-for="SetPolygon" id="SetPolygon" class="form-control" type="hidden" name="SetPolygon" />
+                <input asp-for="SetRadius" id="SetRadius" class="form-control" type="hidden" name="SetRadius" />
+                <!-- Map -->
+                <div id="locationmap" style="height: 400px; border: 1px solid #ccc;"></div>
+                <button type="button" class="btn btn-secondary mt-2" id="drawPolygonButton">Draw Polygon</button>
+                <button type="button" class="btn btn-secondary mt-2" id="setRadiusButton">Set Radius</button>
+                <button type="button" class="btn btn-danger mt-2" id="clearShapesButton" hidden>Clear Shapes</button>
+
             </div>
 
             <!-- Collapsible Section for Beacon List -->
@@ -180,40 +209,7 @@
                 return row;
             }
 
-            // // Create an editable row for adding or editing a beacon
-            // function createEditableRow(beacon = {}) {
-            //     const row = document.createElement("tr");
-            //     row.innerHTML = `
-            //         <td><input type="text" class="form-control" value="${beacon.beaconName || ""}" placeholder="Enter Beacon Name"></td>
-            //         <td><input type="text" class="form-control" value="${beacon.uuid || ""}" placeholder="Enter UUID"></td>
-            //         <td>
-            //             <select class="form-select">
-            //                 <option value="true" ${beacon.status ? "selected" : ""}>Active</option>
-            //                 <option value="false" ${!beacon.status ? "selected" : ""}>Inactive</option>
-            //             </select>
-            //         </td>
-            //         <td>
-            //             <button type="button" class="btn btn-primary saveBeacon">Save</button>
-            //             <button type="button" class="btn btn-danger cancelBeacon ms-2">Cancel</button>
-            //         </td>
-            //     `;
-
-            //     row.querySelector(".saveBeacon").addEventListener("click", function () {
-            //         saveBeacon(row, beacon.id);
-            //     });
-
-            //     row.querySelector(".cancelBeacon").addEventListener("click", function () {
-            //         if (beacon.id) {
-            //             row.replaceWith(createRow(beacon));
-            //         } else {
-            //             row.remove();
-            //         }
-            //     });
-
-            //     return row;
-            // }
-
-                    // Create an editable row for adding or editing a beacon
+        // Create an editable row for adding or editing a beacon
         function createEditableRow(beacon = {}) {
             const row = document.createElement("tr");
             row.innerHTML = `
@@ -359,13 +355,176 @@
     </script>
 
     <script>
+        let map, marker, autocomplete, geocoder, polygon, circle;
+
         function initMap() {
-            const map = new google.maps.Map(document.getElementById("map"), {
-                center: { lat: 40.7128, lng: -74.0060 },
-                zoom: 12
+            // Initialize the map
+            map = new google.maps.Map(document.getElementById("locationmap"), {
+                center: { lat: 40.7128, lng: -74.0060 }, // Default location (New York City)
+                zoom: 12,
             });
+
+            // Initialize geocoder
+            geocoder = new google.maps.Geocoder();
+
+            // Initialize marker
+            marker = new google.maps.Marker({
+                map: map,
+                draggable: true,
+                position: { lat: 40.7128, lng: -74.0060 }, // Default location
+            });
+
+            // Update coordinates when marker is dragged
+            google.maps.event.addListener(marker, "dragend", function () {
+                const position = marker.getPosition();
+                updateCoordinates(position.lat(), position.lng());
+            });
+
+            // Initialize autocomplete
+            autocomplete = new google.maps.places.Autocomplete(document.getElementById("autocomplete"), {
+                types: ["geocode"],
+            });
+            autocomplete.bindTo("bounds", map);
+
+            // Handle place selection from autocomplete
+            autocomplete.addListener("place_changed", function () {
+                const place = autocomplete.getPlace();
+                if (!place.geometry) {
+                    alert("No details available for the selected location.");
+                    return;
+                }
+
+                // Update map and marker
+                map.setCenter(place.geometry.location);
+                map.setZoom(15);
+                marker.setPosition(place.geometry.location);
+                updateCoordinates(place.geometry.location.lat(), place.geometry.location.lng());
+            });
+
+            // Handle "Draw Polygon" button
+            document.getElementById("drawPolygonButton").addEventListener("click", drawPolygon);
+
+            // Handle "Set Radius" button
+            document.getElementById("setRadiusButton").addEventListener("click", setRadius);
+
+            // Handle form submission
+            document.getElementById("locationForm").addEventListener("submit", function () {
+                if (polygon) savePolygon();
+                if (circle) saveRadius();
+            });
+        }
+
+        // Function to update coordinates input fields
+        function updateCoordinates(lat, lng) {
+            document.getElementById("latitude").value = lat.toFixed(6);
+            document.getElementById("longitude").value = lng.toFixed(6);
+        }
+
+        // Draw a polygon on the map
+        function drawPolygon() {
+            // Clear existing shapes
+            clearShapes();
+
+            const drawingManager = new google.maps.drawing.DrawingManager({
+                drawingMode: google.maps.drawing.OverlayType.POLYGON,
+                drawingControl: false,
+                polygonOptions: {
+                    fillColor: "#FF0000",
+                    fillOpacity: 0.35,
+                    strokeWeight: 2,
+                    clickable: true,
+                    editable: true,
+                    zIndex: 1,
+                },
+            });
+
+            drawingManager.setMap(map);
+
+            google.maps.event.addListener(drawingManager, "overlaycomplete", function (event) {
+                if (event.type === google.maps.drawing.OverlayType.POLYGON) {
+                    polygon = event.overlay;
+                    drawingManager.setDrawingMode(null); // Stop drawing mode
+                    drawingManager.setMap(null); // Remove drawing tools
+                    savePolygon();
+                    alert("Polygon drawn!");
+                }
+            });
+        }
+
+        // Set a radius around the marker
+        function setRadius() {
+            // Clear existing shapes
+            clearShapes();
+
+            const radius = prompt("Enter radius in meters:", "1000");
+            if (isNaN(radius) || radius <= 0) {
+                alert("Please enter a valid radius in meters.");
+                return;
+            }
+
+            circle = new google.maps.Circle({
+                map: map,
+                radius: parseFloat(radius),
+                center: marker.getPosition(),
+                fillColor: "#00FF00",
+                fillOpacity: 0.35,
+                strokeWeight: 2,
+            });
+
+            map.fitBounds(circle.getBounds()); // Adjust map to fit the circle
+            saveRadius();
+        }
+
+        // Save polygon coordinates to the hidden input
+        function savePolygon() {
+            const polygonPath = polygon
+                .getPath()
+                .getArray()
+                .map(latlng => ({ lat: latlng.lat(), lng: latlng.lng() }));
+            document.getElementById("SetPolygon").value = JSON.stringify(polygonPath);
+        }
+
+        // Save radius value to the hidden input
+        function saveRadius() {
+            document.getElementById("SetRadius").value = circle.getRadius().toFixed(2);
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Make sure the button exists before adding event listener
+            const clearButton = document.getElementById("clearShapesButton");
+
+            if (clearButton) {
+                clearButton.addEventListener("click", function () {
+                    clearShapes(); // Clear the polygon and circle from the map
+                    resetHiddenValues(); // Reset the hidden input values
+                });
+            } else {
+                console.error("Clear Shapes button not found!");
+            }
+        });
+
+        // Function to clear polygon and circle from the map
+        function clearShapes() {
+            if (polygon) {
+                polygon.setMap(null); // Remove the polygon from the map
+                polygon = null;
+            }
+            if (circle) {
+                circle.setMap(null); // Remove the circle from the map
+                circle = null;
+            }
+        }
+
+        // Function to reset the hidden input values
+        function resetHiddenValues() {
+            document.getElementById("SetPolygon").value = "";
+            document.getElementById("SetRadius").value = "";
         }
     </script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+
+<!-- Include Google Maps API with Drawing Library -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkN-Q_IuLUmbFX_QHCzEEecAufZmwpZ7k&libraries=places,drawing&callback=initMap" async defer></script>
+
+
 }

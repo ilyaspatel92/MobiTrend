@@ -36,6 +36,12 @@ namespace Mobi.Service.EmployeeLocationServices
             return null;
         }
 
+        public IEnumerable<EmployeeLocation> GetAllEmployeeLocations()
+        {
+            
+            return _employeeLocationRepository.GetAll();           
+        }
+
         public void ClearEmpLocations(int empId)
         {
             if (empId > 0)

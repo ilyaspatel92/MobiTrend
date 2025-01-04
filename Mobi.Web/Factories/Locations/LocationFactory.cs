@@ -26,6 +26,7 @@ namespace Mobi.Web.Factories.Locations
                 Latitude = location.Latitude,
                 Longitude = location.Longitude,
                 SetRadius = location.SetRadius,
+                SetPolygon = location.SetPolygon,
                 CompanyId = location.CompanyId
             };
         }

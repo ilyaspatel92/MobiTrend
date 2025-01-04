@@ -1,0 +1,76 @@
+﻿@{
+    ViewData["Title"] = "MobileManage";
+}
+<div class="card card-info card-outline mb-4 mx-3 custom-top-spacing">
+    <div class="card-header">
+        <h3 class="card-title">Mobile Manage</h3>
+    </div>
+    <div class="card-body">
+        <form id="searchForm" method="get" action="#">
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <label for="employeeName" class="form-label">Employee Name</label>
+                    <input type="text" name="employeeName" id="employeeName" class="form-control" placeholder="Search by name">
+                </div>
+                <div class="col-md-2">
+                    <label for="employeeId" class="form-label">ID</label>
+                    <input type="text" name="employeeId" id="employeeId" class="form-control" placeholder="ID">
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                </div>
+            </div>
+        </form>
+
+        <table class="table table-bordered text-center">
+            <thead class="table-light">
+                <tr>
+                    <th>No</th>
+                    <th>Employee Name</th>
+                    <th>ID</th>
+                    <th>Mobile Type</th>
+                    <th>Reg Date</th>
+                    <th>Reg Via</th>
+                    <th>Admin</th>
+                    <th>Reg Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>employee 1</td>
+                    <td>100</td>
+                    <td>Iphone</td>
+                    <td>20/2/2022</td>
+                    <td>web</td>
+                    <td>admin 1</td>
+                    <td>regited</td>
+                    <td><a href="#" class="btn btn-link">Edit</a></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>employee 2</td>
+                    <td>201</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>Non regited</td>
+                    <td><a href="#" class="btn btn-link">Register</a></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>employee 3</td>
+                    <td>202</td>
+                    <td>Android</td>
+                    <td>01/01/2022</td>
+                    <td>web</td>
+                    <td>admin 2</td>
+                    <td>regited</td>
+                    <td><a href="#" class="btn btn-link">Edit</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

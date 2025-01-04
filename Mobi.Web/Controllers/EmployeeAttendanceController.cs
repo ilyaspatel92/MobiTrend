@@ -20,9 +20,41 @@ namespace Mobi.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Logs(DateTime startDate, DateTime endDate, string employeeName, string employeeId)
         {
+            var attendanceLogs = _attendanceRepository.GetAll().ToList();
+            var employees = _employeeRepository.GetAll().ToList();
+            var joinedLogs = from log in attendanceLogs
+                             join emp in employees on log.EmployeeId equals emp.Id
+                             where log.AttendanceDateTime.Date >= startDate.Date && log.AttendanceDateTime.Date <= endDate.Date.Date
+                             select new
+                             {
+                                 Log = log,
+                                 EmployeeName = emp.NameEng
+                             };
+            if (!string.IsNullOrWhiteSpace(employeeName))
+            {
+                joinedLogs = joinedLogs.Where(entry => entry.EmployeeName.Contains(employeeName, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (!string.IsNullOrWhiteSpace(employeeId) && int.TryParse(employeeId, out int parsedEmployeeId))
+            {
+                joinedLogs = joinedLogs.Where(entry => entry.Log.EmployeeId == parsedEmployeeId);
+            }
+
+            var viewModel = joinedLogs.Select(entry => new EmployeeAttendanceLogModel
+            {
+                EmployeeName = entry.EmployeeName,
+                DateAndTime = entry.Log.AttendanceDateTime.ToString("MM/dd/yyyy @ hh:mm tt"),
+                ActionTypeName = GetActionTypeName(entry.Log.ActionTypeId),
+                ActionTypeClass = GetActionTypeClass(entry.Log.ActionTypeId),
+                ProofType = GetProofType(entry.Log.ProofTypeId),
+                Location = _locationService.GetLocationById(Convert.ToInt32(entry.Log.LocationId))?.LocationNameEnglish
+            }).ToList();
+
             var model = new EmployeeAttendanceModel();
+
+            model.AttendanceLogs = viewModel;
             return View(model);
         }
 
@@ -31,10 +63,9 @@ namespace Mobi.Web.Controllers
         {
             var attendanceLogs = _attendanceRepository.GetAll().ToList();
             var employees = _employeeRepository.GetAll().ToList();
-         
             var joinedLogs = from log in attendanceLogs
                              join emp in employees on log.EmployeeId equals emp.Id
-                             where log.AttendanceDateTime >= startDate && log.AttendanceDateTime <= endDate
+                             where log.AttendanceDateTime.Date >= startDate.Date && log.AttendanceDateTime.Date <= endDate.Date.Date
                              select new
                              {
                                  Log = log,

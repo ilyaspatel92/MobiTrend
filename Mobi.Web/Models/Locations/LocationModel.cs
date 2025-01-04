@@ -23,6 +23,7 @@ namespace Mobi.Web.Models.Locations
         public decimal Longitude { get; set; }
 
         public decimal SetRadius { get; set; }
+        public string? SetPolygon { get; set; }
         public string? GPSLocationAddress { get; set; }
         public int CompanyId { get; set; }
         public DateTime CreatedDate { get; set; }

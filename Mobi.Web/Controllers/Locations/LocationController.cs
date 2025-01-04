@@ -134,6 +134,7 @@ namespace Mobi.Web.Controllers.Locations
                 existingLocation.Latitude = model.Latitude;
                 existingLocation.Longitude = model.Longitude;
                 existingLocation.SetRadius = model.SetRadius;
+                existingLocation.SetPolygon = model.SetPolygon;
                 existingLocation.GPSLocationAddress = model.GPSLocationAddress;
                 existingLocation.CompanyId = model.CompanyId;
 
