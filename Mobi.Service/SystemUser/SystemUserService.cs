@@ -58,6 +58,11 @@ namespace Mobi.Service.SystemUser
 
             return query.ToList();
         }
+        public IEnumerable<SystemUsers> GetAllUsers()
+        {
+            return _systemUserRepository.GetAll();
+
+        }
 
         /// <summary>
         /// Inserts a new system user into the system.

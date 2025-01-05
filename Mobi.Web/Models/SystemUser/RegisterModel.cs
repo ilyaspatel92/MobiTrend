@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Mobi.Data;
 
 namespace Mobi.Web.Models.SystemUser
 {
-    public class RegisterModel
+    public class RegisterModel : BaseEntity
     {
         [Required]
         [StringLength(100, MinimumLength = 2)]

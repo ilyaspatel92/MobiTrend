@@ -71,12 +71,13 @@
                 <!-- Coordinates Display -->
                 <div class="d-flex mb-3">
                     <div class="me-2">
-                        <label for="latitude" class="form-label">Latitude</label>
-                        <input asp-for="Latitude" id="latitude" class="form-control" readonly>
+                        <label for="latitude" class="form-label">Latitude</label>                        
+                        <input id="latitude" name="latitude" class="form-control" value="@Model.Latitude.ToString("F6")" readonly>
+
                     </div>
                     <div>
                         <label for="longitude" class="form-label">Longitude</label>
-                        <input asp-for="Longitude" id="longitude" class="form-control" readonly>
+                        <input id="longitude" name="longitude" class="form-control" value="@Model.Longitude.ToString("F6")" readonly>
                     </div>
                    @*  <div>
                         <label for="Radius" class="form-label">Radius</label>
@@ -356,12 +357,18 @@
 
     <script>
         let map, marker, autocomplete, geocoder, polygon, circle;
+                const latitude = parseFloat("@Model.Latitude");
+        const longitude = parseFloat("@Model.Longitude");
 
-        function initMap() {
+        // Fallback to default coordinates if the model values are null or 0
+        const centerCoordinates = (latitude && longitude)
+            ? { lat: latitude, lng: longitude }
+            : { lat: 40.7128, lng: -74.0060 };
+                function initMap() {
             // Initialize the map
             map = new google.maps.Map(document.getElementById("locationmap"), {
-                center: { lat: 40.7128, lng: -74.0060 }, // Default location (New York City)
-                zoom: 12,
+                center: centerCoordinates, // Default location (New York City)
+                zoom: 15,
             });
 
             // Initialize geocoder
@@ -371,7 +378,7 @@
             marker = new google.maps.Marker({
                 map: map,
                 draggable: true,
-                position: { lat: 40.7128, lng: -74.0060 }, // Default location
+                position: centerCoordinates, // Default location
             });
 
             // Update coordinates when marker is dragged
