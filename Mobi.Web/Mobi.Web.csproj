@@ -34,4 +34,11 @@
     <ProjectReference Include="..\Mobi.Service\Mobi.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Views\SystemUsers\Edit.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

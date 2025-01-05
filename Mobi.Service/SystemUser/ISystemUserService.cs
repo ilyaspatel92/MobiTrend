@@ -16,6 +16,12 @@ namespace Mobi.Service.SystemUser
         IEnumerable<SystemUsers> GetSystemUsers(string searchText);
 
         /// <summary>
+        /// Retrieves a list of system users.
+        /// </summary>
+        /// <returns>A collection of matching system users.</returns>
+        IEnumerable<SystemUsers> GetAllUsers();
+
+        /// <summary>
         /// Retrieves the details of a system user by their unique identifier.
         /// </summary>
         /// <param name="id">The unique identifier of the system user.</param>
