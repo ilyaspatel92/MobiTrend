@@ -20,6 +20,7 @@ using Mobi.Service.Locations;
 using Mobi.Service.Pictures;
 using Mobi.Service.ResourceService;
 using Mobi.Service.SystemUser;
+using Mobi.Service.SystemUserAuthoritys;
 using Mobi.Web.Areas.Admin.Factories;
 using Mobi.Web.Areas.Admin.Utilities;
 using Mobi.Web.Factories.EmployeeLocations;
@@ -211,6 +212,7 @@ namespace Mobi.Web
             services.AddScoped<IPictureService, PictureService>();
             services.AddScoped<IEmployeeLocationService, EmployeeLocationService>();
             services.AddScoped<IEmployeeAttendanceService, EmployeeAttendanceService>();
+            services.AddScoped<ISystemUserAuthorityService, SystemUserAuthorityService>();
             
 
             // Register Factories

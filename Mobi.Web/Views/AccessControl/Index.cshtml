@@ -1,0 +1,125 @@
+﻿@{
+    ViewData["Title"] = "Manage Access Control";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-info text-white">
+            <h3 class="card-title mb-0">Manage Access Control</h3>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="EmployeeName" class="form-label">Employee Name</label>
+                    <input id="EmployeeName" class="form-control" placeholder="Enter 3 character of system user for search" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Screen Authority</h5>
+                    <div id="authority-list">
+                        @foreach (var authority in Enum.GetValues(typeof(ScreenAuthorityEnum)))
+                        {
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="@authority" name="authorities" value="@authority">
+                                <label class="form-check-label" for="@authority">@authority</label>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end mt-3">
+                <button id="saveAccess" class="btn btn-success">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let selectedUserId = 0;
+
+        // Autocomplete for employee names
+        const employeeNameInput = document.getElementById("EmployeeName");
+        const employeeNameDropdown = document.createElement("ul");
+        employeeNameDropdown.setAttribute("id", "EmployeeNameDropdown");
+        employeeNameDropdown.setAttribute(
+            "style",
+            "list-style: none; padding: 0; margin: 0; border: 1px solid #ccc; display: none; position: absolute; background: white; max-height: 200px; overflow-y: auto; width: 100%; z-index: 1000;"
+        );
+        employeeNameInput.parentNode.appendChild(employeeNameDropdown);
+
+        employeeNameInput.addEventListener("input", function () {
+            const term = employeeNameInput.value;
+
+            if (term.length < 3) {
+                employeeNameDropdown.style.display = "none";
+                return;
+            }
+
+            fetch(`/AccessControl/GetEmployeeNames?term=${term}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    employeeNameDropdown.innerHTML = "";
+
+                    if (data.length === 0) {
+                        const noRecordOption = document.createElement("li");
+                        noRecordOption.textContent = "No record found";
+                        noRecordOption.setAttribute("style", "padding: 5px; color: #888;");
+                        employeeNameDropdown.appendChild(noRecordOption);
+                    } else {
+                        data.forEach((item) => {
+                            const option = document.createElement("li");
+                            option.textContent = item.employeeName;
+                            option.setAttribute("data-id", item.id);
+                            option.setAttribute("style", "padding: 5px; cursor: pointer;");
+                            option.addEventListener("click", function () {
+                                employeeNameInput.value = item.employeeName;
+                                selectedUserId = item.id;
+                                employeeNameDropdown.style.display = "none";
+                                fetchAccess(selectedUserId);
+                            });
+                            employeeNameDropdown.appendChild(option);
+                        });
+                    }
+
+                    employeeNameDropdown.style.display = "block";
+                })
+                .catch(() => {
+                    employeeNameDropdown.innerHTML = "";
+                    const errorOption = document.createElement("li");
+                    errorOption.textContent = "Error fetching data";
+                    errorOption.setAttribute("style", "padding: 5px; color: red;");
+                    employeeNameDropdown.appendChild(errorOption);
+                    employeeNameDropdown.style.display = "block";
+                });
+        });
+
+        document.addEventListener("click", function (event) {
+            if (!employeeNameInput.contains(event.target) && !employeeNameDropdown.contains(event.target)) {
+                employeeNameDropdown.style.display = "none";
+            }
+        });
+
+        // Fetch access for selected employee
+        function fetchAccess(userId) {
+            fetch(`/AccessControl/GetAccessForEmployee?userId=${userId}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    document.querySelectorAll("input[name='authorities']").forEach((input) => {
+                        input.checked = false;
+                    });
+                    data.forEach((item) => {
+                        const authorityInput = document.querySelector(
+                            `#authority-list input[value='${item.screenAuthority}']`
+                        );
+                        if (authorityInput) {
+                            authorityInput.checked = true;
+                        }
+                    });
+                });
+        }
+    });
+
+
+</script>
