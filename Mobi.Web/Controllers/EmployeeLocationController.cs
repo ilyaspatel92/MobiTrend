@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Mobi.Data.Domain;
+using Mobi.Data.Enums;
+using Mobi.Service.AccessControls;
 using Mobi.Service.EmployeeLocationServices;
 using Mobi.Service.Employees;
 using Mobi.Service.Locations;
@@ -15,16 +17,18 @@ namespace Mobi.Web.Controllers
         private readonly ILocationService _locationService;
         private readonly IEmployeeLocationService _employeeLocationService;
         private readonly IEmployeeLocationsFactory _employeeLocationsFactory;
-
+        private readonly IAccessControlService _accessControlService;
         public EmployeeLocationController(IEmployeeService employeeService,
                                           ILocationService locationService,
                                           IEmployeeLocationService employeeLocationService,
-                                          IEmployeeLocationsFactory employeeLocationsFactory)
+                                          IEmployeeLocationsFactory employeeLocationsFactory,
+                                          IAccessControlService accessControlService)
         {
             _employeeService = employeeService;
             _locationService = locationService;
             _employeeLocationService = employeeLocationService;
             _employeeLocationsFactory = employeeLocationsFactory;
+            _accessControlService = accessControlService;
         }
 
 
@@ -32,6 +36,11 @@ namespace Mobi.Web.Controllers
         [HttpGet]
         public IActionResult SetLocation(int? employeeId)
         {
+            bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.EmployeeLocation));
+
+            if (!hasAccess)
+                return RedirectToAction("AccessDenied", "AccessControl");
+
             if (employeeId.HasValue)
             {
                 // Fetch employee details
@@ -125,6 +134,11 @@ namespace Mobi.Web.Controllers
         [HttpGet]
         public IActionResult EmployeeLocation(string employeeName, int? employeeId, string siteStatus, int page = 1, int pageSize = 5)
         {
+            bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.EmployeeLocation));
+
+            if (!hasAccess)
+                return RedirectToAction("AccessDenied", "AccessControl");
+
             // Pass query string values to the view
             ViewData["EmployeeName"] = employeeName;
             ViewData["EmployeeId"] = employeeId?.ToString();

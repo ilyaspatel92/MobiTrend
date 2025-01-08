@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Mobi.Data.Domain;
+using Mobi.Data.Enums;
+using Mobi.Service.AccessControls;
 using Mobi.Service.Factories;
 using Mobi.Service.SystemUser;
 using Mobi.Web.Areas.Admin.Utilities;
@@ -12,15 +14,23 @@ namespace Mobi.Web.Controllers
     {
         private readonly ISystemUserService _systemUserService;
         private readonly ISystemUserFactory _systemUserFactory;
-        public SystemUsersController(ISystemUserService systemUserService, ISystemUserFactory systemUserFactory)
+        private readonly IAccessControlService _accessControlService;
+
+        public SystemUsersController(ISystemUserService systemUserService, ISystemUserFactory systemUserFactory, IAccessControlService accessControlService)
         {
             _systemUserService = systemUserService;
             _systemUserFactory = systemUserFactory;
+            _accessControlService = accessControlService;
         }
 
         [HttpGet]
         public IActionResult Index(string employeeName, string userName, bool? userStatus, int page = 1, int pageSize = 5)
         {
+            bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.SystemUsers));
+
+            if (!hasAccess)
+                return RedirectToAction("AccessDenied", "AccessControl");
+
             ViewData["EmployeeName"] = employeeName;
             ViewData["UserName"] = userName;
             ViewData["UserStatus"] = userStatus;
@@ -59,6 +69,11 @@ namespace Mobi.Web.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.SystemUsers));
+
+            if (!hasAccess)
+                return RedirectToAction("AccessDenied", "AccessControl");
+
             return View();
         }
 
@@ -125,6 +140,11 @@ namespace Mobi.Web.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
+            bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.SystemUsers));
+
+            if (!hasAccess)
+                return RedirectToAction("AccessDenied", "AccessControl");
+
             // Retrieve the user by ID
             var user = _systemUserService.GetSystemUserById(id);
             if (user == null)

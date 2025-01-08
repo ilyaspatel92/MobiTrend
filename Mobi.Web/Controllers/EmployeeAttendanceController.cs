@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Mobi.Data.Domain;
 using Mobi.Data.Domain.Employees;
+using Mobi.Data.Enums;
 using Mobi.Repository;
+using Mobi.Service.AccessControls;
 using Mobi.Service.Locations;
 using Mobi.Web.Models.EmployeeAttendance;
 
@@ -12,16 +14,26 @@ namespace Mobi.Web.Controllers
         private readonly IRepository<EmployeeAttendanceLogs> _attendanceRepository;
         private readonly IRepository<Employee> _employeeRepository;
         private readonly ILocationService _locationService;
-        public EmployeeAttendanceController(IRepository<EmployeeAttendanceLogs> attendanceRepository, IRepository<Employee> employeeRepository, ILocationService locationService)
+        private readonly IAccessControlService _accessControlService;
+        public EmployeeAttendanceController(IRepository<EmployeeAttendanceLogs> attendanceRepository,
+                                            IRepository<Employee> employeeRepository,
+                                            ILocationService locationService,
+                                            IAccessControlService accessControlService)
         {
             _attendanceRepository = attendanceRepository;
             _employeeRepository = employeeRepository;
             _locationService = locationService;
+            _accessControlService = accessControlService;
         }
 
         [HttpGet]
         public IActionResult Logs(DateTime startDate, DateTime endDate, string employeeName, string employeeId)
         {
+            bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.EmployeeAttendance));
+
+            if (!hasAccess)
+                return RedirectToAction("AccessDenied", "AccessControl");
+
             var attendanceLogs = _attendanceRepository.GetAll().ToList();
             var employees = _employeeRepository.GetAll().ToList();
             var joinedLogs = from log in attendanceLogs
@@ -61,6 +73,11 @@ namespace Mobi.Web.Controllers
         [HttpGet]
         public IActionResult Search(DateTime startDate, DateTime endDate, string employeeName, string employeeId)
         {
+            bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.Locations));
+
+            if (!hasAccess)
+                return RedirectToAction("AccessDenied", "AccessControl");
+
             var attendanceLogs = _attendanceRepository.GetAll().ToList();
             var employees = _employeeRepository.GetAll().ToList();
             var joinedLogs = from log in attendanceLogs

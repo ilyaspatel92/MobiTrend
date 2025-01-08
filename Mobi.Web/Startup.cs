@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Mobi.Repository;
 using Mobi.Repository.Migrations;
+using Mobi.Service.AccessControls;
 using Mobi.Service.Compnay;
 using Mobi.Service.EmployeeAttendances;
 using Mobi.Service.EmployeeLocationServices;
@@ -213,6 +214,7 @@ namespace Mobi.Web
             services.AddScoped<IEmployeeLocationService, EmployeeLocationService>();
             services.AddScoped<IEmployeeAttendanceService, EmployeeAttendanceService>();
             services.AddScoped<ISystemUserAuthorityService, SystemUserAuthorityService>();
+            services.AddScoped<IAccessControlService, AccessControlService>();
             
 
             // Register Factories

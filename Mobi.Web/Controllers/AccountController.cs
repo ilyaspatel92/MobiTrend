@@ -2,12 +2,21 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Mobi.Service.SystemUser;
 using System.Security.Claims;
 
 namespace Mobi.Web.Controllers
 {
     public class AccountController : BasePublicController
     {
+
+        private readonly ISystemUserService _systemUserService;
+
+        public AccountController(ISystemUserService systemUserService)
+        {
+            _systemUserService = systemUserService;
+        }
+
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Login(string returnUrl = null)
@@ -36,11 +45,14 @@ namespace Mobi.Web.Controllers
                 return View();
             }
 
+            var systemUser = _systemUserService.Authenticate(email, password);
+
             // Replace with actual user validation logic
-            if (email == "admin@mobi.com" && password == "admin")
+            if (systemUser != null)
             {
                 var claims = new List<Claim>
                 {
+                    new Claim(ClaimTypes.Sid, systemUser.Id.ToString()),
                     new Claim(ClaimTypes.Name, email),
                     new Claim(ClaimTypes.Email, email)
                 };

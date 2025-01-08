@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Mobi.Data.Domain;
+using Mobi.Data.Enums;
+using Mobi.Service.AccessControls;
 using Mobi.Service.SystemUser;
 using Mobi.Service.SystemUserAuthoritys;
+using Mobi.Web.Models.AccessControl;
 
 namespace Mobi.Web.Controllers
 {
@@ -9,17 +12,24 @@ namespace Mobi.Web.Controllers
     {
         private readonly ISystemUserService _systemUserService;
         private readonly ISystemUserAuthorityService _systemUserAuthorityService;
+        private readonly IAccessControlService _accessControlService;
 
-        public AccessControlController(
-            ISystemUserService systemUserService,
-            ISystemUserAuthorityService systemUserAuthorityService)
+        public AccessControlController(ISystemUserService systemUserService,
+                                       ISystemUserAuthorityService systemUserAuthorityService,
+                                       IAccessControlService accessControlService)
         {
             _systemUserService = systemUserService;
             _systemUserAuthorityService = systemUserAuthorityService;
+            _accessControlService = accessControlService;
         }
 
         public IActionResult Index()
         {
+            bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.ControlACL));
+
+            if (!hasAccess)
+                return RedirectToAction("AccessDenied", "AccessControl");
+
             return View();
         }
 
@@ -54,29 +64,43 @@ namespace Mobi.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult SaveAccess([FromForm] int userId, [FromForm] List<string> authorities)
+        public IActionResult SaveAccess([FromBody] SaveAccessRequest request)
         {
-            if (userId == 0)
+            if (request.UserId == 0)
             {
-                return BadRequest("Invalid data.");
+                TempData["ErrorMessage"] = "Invalid user selection.";
+                return RedirectToAction("Index");
             }
 
-            _systemUserAuthorityService.DeleteByUserId(userId);
-            if (authorities != null && authorities.Any())
+            try
             {
-                foreach (var authority in authorities)
+                _systemUserAuthorityService.DeleteByUserId(request.UserId);
+                if (request.Authorities != null && request.Authorities.Any())
                 {
-                    var mapping = new SystemUserAuthorityMapping
+                    foreach (var authority in request.Authorities)
                     {
-                        SystemUserID = userId,
-                        ScreenAuthority = authority,
-                        ScreenAuthoritySystemName = authority.Replace(" ", "").ToLower()
-                    };
-                    _systemUserAuthorityService.Insert(mapping);
+                        var mapping = new SystemUserAuthorityMapping
+                        {
+                            SystemUserID = request.UserId,
+                            ScreenAuthority = authority,
+                            ScreenAuthoritySystemName = authority.Replace(" ", "").ToLower()
+                        };
+                        _systemUserAuthorityService.Insert(mapping);
+                    }
                 }
+                TempData["SuccessMessage"] = "Access control updated successfully.";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"An error occurred: {ex.Message}";
             }
 
-            return Ok("Access saved successfully.");
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult AccessDenied()
+        {
+            return View();  
         }
 
     }

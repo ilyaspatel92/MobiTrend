@@ -3,10 +3,10 @@
     public enum ScreenAuthorityEnum
     {
         Locations,
-        LocationProof,
+        EmployeeAttendance,
         Employees,
         MobileManage,
-        EmployeeSite,
+        EmployeeLocation,
         SystemUsers,
         Reports,
         ControlACL
