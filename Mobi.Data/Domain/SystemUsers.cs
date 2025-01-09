@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mobi.Data.Domain
 {
@@ -24,5 +25,9 @@ namespace Mobi.Data.Domain
         [Required]
         public bool Deleted { get; set; }
 
+        [NotMapped]
+        public string PasswordResetToken { get; set; }
+        [NotMapped]
+        public DateTime? PasswordResetTokenExpiry { get; set; }
     }
 }
