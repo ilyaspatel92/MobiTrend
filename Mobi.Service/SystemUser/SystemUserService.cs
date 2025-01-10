@@ -155,6 +155,50 @@ namespace Mobi.Service.SystemUser
             UpdateSystemUser(user);
         }
 
+        /// <summary>
+        /// Saves a password reset token for a user.
+        /// </summary>
+        /// <param name="username">The username of the user.</param>
+        /// <param name="token">The password reset token.</param>
+        /// <param name="expiry">The expiry date of the token.</param>
+        public void SavePasswordResetToken(string username, string token, DateTime expiry)
+        {
+            if (string.IsNullOrWhiteSpace(username))
+                throw new ArgumentException("Username cannot be null or empty.", nameof(username));
+            if (string.IsNullOrWhiteSpace(token))
+                throw new ArgumentException("Token cannot be null or empty.", nameof(token));
+
+            var user = _systemUserRepository.GetAll().FirstOrDefault(u => u.UserName == username);
+            if (user == null)
+                throw new Exception("User not found");
+
+            user.PasswordResetToken = token;
+            user.PasswordResetTokenExpiry = expiry;
+
+            UpdateSystemUser(user);
+        }
+
+        /// <summary>
+        /// Validates a password reset token.
+        /// </summary>
+        /// <param name="username">The username of the user.</param>
+        /// <param name="token">The token to validate.</param>
+        /// <returns>True if the token is valid; otherwise, false.</returns>
+        public bool ValidatePasswordResetToken(string username, string token)
+        {
+            if (string.IsNullOrWhiteSpace(username))
+                throw new ArgumentException("Username cannot be null or empty.", nameof(username));
+            if (string.IsNullOrWhiteSpace(token))
+                throw new ArgumentException("Token cannot be null or empty.", nameof(token));
+
+            var user = _systemUserRepository.GetAll().FirstOrDefault(u => u.UserName == username);
+            if (user == null)
+                throw new Exception("User not found");
+
+            return user.PasswordResetToken == token && user.PasswordResetTokenExpiry > DateTime.UtcNow;
+        }
+
+
         #endregion
 
     }

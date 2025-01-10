@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Mobi.Data.Enums;
+using Mobi.Service.AccessControls;
 using Mobi.Service.Employees;
 using Mobi.Web.Factories.Employees;
 using Mobi.Web.Models;
@@ -11,16 +13,21 @@ namespace Mobi.Web.Controllers
 
         private readonly IEmployeeService _employeeService;
         private readonly IEmployeeFactory _employeeFactory;
-
-        public MobileManageController(IEmployeeFactory employeeFactory, IEmployeeService employeeService)
+        private readonly IAccessControlService _accessControlService;
+        public MobileManageController(IEmployeeFactory employeeFactory, IEmployeeService employeeService, IAccessControlService accessControlService)
         {
             _employeeFactory = employeeFactory;
             _employeeService = employeeService;
+            _accessControlService = accessControlService;
         }
 
         [HttpGet]
         public IActionResult MobileManage(string name, int? id, int page = 1, int pageSize = 5)
         {
+            bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.MobileManage));
+
+            if (!hasAccess)
+                return RedirectToAction("AccessDenied", "AccessControl");
             // Pass query string values to the view
             ViewData["Name"] = name;
             ViewData["Id"] = id?.ToString();

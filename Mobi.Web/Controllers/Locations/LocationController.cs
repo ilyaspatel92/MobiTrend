@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Mobi.Data.Domain;
+using Mobi.Data.Enums;
+using Mobi.Service.AccessControls;
 using Mobi.Service.Locations;
 using Mobi.Web.Factories.Locations;
 using Mobi.Web.Models.Locations;
@@ -10,16 +12,24 @@ namespace Mobi.Web.Controllers.Locations
     {
         private readonly ILocationService _locationService;
         private readonly ILocationFactory _locationFactory;
-
-        public LocationController(ILocationService locationService, ILocationFactory locationFactory)
+        private readonly IAccessControlService _accessControlService;
+        public LocationController(ILocationService locationService,
+                                  ILocationFactory locationFactory,
+                                  IAccessControlService accessControlService)
         {
             _locationService = locationService;
             _locationFactory = locationFactory;
+            _accessControlService = accessControlService;
         }
 
         [HttpGet]
         public IActionResult List(string name, bool? status)
         {
+            bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.Locations));
+
+            if (!hasAccess)
+                return RedirectToAction("AccessDenied", "AccessControl");
+
             var locations = _locationService.GetAllLocations();
 
             if (!string.IsNullOrEmpty(name))
@@ -66,6 +76,11 @@ namespace Mobi.Web.Controllers.Locations
         }
         public IActionResult Create()
         {
+            bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.Locations));
+
+            if (!hasAccess)
+                return RedirectToAction("AccessDenied", "AccessControl");
+
             return View();
         }
 
@@ -98,6 +113,11 @@ namespace Mobi.Web.Controllers.Locations
 
         public IActionResult Edit(int id)
         {
+            bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.Locations));
+
+            if (!hasAccess)
+                return RedirectToAction("AccessDenied", "AccessControl");
+
             var location = _locationService.GetLocationById(id);
             if (location == null)
             {
@@ -161,6 +181,11 @@ namespace Mobi.Web.Controllers.Locations
 
         public IActionResult Details(int id)
         {
+            bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.Locations));
+
+            if (!hasAccess)
+                return RedirectToAction("AccessDenied", "AccessControl");
+
             var location = _locationService.GetLocationById(id);
             if (location == null)
             {

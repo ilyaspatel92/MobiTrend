@@ -1,64 +1,101 @@
 ﻿@model RegisterModel
 
-<div class="container mt-4">
-    <div class="card">
-        <div class="card-header bg-primary text-white">
-            <h3 class="card-title mb-0">Add System User</h3>
+<div class="content-wrapper">
+    <!-- Page Header -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+            </div>
         </div>
-        <div class="card-body">
-            @if (ViewData.ModelState != null && !ViewData.ModelState.IsValid)
-            {
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                        {
-                            <li>@error.ErrorMessage</li>
-                        }
-                    </ul>
-                </div>
-            }
+    </section>
 
-            <form asp-action="Create" method="post">
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="EmployeeName" class="form-label">Employee Name</label>
-                        <input asp-for="EmployeeName" class="form-control" />
-                        <span asp-validation-for="EmployeeName" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="UserName" class="form-label">User Name</label>
-                        <input asp-for="UserName" class="form-control" />
-                        <span asp-validation-for="UserName" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="Password" class="form-label">Password</label>
-                        <input asp-for="Password" class="form-control" type="password" />
-                        <span asp-validation-for="Password" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="CompanyID" class="form-label">Company ID</label>
-                        <input asp-for="CompanyID" class="form-control" type="number" />
-                        <span asp-validation-for="CompanyID" class="text-danger"></span>
+    <!-- Main Content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Add System User</h3>
+                    <div class="card-tools">
+                        <a asp-action="Index" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-arrow-left"></i> Back to List
+                        </a>
                     </div>
                 </div>
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="UserStatus" class="form-label">User Status</label>
-                        <select asp-for="UserStatus" class="form-control">
-                            <option value="">Select Status</option>
-                            <option value="true">Active</option>
-                            <option value="false">Inactive</option>
-                        </select>
-                        <span asp-validation-for="UserStatus" class="text-danger"></span>
-                    </div>
+                <div class="card-body">
+                    <!-- Display Validation Errors -->
+                    @if (ViewData.ModelState != null && !ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    <form asp-action="Create" method="post">
+                        <!-- Form Fields -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="EmployeeName">Employee Name</label>
+                                    <input asp-for="EmployeeName" class="form-control" placeholder="Enter employee name" />
+                                    <span asp-validation-for="EmployeeName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="UserName">User Name</label>
+                                    <input asp-for="UserName" class="form-control" placeholder="Enter username" />
+                                    <span asp-validation-for="UserName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Password">Password</label>
+                                    <input asp-for="Password" class="form-control" type="password" placeholder="Enter password" />
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="CompanyID">Company ID</label>
+                                    <input asp-for="CompanyID" class="form-control" type="number" placeholder="Enter company ID" />
+                                    <span asp-validation-for="CompanyID" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="UserStatus">User Status</label>
+                                    <select asp-for="UserStatus" class="form-control">
+                                        <option value="true">Active</option>
+                                        <option value="false">Inactive</option>
+                                    </select>
+                                    <span asp-validation-for="UserStatus" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit and Cancel Buttons -->
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary me-2">
+                                    <i class="fas fa-save"></i> Save
+                                </button>
+                                <a asp-action="Index" class="btn btn-secondary">
+                                    <i class="fas fa-times"></i> Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="d-flex justify-content-between">
-                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
+    </section>
 </div>

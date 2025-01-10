@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Access Denied";
+}
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header bg-danger text-white">
+            <h3 class="card-title mb-0">Access Denied</h3>
+        </div>
+        <div class="card-body">
+            <!-- Access Denied Message -->
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">You do not have the necessary permissions to view this page.</h4>
+                <p>Your account does not have the required access rights to view the content of this page.</p>
+                <hr>
+                <p class="mb-0">
+                    Please contact your administrator MOBI.
+                </p>
+            </div>
+
+            <!-- Button to navigate back -->
+            <div class="d-flex justify-content-between">
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Go to Home</a>
+                <a href="javascript:history.back()" class="btn btn-secondary">Go Back</a>
+            </div>
+        </div>
+    </div>
+</div>

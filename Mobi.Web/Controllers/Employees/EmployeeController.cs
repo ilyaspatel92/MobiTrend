@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Mobi.Data.Domain.Employees;
 using Mobi.Data.Enums;
+using Mobi.Service.AccessControls;
 using Mobi.Service.Compnay;
 using Mobi.Service.Employees;
 using Mobi.Service.Helpers;
@@ -14,20 +15,29 @@ namespace Mobi.Web.Controllers.Employees
         private readonly IEmployeeService _employeeService;
         private readonly IEmployeeFactory _employeeFactory;
         private readonly ICompanyService _companyService;
+        private readonly IAccessControlService _accessControlService;
 
 
         public EmployeeController(IEmployeeService employeeService,
                                   IEmployeeFactory employeeFactory,
-                                  ICompanyService companyService)
+                                  ICompanyService companyService,
+                                  IAccessControlService accessControlService)
         {
             _employeeService = employeeService;
             _employeeFactory = employeeFactory;
             _companyService = companyService;
+            _accessControlService = accessControlService;
         }
 
         [HttpGet]
         public IActionResult List(string name, int? id)
         {
+            bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.Employees));
+
+            if (!hasAccess)
+                return RedirectToAction("AccessDenied", "AccessControl");
+
+
             //// Retrieve all employees
             //var employees = _employeeService.GetAllEmployees();
 
@@ -103,8 +113,8 @@ namespace Mobi.Web.Controllers.Employees
                     CompanyId = _companyService.GetCompanies(string.Empty).FirstOrDefault()?.Id ?? 1,
                     CID = model.CID,
                     CreatedDate = DateTime.Now,
-                    UserName= model.NameEng,
-                    RegistrationType =(int)RegistrationType.Web
+                    UserName = model.NameEng,
+                    RegistrationType = (int)RegistrationType.Web
                 };
 
                 _employeeService.AddEmployee(employee);
@@ -116,6 +126,11 @@ namespace Mobi.Web.Controllers.Employees
 
         public IActionResult Edit(int id)
         {
+            bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.Employees));
+
+            if (!hasAccess)
+                return RedirectToAction("AccessDenied", "AccessControl");
+
             var employee = _employeeService.GetEmployeeById(id);
             if (employee == null)
             {
