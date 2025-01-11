@@ -81,7 +81,7 @@
                     @for (int i = 1; i <= Model.TotalPages; i++)
                     {
                         <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                            <a class="page-link" href="@Url.Action("MobileManage", "YourControllerName", new { page = i, name = ViewData["Name"], id = ViewData["Id"] })">@i</a>
+                            <a class="page-link" href="@Url.Action("MobileManage", "MobileManage", new { page = i, name = ViewData["Name"], id = ViewData["Id"] })">@i</a>
                         </li>
                     }
                 </ul>

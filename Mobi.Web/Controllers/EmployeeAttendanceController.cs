@@ -116,6 +116,7 @@ namespace Mobi.Web.Controllers
         {
             return actionTypeId switch
             {
+                0 => "None",
                 1 => "IN",
                 2 => "OUT",
                 3 => "Rejected"
@@ -126,6 +127,7 @@ namespace Mobi.Web.Controllers
         {
             return actionTypeId switch
             {
+                0 => "None",
                 1 => "badge-custom-in",
                 2 => "badge-custom-out",
                 3 => "badge-custom-rejected"
@@ -136,12 +138,11 @@ namespace Mobi.Web.Controllers
         {
             return proofTypeId switch
             {
+                0 => "None",
                 1 => "GPS",
                 2 => "Beacon"
             };
         }
-
-
 
     }
 }

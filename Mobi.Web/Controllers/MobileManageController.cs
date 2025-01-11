@@ -22,7 +22,7 @@ namespace Mobi.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult MobileManage(string name, int? id, int page = 1, int pageSize = 5)
+        public IActionResult MobileManage(string name, int? id, int page = 1, int pageSize = 10)
         {
             bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.MobileManage));
 

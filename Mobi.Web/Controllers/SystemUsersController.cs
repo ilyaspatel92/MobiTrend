@@ -24,7 +24,7 @@ namespace Mobi.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(string employeeName, string userName, bool? userStatus, int page = 1, int pageSize = 5)
+        public IActionResult Index(string employeeName, string userName, bool? userStatus, int page = 1, int pageSize = 10)
         {
             bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.SystemUsers));
 
