@@ -2,8 +2,11 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Mobi.Service.EmailServices;
+using Mobi.Service.Helpers;
 using Mobi.Service.SystemUser;
 using System.Security.Claims;
+using System.Text;
 
 namespace Mobi.Web.Controllers
 {
@@ -84,6 +87,117 @@ namespace Mobi.Web.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Account");
+        }
+
+
+        // Forgot Password GET
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        // Forgot Password POST
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                ModelState.AddModelError("", "Email is required.");
+                return View();
+            }
+
+            var user = _systemUserService.GetSystemUserByEmail(email);
+            if (user == null)
+            {
+                ModelState.AddModelError("", "No account found with this email.");
+                return View();
+            }
+
+            var token = Guid.NewGuid().ToString(); // Replace with your token generation logic
+            var resetLink = Url.Action("ResetPassword", "Account", new { token = token, email = email }, Request.Scheme);
+
+            _systemUserService.SavePasswordResetToken(email, token,DateTime.Now.AddHours(1));
+
+            // Send reset link via email
+            var subject = "Password Reset Request";
+            var message = new StringBuilder();
+            message.AppendLine($"Hi {user.EmployeeName},");
+            message.AppendLine("You requested to reset your password. Click the link below to reset it:");
+            message.AppendLine($"{resetLink}");
+            message.AppendLine("If you did not request this, please ignore this email.");
+
+            // Configure your email service with SMTP details
+            var emailService = new EmailService("smtp.gmail.com", 587, "ppatel14151617@gmail.com", "pP@telTest");
+
+            try
+            {
+                // Send an email
+                emailService.SendEmail(email, subject, message.ToString());
+                Console.WriteLine("Email sent successfully!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to send email: {ex.Message}");
+            }
+
+            ViewBag.Message = "Password reset link has been sent to your email.";
+
+            return View("ForgotPasswordConfirmation");
+        }
+
+        // Reset Password GET
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string token, string email)
+        {
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(email))
+            {
+                return BadRequest("Invalid password reset request.");
+            }
+
+            // Verify token (example implementation)
+            //var isValid = _systemUserService.ValidatePasswordResetToken(email, token);
+            //if (!isValid)
+            //{
+            //    return BadRequest("Invalid or expired token.");
+            //}
+
+            ViewBag.Token = token;
+            ViewBag.Email = email;
+
+            return View();
+        }
+
+        // Reset Password POST
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public IActionResult ResetPassword(string token, string email, string newPassword)
+        {
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(newPassword))
+            {
+                ModelState.AddModelError("", "Invalid input.");
+                return View();
+            }
+
+            //Verify token
+            var isValid = _systemUserService.ValidatePasswordResetToken(email, token);
+            if (!isValid)
+            {
+                ModelState.AddModelError("", "Invalid or expired token.");
+                return View();
+            }
+
+            // Update password
+            var hashedPassword = PasswordHelper.HashPassword(newPassword); // Use your hashing method
+            //_systemUserService.UpdatePassword(email, hashedPassword);
+
+            ViewBag.Message = "Password reset successfully!";
+            return RedirectToAction("Login");
         }
     }
 }

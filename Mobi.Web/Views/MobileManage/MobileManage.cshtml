@@ -29,7 +29,6 @@
                 <tr>
                     <th>No</th>
                     <th>Employee Name</th>
-                    <th>ID</th>
                     <th>Mobile Type</th>
                     <th>Reg Date</th>
                     <th>Reg Via</th>
@@ -46,7 +45,6 @@
                         <tr>
                             <td>@employee.Id</td>
                             <td>@employee.NameEng</td>
-                            <td>@employee.Id</td>
                             <td>@Enum.GetName(typeof(MobileType), employee.MobileType)</td>
                             <td>@employee.CreatedDate.ToString("dd/MM/yyyy")</td>
                             <td>@Enum.GetName(typeof(RegistrationType), employee.RegistrationVia)</td>

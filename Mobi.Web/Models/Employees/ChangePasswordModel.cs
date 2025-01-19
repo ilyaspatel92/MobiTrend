@@ -14,5 +14,8 @@ namespace Mobi.Web.Models.Employees
         [DataType(DataType.Password)]
         public string ConfirmNewPassword { get; set; }
 
+        public int EmployeeId { get; set; }
+
+
     }
 }

@@ -7,8 +7,8 @@
         {
             AttendanceLogs = new List<EmployeeAttendanceLogModel>();
         }
-        public DateTime StartDate { get; set; } = DateTime.Now.Date;
-        public DateTime EndDate { get; set; } = DateTime.Now.Date;
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
         public List<EmployeeAttendanceLogModel> AttendanceLogs { get; set; }
     }
 

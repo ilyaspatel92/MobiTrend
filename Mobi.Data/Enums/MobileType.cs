@@ -5,6 +5,7 @@ namespace Mobi.Data.Enums
     /// </summary>
     public enum MobileType
     {
+        _ = 0,
         /// <summary>
         /// android
         /// </summary>

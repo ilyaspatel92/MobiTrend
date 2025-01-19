@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mobi.Data.Domain
 {
@@ -6,6 +7,9 @@ namespace Mobi.Data.Domain
     {
         [Required]
         public string EmployeeName { get; set; }
+
+        [Required]
+        public string Email { get; set; }
 
         [Required]
         public string UserName { get; set; }
@@ -24,5 +28,8 @@ namespace Mobi.Data.Domain
         [Required]
         public bool Deleted { get; set; }
 
+        public string PasswordResetToken { get; set; }
+
+        public DateTime? PasswordResetTokenExpiry { get; set; }
     }
 }

@@ -23,6 +23,8 @@
 
         <div class="card-body">
             <div class="row g-3">
+                <input type="hidden" id="employeeId" value="@Model.Id" />
+
                 <!-- Name (English) -->
                 <div class="col-md-6">
                     <label asp-for="NameEng" class="form-label">Name (English)</label>
@@ -82,15 +84,26 @@
                     <input asp-for="CompanyId" class="form-control" placeholder="Enter Company ID" required>
                     <span asp-validation-for="CompanyId" class="text-danger"></span>
                 </div> *@
-                 <div class="col-md-6">
+                <div class="col-md-6">
                     <label asp-for="CID" class="form-label">CID</label><span class="text-danger">*</span>
                     <input asp-for="CID" type="CID" class="form-control" placeholder="Enter CID">
                     <span asp-validation-for="CID" class="text-danger"></span>
                 </div>
+                <div class="col-md-12 mt-4">
+                    <label class="form-label">Password</label>
+                    <div class="input-group">
+                        <input type="password" id="passwordInput" name="NewPassword" class="form-control" placeholder="Enter New Password" aria-describedby="passwordButton" disabled>
+                        <button type="button" id="editPasswordButton" class="btn btn-secondary">Change Password</button>
+                        <button type="button" id="savePasswordButton" class="btn btn-primary d-none">Save</button>
+                    </div>
+                    <span id="passwordMessage" class="text-success mt-2 d-none"></span>
+                </div>
+
+
 
             </div>
         </div>
-      
+
         <div class="card-body mt-4">
             <h4 class="card-title">QR Code</h4>
             <div class="text-center">
@@ -124,5 +137,79 @@
                 }, false);
             });
         })();
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const passwordInput = document.getElementById("passwordInput");
+            const employeeIdInput = document.getElementById("employeeId");
+            const editButton = document.getElementById("editPasswordButton");
+            const saveButton = document.getElementById("savePasswordButton");
+            const passwordMessage = document.getElementById("passwordMessage");
+
+            // Enable editing mode
+            editButton.addEventListener("click", function () {
+                passwordInput.removeAttribute("disabled");
+                passwordInput.value = ""; // Clear the password field
+                saveButton.classList.remove("d-none");
+                editButton.classList.add("d-none");
+                passwordInput.focus();
+            });
+
+            // Save the password via AJAX
+            saveButton.addEventListener("click", function () {
+                const password = passwordInput.value.trim();
+                const employeeId = employeeIdInput.value;
+
+                if (!password) {
+                    alert("Password cannot be empty.");
+                    return;
+                }
+
+                // Make the AJAX POST request
+                fetch("/Employee/ChangePassword", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector('input[name="__RequestVerificationToken"]').value
+                    },
+                    body: JSON.stringify({ NewPassword: password, EmployeeId: employeeId })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            passwordMessage.textContent = "Password changed successfully!";
+                            passwordMessage.classList.remove("d-none");
+                            passwordMessage.classList.add("text-success");
+
+                            // Reset UI
+                            passwordInput.setAttribute("disabled", true);
+                            saveButton.classList.add("d-none");
+                            editButton.classList.remove("d-none");
+
+                            setTimeout(() => {
+                                passwordMessage.classList.add("d-none");
+                            }, 3000);
+                        } else {
+                            passwordMessage.textContent = data.message;
+                            passwordMessage.classList.remove("d-none");
+                            passwordMessage.classList.add("text-danger");
+
+                            // Reset UI
+                            passwordInput.setAttribute("disabled", true);
+                            saveButton.classList.add("d-none");
+                            editButton.classList.remove("d-none");
+
+                            setTimeout(() => {
+                                passwordMessage.classList.add("d-none");
+                            }, 3000);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        alert("Failed to change the password.");
+                    });
+            });
+        });
+
+
     </script>
 }

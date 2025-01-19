@@ -24,6 +24,7 @@ namespace Mobi.Service.Factories
             {
                 EmployeeName = model.EmployeeName,
                 UserName = model.UserName,
+                Email = model.Email,
                 Password = PasswordHelper.HashPassword(model.Password),
                 CompanyID = model.CompanyID,
                 UserStatus = model.UserStatus,

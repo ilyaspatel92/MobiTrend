@@ -2,7 +2,6 @@
 using Mobi.Data.Domain;
 using Mobi.Data.Domain.Employees;
 using Mobi.Data.Mapping;
-
 public class ApplicationContext : DbContext
 {
     //public ApplicationContext() { }
@@ -86,6 +85,35 @@ public class ApplicationContext : DbContext
                 LanguageId = 2
             }
         );
+
+        // Seed data for SystemUsers
+        modelBuilder.Entity<SystemUsers>().HasData(
+            new SystemUsers
+            {
+                Id=1,
+                EmployeeName = "Mobi",
+                UserName = "Admin Mobi",
+                Email = "admin@mobi.com",
+                UserStatus = true,
+                Password = BCrypt.Net.BCrypt.HashPassword("admin123"),
+                CompanyID = 1,
+                CreatedDate = DateTime.Now,
+                Deleted = false
+            }
+        );
+
+        // Seed data for SystemUserAuthorityMapping
+        modelBuilder.Entity<SystemUserAuthorityMapping>().HasData(
+            new SystemUserAuthorityMapping { Id = 1, SystemUserID = 1, ScreenAuthority = "Locations", ScreenAuthoritySystemName = "locations" },
+            new SystemUserAuthorityMapping { Id = 2, SystemUserID = 1, ScreenAuthority = "EmployeeAttendance", ScreenAuthoritySystemName = "employeeattendance" },
+            new SystemUserAuthorityMapping { Id = 3, SystemUserID = 1, ScreenAuthority = "Employees", ScreenAuthoritySystemName = "employees" },
+            new SystemUserAuthorityMapping { Id = 4, SystemUserID = 1, ScreenAuthority = "MobileManage", ScreenAuthoritySystemName = "mobilemanage" },
+            new SystemUserAuthorityMapping { Id = 5, SystemUserID = 1, ScreenAuthority = "EmployeeLocation", ScreenAuthoritySystemName = "employeelocation" },
+            new SystemUserAuthorityMapping { Id = 6, SystemUserID = 1, ScreenAuthority = "SystemUsers", ScreenAuthoritySystemName = "systemusers" },
+            new SystemUserAuthorityMapping { Id = 7, SystemUserID = 1, ScreenAuthority = "Reports", ScreenAuthoritySystemName = "reports" },
+            new SystemUserAuthorityMapping { Id = 8, SystemUserID = 1, ScreenAuthority = "ControlACL", ScreenAuthoritySystemName = "controlacl" }
+        );
+
 
     }
 }

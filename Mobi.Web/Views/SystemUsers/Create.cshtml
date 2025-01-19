@@ -56,11 +56,29 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="Password">Password</label>
-                                    <input asp-for="Password" class="form-control" type="password" placeholder="Enter password" />
-                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                    <label for="Email">Email</label>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input asp-for="Email" class="form-control" type="text" placeholder="Enter Email" />
+                                    </div>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Password">Password</label>
+                                   
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input asp-for="Password" class="form-control" type="password" placeholder="Enter password" />                                        
+                                        <button type="button" class="btn btn-secondary generateGuidButton">Change Password</button>
+                                    </div>
+                                </div>
+                            </div>
+                          
+                        </div>
+                        <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="CompanyID">Company ID</label>
@@ -68,8 +86,6 @@
                                     <span asp-validation-for="CompanyID" class="text-danger"></span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="UserStatus">User Status</label>
@@ -80,6 +96,7 @@
                                     <span asp-validation-for="UserStatus" class="text-danger"></span>
                                 </div>
                             </div>
+
                         </div>
 
                         <!-- Submit and Cancel Buttons -->

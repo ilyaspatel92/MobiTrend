@@ -104,6 +104,23 @@ namespace Mobi.Service.SystemUser
         }
 
         /// <summary>
+        /// Retrieves the details of a system user by their unique identifier.
+        /// </summary>
+        /// <param name="email">System user.</param>
+        /// <returns>The details of the specified system user.</returns>
+        public SystemUsers GetSystemUserByEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                throw new ArgumentException("Email cannot be null or empty.", nameof(email));
+
+            var users = _systemUserRepository.GetAll();
+            if (users == null)
+                throw new InvalidOperationException("User repository returned null.");
+
+            return users.FirstOrDefault(x => x.Email == email);
+        }
+
+        /// <summary>
         /// Updates an existing system user's details.
         /// </summary>
         /// <param name="systemUser">The system user to update.</param>
@@ -128,9 +145,9 @@ namespace Mobi.Service.SystemUser
         }
 
 
-        public SystemUsers Authenticate(string username, string password)
+        public SystemUsers Authenticate(string email, string password)
         {
-            var user = _systemUserRepository.GetAll().FirstOrDefault(u => u.UserName == username);
+            var user = _systemUserRepository.GetAll().FirstOrDefault(u => u.Email == email);
             if (user == null || !PasswordHelper.VerifyPassword(password, user.Password))
                 return null; // Invalid credentials
 
@@ -154,6 +171,74 @@ namespace Mobi.Service.SystemUser
             user.Password = PasswordHelper.HashPassword(newPassword);
             UpdateSystemUser(user);
         }
+
+        /// <summary>
+        /// Saves a password reset token for a user.
+        /// </summary>
+        /// <param name="username">The username of the user.</param>
+        /// <param name="token">The password reset token.</param>
+        /// <param name="expiry">The expiry date of the token.</param>
+        public void SavePasswordResetToken(string email, string token, DateTime expiry)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                throw new ArgumentException("Username cannot be null or empty.", nameof(email));
+            if (string.IsNullOrWhiteSpace(token))
+                throw new ArgumentException("Token cannot be null or empty.", nameof(token));
+
+            var user = _systemUserRepository.GetAll().FirstOrDefault(u => u.Email == email);
+            if (user == null)
+                throw new Exception("User not found");
+
+            user.PasswordResetToken = token;
+            user.PasswordResetTokenExpiry = expiry;
+
+            UpdateSystemUser(user);
+        }
+
+        /// <summary>
+        /// Validates a password reset token.
+        /// </summary>
+        /// <param name="username">The username of the user.</param>
+        /// <param name="token">The token to validate.</param>
+        /// <returns>True if the token is valid; otherwise, false.</returns>
+        //public bool ValidatePasswordResetToken(string username, string token)
+        //{
+        //    if (string.IsNullOrWhiteSpace(username))
+        //        throw new ArgumentException("Username cannot be null or empty.", nameof(username));
+        //    if (string.IsNullOrWhiteSpace(token))
+        //        throw new ArgumentException("Token cannot be null or empty.", nameof(token));
+
+        //    var user = _systemUserRepository.GetAll().FirstOrDefault(u => u.UserName == username);
+        //    if (user == null)
+        //        throw new Exception("User not found");
+
+        //    return user.PasswordResetToken == token && user.PasswordResetTokenExpiry > DateTime.UtcNow;
+        //}
+
+
+        public bool ValidatePasswordResetToken(string email, string token)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                throw new ArgumentException("Email cannot be null or empty.", nameof(email));
+            if (string.IsNullOrWhiteSpace(token))
+                throw new ArgumentException("Token cannot be null or empty.", nameof(token));
+
+            var user = _systemUserRepository.GetAll().FirstOrDefault(u => u.Email == email);
+            if (user == null)
+                return false; // User not found
+
+            if (string.IsNullOrWhiteSpace(user.PasswordResetToken) || user.PasswordResetTokenExpiry == null)
+                return false; // No reset token or expiry set for the user
+
+            if (user.PasswordResetToken != token)
+                return false; // Token does not match
+
+            if (DateTime.Now > user.PasswordResetTokenExpiry)
+                return false; // Token has expired
+
+            return true; // Token is valid
+        }
+
 
         #endregion
 
