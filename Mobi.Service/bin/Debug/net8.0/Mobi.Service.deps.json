@@ -1046,6 +1046,7 @@
       },
       "Mobi.Repository/1.0.0": {
         "dependencies": {
+          "BCrypt.Net-Next": "4.0.3",
           "FluentMigrator": "6.2.0",
           "FluentMigrator.Runner": "6.2.0",
           "FluentMigrator.Runner.SqlServer": "6.2.0",
