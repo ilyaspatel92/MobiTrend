@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Mobi.Data;
+using Mobi.Web.Utilities.Validations;
 
 namespace Mobi.Web.Models.SystemUser
 {
@@ -12,6 +13,11 @@ namespace Mobi.Web.Models.SystemUser
         [Required]
         [StringLength(50, MinimumLength = 3)]
         public string UserName { get; set; }
+
+        [Required(ErrorMessage = "Email is required.")]
+        [CustomEmail(ErrorMessage = "Please provide a valid email address.")]
+        [StringLength(150, ErrorMessage = "Email cannot exceed 150 characters.")]
+        public string Email { get; set; }
 
         [Required]
         [StringLength(20, MinimumLength = 6)]

@@ -57,6 +57,16 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <label for="Email">Email</label>
+                                    <input asp-for="Email" class="form-control" placeholder="Enter Email" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <label for="CompanyID">Company ID</label>
                                     <input asp-for="CompanyID" class="form-control" type="number" placeholder="Enter company ID" />
                                     <span asp-validation-for="CompanyID" class="text-danger"></span>

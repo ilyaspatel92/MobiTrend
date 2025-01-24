@@ -218,5 +218,28 @@ namespace Mobi.Web.Controllers.Employees
 
             return View(EmployeeModel);
         }
+
+        [HttpPost]
+        public IActionResult ChangePassword([FromBody] ChangePasswordModel model)
+        {
+            if (string.IsNullOrWhiteSpace(model.NewPassword))
+            {
+                return Json(new { success = false, message = "Password cannot be empty." });
+            }
+
+            var employee = _employeeService.GetEmployeeById(model.EmployeeId);
+            if (employee == null)
+            {
+                return Json(new { success = false, message = "Employee not found." });
+            }
+
+            // Update the password (hash it before saving)
+            employee.Password = PasswordHelper.HashPassword(model.NewPassword);
+            _employeeService.UpdateEmployee(employee);
+
+            return Json(new { success = true, message = "Password updated successfully." });
+        }
+
+
     }
 }

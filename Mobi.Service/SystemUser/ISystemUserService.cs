@@ -53,10 +53,22 @@ namespace Mobi.Service.SystemUser
         /// <returns>The details of the specified system user.</returns>
         SystemUsers GetSystemUserByUserName(string userName);
 
+        /// <summary>
+        /// Retrieves the details of a system user by their unique identifier.
+        /// </summary>
+        /// <param name="email">System user.</param>
+        /// <returns>The details of the specified system user.</returns>
+        SystemUsers GetSystemUserByEmail(string email);
 
-        SystemUsers Authenticate(string username, string password);
+
+        SystemUsers Authenticate(string email, string password);
         void ChangePassword(int userId, string newPassword);
         void ResetPassword(string username, string newPassword);
+
+        void SavePasswordResetToken(string email, string token, DateTime expiry);
+
+        bool ValidatePasswordResetToken(string email, string token);
+
     }
 
 }

@@ -23,11 +23,14 @@ namespace Mobi.Repository.Migrations
                 Create.Table("SystemUsers")
                     .WithColumn("Id").AsInt32().PrimaryKey().Identity() // Auto-increment primary key
                     .WithColumn("EmployeeName").AsString(255).NotNullable()
+                    .WithColumn("Email").AsString(255).NotNullable()
                     .WithColumn("UserName").AsString(255).NotNullable()
                     .WithColumn("UserStatus").AsString(50).NotNullable()
                     .WithColumn("Password").AsString(255).NotNullable()
                     .WithColumn("CompanyID").AsString(255).NotNullable()
                     .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                    .WithColumn("PasswordResetToken").AsString(255).Nullable()
+                    .WithColumn("PasswordResetTokenExpiry").AsDateTime().Nullable()
                     .WithColumn("Deleted").AsBoolean().NotNullable();
 
                 // Add foreign key only if the table was created

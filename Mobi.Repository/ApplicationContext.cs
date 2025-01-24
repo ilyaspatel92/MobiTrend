@@ -92,7 +92,8 @@ public class ApplicationContext : DbContext
             {
                 Id=1,
                 EmployeeName = "Mobi",
-                UserName = "admin@mobi.com",
+                UserName = "Admin Mobi",
+                Email = "admin@mobi.com",
                 UserStatus = true,
                 Password = BCrypt.Net.BCrypt.HashPassword("admin123"),
                 CompanyID = 1,

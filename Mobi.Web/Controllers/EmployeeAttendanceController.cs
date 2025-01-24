@@ -27,7 +27,7 @@ namespace Mobi.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Logs(DateTime startDate, DateTime endDate, string employeeName, string employeeId)
+        public IActionResult Logs(DateTime? startDate, DateTime? endDate, string employeeName, string employeeId)
         {
             bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.EmployeeAttendance));
 
@@ -38,12 +38,20 @@ namespace Mobi.Web.Controllers
             var employees = _employeeRepository.GetAll().ToList();
             var joinedLogs = from log in attendanceLogs
                              join emp in employees on log.EmployeeId equals emp.Id
-                             where log.AttendanceDateTime.Date >= startDate.Date && log.AttendanceDateTime.Date <= endDate.Date.Date
+
                              select new
                              {
                                  Log = log,
                                  EmployeeName = emp.NameEng
                              };
+
+            if (startDate.HasValue && endDate.HasValue)
+                joinedLogs = joinedLogs.Where(entry => entry.Log.AttendanceDateTime.Date >= startDate.Value && entry.Log.AttendanceDateTime.Date <= endDate.Value);
+            else if (startDate.HasValue)
+                joinedLogs = joinedLogs.Where(entry => entry.Log.AttendanceDateTime.Date >= startDate.Value);
+            else if (endDate.HasValue)
+                joinedLogs = joinedLogs.Where(entry => entry.Log.AttendanceDateTime.Date <= endDate.Value);
+
             if (!string.IsNullOrWhiteSpace(employeeName))
             {
                 joinedLogs = joinedLogs.Where(entry => entry.EmployeeName.Contains(employeeName, StringComparison.OrdinalIgnoreCase));
@@ -71,7 +79,7 @@ namespace Mobi.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Search(DateTime startDate, DateTime endDate, string employeeName, string employeeId)
+        public IActionResult Search(DateTime? startDate, DateTime? endDate, string employeeName, string employeeId)
         {
             bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.Locations));
 
@@ -82,12 +90,20 @@ namespace Mobi.Web.Controllers
             var employees = _employeeRepository.GetAll().ToList();
             var joinedLogs = from log in attendanceLogs
                              join emp in employees on log.EmployeeId equals emp.Id
-                             where log.AttendanceDateTime.Date >= startDate.Date && log.AttendanceDateTime.Date <= endDate.Date.Date
                              select new
                              {
                                  Log = log,
                                  EmployeeName = emp.NameEng
                              };
+
+            if (startDate.HasValue && endDate.HasValue)
+                joinedLogs = joinedLogs.Where(entry => entry.Log.AttendanceDateTime.Date >= startDate.Value && entry.Log.AttendanceDateTime.Date <= endDate.Value);
+            else if (startDate.HasValue)
+                joinedLogs = joinedLogs.Where(entry => entry.Log.AttendanceDateTime.Date >= startDate.Value);
+            else if (endDate.HasValue)
+                joinedLogs = joinedLogs.Where(entry => entry.Log.AttendanceDateTime.Date <= endDate.Value);
+
+
             if (!string.IsNullOrWhiteSpace(employeeName))
             {
                 joinedLogs = joinedLogs.Where(entry => entry.EmployeeName.Contains(employeeName, StringComparison.OrdinalIgnoreCase));

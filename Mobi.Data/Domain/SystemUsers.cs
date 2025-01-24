@@ -9,6 +9,9 @@ namespace Mobi.Data.Domain
         public string EmployeeName { get; set; }
 
         [Required]
+        public string Email { get; set; }
+
+        [Required]
         public string UserName { get; set; }
 
         [Required]
@@ -25,9 +28,8 @@ namespace Mobi.Data.Domain
         [Required]
         public bool Deleted { get; set; }
 
-        [NotMapped]
         public string PasswordResetToken { get; set; }
-        [NotMapped]
+
         public DateTime? PasswordResetTokenExpiry { get; set; }
     }
 }
