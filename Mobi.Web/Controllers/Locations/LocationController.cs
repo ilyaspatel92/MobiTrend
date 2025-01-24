@@ -105,6 +105,9 @@ namespace Mobi.Web.Controllers.Locations
                 };
 
                 _locationService.AddLocation(location);
+
+                TempData["SuccessMessage"] = "Location added successfully.";
+
                 return RedirectToAction(nameof(List));
             }
 
@@ -158,6 +161,7 @@ namespace Mobi.Web.Controllers.Locations
                 existingLocation.GPSLocationAddress = model.GPSLocationAddress;
 
                 _locationService.UpdateLocation(existingLocation);
+                TempData["SuccessMessage"] = "Location updated successfully.";
                 return RedirectToAction(nameof(List));
             }
 
@@ -174,8 +178,7 @@ namespace Mobi.Web.Controllers.Locations
                 return NotFound();
             }
 
-            _locationService.RemoveLocation(location);
-
+            _locationService.RemoveLocation(location);            
             return RedirectToAction(nameof(List));
         }
 

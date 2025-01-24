@@ -15,7 +15,5 @@ namespace Mobi.Web.Models.Employees
         public string ConfirmNewPassword { get; set; }
 
         public int EmployeeId { get; set; }
-
-
     }
 }

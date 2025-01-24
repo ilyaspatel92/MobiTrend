@@ -1,0 +1,23 @@
+﻿@model int // Employee ID passed to the view
+
+<div class="container mt-5 text-center" style="font-family: Arial, sans-serif;">
+    <h4 class="mb-4">Mobile Register using QR</h4>
+
+    <form method="post" asp-action="EditMobile">
+        <input type="hidden" name="id" value="@Model" />
+
+        <div class="d-grid gap-3" style="max-width: 300px; margin: 0 auto;">
+            <button type="submit" name="action" value="register" class="btn btn-success" style="border-radius: 8px; padding: 10px 20px; font-size: 16px;"
+                    onclick="return confirm('Are you sure you want to register a new mobile?');">
+                Register new mobile
+            </button>
+            <button type="submit" name="action" value="remove" class="btn btn-danger" style="border-radius: 8px; padding: 10px 20px; font-size: 16px;"
+                    onclick="return confirm('Are you sure you want to remove the registered mobile?');">
+                Remove registered Mobile
+            </button>
+            <a href="@Url.Action("MobileManage")" class="btn btn-light" style="border: 1px solid #e0e0e0; color: #6c757d; border-radius: 8px; padding: 10px 20px; font-size: 16px;">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>

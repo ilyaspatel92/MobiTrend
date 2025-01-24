@@ -26,6 +26,9 @@ namespace Mobi.Data.Domain
         public DateTime CreatedDate { get; set; }
 
         [Required]
+        public int EmployeeId { get; set; }
+
+        [Required]
         public bool Deleted { get; set; }
 
         public string PasswordResetToken { get; set; }

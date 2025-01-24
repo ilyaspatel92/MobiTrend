@@ -79,10 +79,10 @@
                         <label for="longitude" class="form-label">Longitude</label>
                         <input id="longitude" name="longitude" class="form-control" value="@Model.Longitude.ToString("F6")" readonly>
                     </div>
-                   @*  <div>
+                    <div>
                         <label for="Radius" class="form-label">Radius</label>
                         <input asp-for="SetRadius" id="SetRadius" class="form-control" name="SetRadius" readonly />
-                    </div> *@
+                    </div>
                 </div>
                 <input asp-for="SetPolygon" id="SetPolygon" class="form-control" type="hidden" name="SetPolygon" />
                 <input asp-for="SetRadius" id="SetRadius" class="form-control" type="hidden" name="SetRadius" />

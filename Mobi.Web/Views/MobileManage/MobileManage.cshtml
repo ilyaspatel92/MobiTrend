@@ -50,16 +50,16 @@
                             <td>@Enum.GetName(typeof(RegistrationType), employee.RegistrationVia)</td>
                             <td>@employee.UserName</td>
                             <td>@(employee.RegisterStatus ? "Registered" : "Not Registered")</td>
-                           @*  <td>
+                            <td>
                                 @if (string.IsNullOrEmpty(employee.MobileNumber))
                                 {
-                                    <a href="@Url.Action("RegisterMobile", "YourControllerName", new { id = employee.Id })" class="btn btn-link">Register</a>
+                                    <a href="@Url.Action("RegisterMobile", "MobileManage", new { id = employee.Id })" class="btn btn-link">Register</a>
                                 }
                                 else
                                 {
-                                    <a href="@Url.Action("EditMobile", "YourControllerName", new { id = employee.Id })" class="btn btn-link">Edit</a>
+                                    <a href="@Url.Action("EditMobile", "MobileManage", new { id = employee.Id })" class="btn btn-link">Edit</a>
                                 }
-                            </td> *@
+                            </td>
                         </tr>
                     }
                 }
@@ -79,7 +79,7 @@
                     @for (int i = 1; i <= Model.TotalPages; i++)
                     {
                         <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                            <a class="page-link" href="@Url.Action("MobileManage", "YourControllerName", new { page = i, name = ViewData["Name"], id = ViewData["Id"] })">@i</a>
+                            <a class="page-link" href="@Url.Action("MobileManage", "MobileManage", new { page = i, name = ViewData["Name"], id = ViewData["Id"] })">@i</a>
                         </li>
                     }
                 </ul>

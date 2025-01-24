@@ -1,0 +1,22 @@
+﻿@model RegisterMobileViewModel
+
+<div class="container mt-5 text-center" style="font-family: Arial, sans-serif;">
+    <h4 class="mb-4">Mobile Register using QR</h4>
+    <p class="text-muted mb-4">Please scan the QR code using the mobile app</p>
+
+    @if (!string.IsNullOrEmpty(Model.QrCode))
+    {
+        <div style="display: inline-block; padding: 20px; border: 1px solid #e0e0e0; border-radius: 12px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            <img src="@Model.QrCode" alt="QR Code" style="width: 200px; height: 200px; border-radius: 8px;" />
+        </div>
+    }
+    else
+    {
+        <p class="text-muted">No QR Code available</p>
+    }
+    <div class="container mt-5 text-center" style="font-family: Arial, sans-serif;">
+    <a href="@Url.Action("MobileManage")" class="btn btn-light" style="border: 1px solid #e0e0e0; color: #6c757d; border-radius: 8px; padding: 10px 20px; font-size: 16px;">
+        Cancel
+    </a>
+    </div>
+</div>

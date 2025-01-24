@@ -1,4 +1,8 @@
-﻿@model IEnumerable<LocationModel>
+﻿@{
+    ViewData["Title"] = "Location List";
+}
+
+@model IEnumerable<LocationModel>
 <div class="card card-info card-outline mb-4 mx-3 custom-top-spacing">
     <!-- Header Section -->
     <div class="card-header bg-white py-3 border-bottom">
@@ -113,8 +117,12 @@
                     {
                         data: null,
                         render: function (data) {
-                            return `
-                                <a href="/Location/Details/${data.id}" class="btn btn-info btn-sm">Details</a>
+                            // return `
+                            //     <a href="/Location/Details/${data.id}" class="btn btn-info btn-sm">Details</a>
+                            //     <a href="/Location/Edit/${data.id}" class="btn btn-primary btn-sm">Edit</a>
+                            //     <button class="btn btn-danger btn-sm delete-btn" data-id="${data.id}">Delete</button>
+                            // `;
+                              return `
                                 <a href="/Location/Edit/${data.id}" class="btn btn-primary btn-sm">Edit</a>
                                 <button class="btn btn-danger btn-sm delete-btn" data-id="${data.id}">Delete</button>
                             `;
@@ -152,7 +160,8 @@
                         __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() // Add token here
                     },
                     success: function (response) {
-                        alert("Location deleted successfully!");
+                         $('#notificationMessage').text('Location deleted successfully!');
+                         $('#notificationContainer').fadeIn().delay(4000).fadeOut();
                         table.ajax.reload(); // Refresh the table data
                     },
                     error: function () {
