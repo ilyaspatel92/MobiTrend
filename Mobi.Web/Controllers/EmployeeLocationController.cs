@@ -67,7 +67,8 @@ namespace Mobi.Web.Controllers
                 {
                     EmployeeId = employee.Id,
                     EmployeeName = employee.NameEng,
-                    Locations = locations
+                    Locations = locations,
+                    FileNumber = employee.FileNumber
                 };
 
                 return View(model); // Pass the model to the view
@@ -91,7 +92,8 @@ namespace Mobi.Web.Controllers
                     label = e.NameEng,          // Display name in English
                     nameArabic = e.NameArabic,  // Include Arabic name in the response if needed
                     email = e.Email,            // Include email if relevant for autocomplete UI
-                    mobileNumber = e.MobileNumber // Include mobile number if needed
+                    mobileNumber = e.MobileNumber, // Include mobile number if needed
+                    filenumber =e.FileNumber
                 })
                 .ToList();
 
@@ -101,24 +103,42 @@ namespace Mobi.Web.Controllers
         [HttpGet]
         public IActionResult GetLocationsByEmployeeId(int employeeId)
         {
-            var selectedLocations = _employeeLocationService.GetSelectedLocationsByEmployeeId(employeeId);
+            var selectedLocations = _employeeLocationService.GetSelectedLocationsByEmployeeId(employeeId) ?? new List<int>();
 
             // Fetch locations for the employee
             var locations = _locationService.GetAllLocations()
-                .Select(l => new LocationViewModel { Id = l.Id, Name = l.LocationNameEnglish, IsSelected = selectedLocations.Contains(l.Id) })
+                .Select(l => new LocationViewModel
+                {
+                    Id = l.Id,
+                    Name = l.LocationNameEnglish,
+                    IsSelected = selectedLocations.Contains(l.Id)
+                })
                 .ToList();
 
-            return Json(locations);
-            //return Json(null);
+            // Get Free Location status (assuming it's stored somewhere for the employee)
+            var isFreeLocation = _employeeLocationService.IsFreeLocationSelected(employeeId);
+
+            return Json(new
+            {
+                locations = locations,
+                isFreeLocation = isFreeLocation
+            });
         }
+
 
         [HttpPost]
         public IActionResult SaveEmployeeLocations([FromBody] SaveEmployeeLocationsModel model)
         {
-            if (model == null || model.LocationIds == null || !model.LocationIds.Any())
+            if (model == null)
+                return Json(new { success = false, message = "Invalid request." });
+
+            if (!model.isFreeLocation && (model.LocationIds == null || !model.LocationIds.Any()))
                 return Json(new { success = false, message = "No locations selected." });
 
-            var success = _employeeLocationService.SaveLocationsForEmployee(model.EmployeeId, model.LocationIds);
+            if (model.EmployeeId == 0)
+                return Json(new { success = false, message = "No Employee selected." });
+
+            var success = _employeeLocationService.SaveLocationsForEmployee(model.EmployeeId, model.LocationIds,model.isFreeLocation);
 
             if (success)
                 return Json(new { success = true, message = "Locations saved successfully!" });
@@ -132,7 +152,7 @@ namespace Mobi.Web.Controllers
 
 
         [HttpGet]
-        public IActionResult EmployeeLocation(string employeeName, int? employeeId, string siteStatus, int page = 1, int pageSize = 10)
+        public IActionResult EmployeeLocation(string employeeName, string? filenumber, string siteStatus, int page = 1, int pageSize = 10)
         {
             bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.EmployeeLocation));
 
@@ -141,7 +161,7 @@ namespace Mobi.Web.Controllers
 
             // Pass query string values to the view
             ViewData["EmployeeName"] = employeeName;
-            ViewData["EmployeeId"] = employeeId?.ToString();
+            ViewData["filenumber"] = filenumber?.ToString();
             ViewData["SiteStatus"] = siteStatus;
 
             var query = _employeeService.GetAllEmployees();
@@ -150,8 +170,8 @@ namespace Mobi.Web.Controllers
             if (!string.IsNullOrEmpty(employeeName))
                 query = query.Where(e => e.NameEng.Contains(employeeName, StringComparison.OrdinalIgnoreCase) || e.NameArabic.Contains(employeeName, StringComparison.OrdinalIgnoreCase));
 
-            if (employeeId.HasValue)
-                query = query.Where(e => e.Id == employeeId);
+            if (!string.IsNullOrEmpty(filenumber))
+                query = query.Where(e => e.FileNumber == filenumber);
 
             if (siteStatus =="set")
             {

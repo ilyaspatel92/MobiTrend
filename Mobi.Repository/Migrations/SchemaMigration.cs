@@ -121,6 +121,7 @@ namespace Mobi.Repository.Migrations
                     .WithColumn("EmployeeId").AsInt32().NotNullable()
                     .WithColumn("DateandTime").AsDateTime().NotNullable()
                     .WithColumn("ActionTypeId").AsInt32().NotNullable()
+                    .WithColumn("ActionTypeStatus").AsBoolean().NotNullable().WithDefaultValue(false)
                     .WithColumn("ActionTypeModeId").AsInt32().NotNullable()
                     .WithColumn("IsVerifiedLocation").AsBoolean().NotNullable().WithDefaultValue(false)
                     .WithColumn("CurrentLocation").AsString(255).NotNullable()
@@ -161,7 +162,9 @@ namespace Mobi.Repository.Migrations
                 Create.Table("EmployeeLocation")
                     .WithColumn("Id").AsInt32().PrimaryKey().Identity() // Auto-increment primary key
                     .WithColumn("EmployeeId").AsInt32().NotNullable()
-                    .WithColumn("LocationId").AsInt32().NotNullable();
+                    .WithColumn("LocationId").AsInt32().NotNullable()
+                    .WithColumn("IsFreeLocation").AsBoolean().NotNullable().WithDefaultValue(false);
+
 
                 // Add foreign key only if the table was created
                 Create.ForeignKey("FK_EmployeeLocation_EmployeeId")

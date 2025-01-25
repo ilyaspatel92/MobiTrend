@@ -20,5 +20,6 @@
         public string ActionTypeClass { get; set; }
         public string ProofType { get; set; }
         public string Location { get; set; }
+        public bool ActionTypeStatus { get; set; }
     }
 }

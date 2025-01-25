@@ -24,7 +24,7 @@ namespace Mobi.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult MobileManage(string name, int? id, int page = 1, int pageSize = 10)
+        public IActionResult MobileManage(string name, string? filenumber, int page = 1, int pageSize = 10)
         {
             bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.MobileManage));
 
@@ -32,7 +32,7 @@ namespace Mobi.Web.Controllers
                 return RedirectToAction("AccessDenied", "AccessControl");
             // Pass query string values to the view
             ViewData["Name"] = name;
-            ViewData["Id"] = id?.ToString();
+            ViewData["FileNumber"] = filenumber;
 
             // Retrieve all employees
             var query = _employeeService.GetAllEmployees();
@@ -43,9 +43,9 @@ namespace Mobi.Web.Controllers
                 query = query.Where(e => e.NameEng.Contains(name, StringComparison.OrdinalIgnoreCase) || e.NameArabic.Contains(name, StringComparison.OrdinalIgnoreCase));
             }
 
-            if (id.HasValue)
+            if (!string.IsNullOrEmpty(filenumber))
             {
-                query = query.Where(e => e.Id == id.Value);
+                query = query.Where(e => e.FileNumber == filenumber);
             }
 
             // Pagination

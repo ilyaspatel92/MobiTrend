@@ -15,8 +15,8 @@
                     <input type="text" name="employeeName" id="employeeName" class="form-control" placeholder="Search by name" value="@ViewData["EmployeeName"]">
                 </div>
                 <div class="col-md-2">
-                    <label for="employeeId" class="form-label">ID</label>
-                    <input type="text" name="employeeId" id="employeeId" class="form-control" placeholder="ID" value="@ViewData["EmployeeId"]">
+                    <label for="filenumber" class="form-label">File Number</label>
+                    <input type="text" name="filenumber" id="filenumber" class="form-control" placeholder="Search by file number" value="@ViewData["filenumber"]">
                 </div>
                 <div class="col-md-3">
                     <label for="siteStatus" class="form-label">Site Status</label>
@@ -46,7 +46,7 @@
                         <table class="table table-bordered">
                             <thead class="table-light">
                                 <tr>
-                                    <th>No</th>
+                                    <th>File Number</th>
                                     <th>Employee Name</th>
                                     <th>Location Name</th>
                                     <th>Action</th>
@@ -58,17 +58,17 @@
                                     foreach (var employee in Model.Items)
                                     {
                                         <tr>
-                                            <td>@employee.EmployeeId</td>
+                                            <td>@employee.FileNumber</td>
                                             <td>@employee.EmployeeName</td>
                                             <td>@employee.LocationNames</td>
                                             <td>
                                                 @if (string.IsNullOrEmpty(employee.LocationNames))
                                                 {
-                                                    <a href="@Url.Action("SetLocation", "EmployeeLocation", new { employeeId = employee.EmployeeId })" class="btn btn-link p-0">Set Location</a>
+                                                    <a href="@Url.Action("SetLocation", "EmployeeLocation", new { EmployeeId = employee.EmployeeId })" class="btn btn-link p-0">Set Location</a>
                                                 }
                                                 else
                                                 {
-                                                    <a href="@Url.Action("SetLocation", "EmployeeLocation", new { employeeId = employee.EmployeeId })" class="btn btn-link p-0">Edit</a>
+                                                    <a href="@Url.Action("SetLocation", "EmployeeLocation", new { EmployeeId = employee.EmployeeId })" class="btn btn-link p-0">Edit</a>
                                                 }
                                             </td>
                                         </tr>

@@ -27,13 +27,13 @@ namespace Mobi.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Logs(DateTime? startDate, DateTime? endDate, string employeeName, string employeeId)
+        public IActionResult Logs(DateTime? startDate, DateTime? endDate, string employeeName, string employeeId, string TransStatus)
         {
             bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.EmployeeAttendance));
 
             if (!hasAccess)
                 return RedirectToAction("AccessDenied", "AccessControl");
-
+            ViewData["TransStatus"] = TransStatus;
             var attendanceLogs = _attendanceRepository.GetAll().ToList();
             var employees = _employeeRepository.GetAll().ToList();
             var joinedLogs = from log in attendanceLogs
@@ -79,12 +79,14 @@ namespace Mobi.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Search(DateTime? startDate, DateTime? endDate, string employeeName, string employeeId)
+        public IActionResult Search(DateTime? startDate, DateTime? endDate, string employeeName, string employeeId, string transstatus)
         {
             bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.Locations));
 
             if (!hasAccess)
                 return RedirectToAction("AccessDenied", "AccessControl");
+
+            ViewData["TransStatus"] = transstatus;
 
             var attendanceLogs = _attendanceRepository.GetAll().ToList();
             var employees = _employeeRepository.GetAll().ToList();
@@ -108,10 +110,21 @@ namespace Mobi.Web.Controllers
             {
                 joinedLogs = joinedLogs.Where(entry => entry.EmployeeName.Contains(employeeName, StringComparison.OrdinalIgnoreCase));
             }
+            
 
             if (!string.IsNullOrWhiteSpace(employeeId) && int.TryParse(employeeId, out int parsedEmployeeId))
             {
                 joinedLogs = joinedLogs.Where(entry => entry.Log.EmployeeId == parsedEmployeeId);
+            }
+
+            if (transstatus == "approved")
+            {
+                joinedLogs = joinedLogs.Where(entry => entry.Log.ActionTypeStatus == true);
+            }
+            else if (transstatus == "rejected")
+            {
+                joinedLogs = joinedLogs.Where(entry => entry.Log.ActionTypeStatus == false);
+
             }
 
             var viewModel = joinedLogs.Select(entry => new EmployeeAttendanceLogModel
@@ -120,6 +133,7 @@ namespace Mobi.Web.Controllers
                 DateAndTime = entry.Log.AttendanceDateTime.ToString("MM/dd/yyyy @ hh:mm tt"),
                 ActionTypeName = GetActionTypeName(entry.Log.ActionTypeId),
                 ActionTypeClass = GetActionTypeClass(entry.Log.ActionTypeId),
+                ActionTypeStatus = entry.Log.ActionTypeStatus,
                 ProofType = GetProofType(entry.Log.ProofTypeId),
                 Location = _locationService.GetLocationById(Convert.ToInt32(entry.Log.LocationId))?.LocationNameEnglish
             }).ToList();

@@ -12,14 +12,18 @@ namespace Mobi.Service.EmployeeLocationServices
             _employeeLocationRepository = employeeLocationRepository;
         }
 
-        public bool SaveLocationsForEmployee(int empId, List<int> locationIds)
+        public bool SaveLocationsForEmployee(int empId, List<int> locationIds,bool isFreeLocation)
         {
             ClearEmpLocations(empId);
-
-            if (empId > 0 && locationIds.Any())
+            if (isFreeLocation)
+            {
+                _employeeLocationRepository.Insert(new EmployeeLocation() { EmployeeId = empId, LocationId = 0, IsFreeLocation = isFreeLocation });
+                return true;
+            }
+            else if (empId > 0 && locationIds.Any())
             {
                 foreach (var locationId in locationIds)
-                    _employeeLocationRepository.Insert(new EmployeeLocation() { EmployeeId = empId, LocationId = locationId });
+                    _employeeLocationRepository.Insert(new EmployeeLocation() { EmployeeId = empId, LocationId = locationId, IsFreeLocation = isFreeLocation });
                 return true;
             }
 
@@ -34,6 +38,16 @@ namespace Mobi.Service.EmployeeLocationServices
             }
 
             return null;
+        }
+
+        public bool IsFreeLocationSelected(int empId)
+        {
+            if (empId > 0)
+            {
+                return _employeeLocationRepository.GetAllList().Where(x => x.IsFreeLocation == true && x.EmployeeId == empId).Any();
+            }
+
+            return false;
         }
 
         public IEnumerable<EmployeeLocation> GetAllEmployeeLocations()

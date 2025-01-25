@@ -61,12 +61,12 @@ namespace Mobi.Service.Employees
         {
             return _employeeRepository
                 .GetAll()
-                .FirstOrDefault(e => e.Email.Equals(email, StringComparison.OrdinalIgnoreCase) && e.CompanyId==companyId);
+                .FirstOrDefault(e => e.Email.Equals(email, StringComparison.OrdinalIgnoreCase) && e.CompanyId == companyId);
         }
 
         public IList<Employee> GetEmployeeByName(string name)
         {
-            if(name == null)
+            if (name == null)
                 return new List<Employee>();
 
             return _employeeRepository
@@ -101,5 +101,14 @@ namespace Mobi.Service.Employees
             // Return the value of 'EmployeeId', or null if not found
             return employeeIdClaim?.Value;
         }
+
+        public bool IsFileNumberExists(string filenumber, int empId = 0)
+        {
+            if (empId > 0)
+                return _employeeRepository.GetAll().Any(e => e.FileNumber is not null && e.FileNumber.Equals(filenumber, StringComparison.OrdinalIgnoreCase) && e.Id != empId);
+
+            return _employeeRepository.GetAll().Any(e => e.FileNumber is not null && e.FileNumber.Equals(filenumber, StringComparison.OrdinalIgnoreCase));
+        }
+
     }
 }

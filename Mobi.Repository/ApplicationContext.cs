@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BCrypt.Net;
+using Microsoft.EntityFrameworkCore;
 using Mobi.Data.Domain;
 using Mobi.Data.Domain.Employees;
 using Mobi.Data.Mapping;
+
 public class ApplicationContext : DbContext
 {
     //public ApplicationContext() { }
