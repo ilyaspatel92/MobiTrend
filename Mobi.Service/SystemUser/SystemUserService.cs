@@ -145,9 +145,9 @@ namespace Mobi.Service.SystemUser
         }
 
 
-        public SystemUsers Authenticate(string email, string password)
+        public SystemUsers Authenticate(string userName, string password)
         {
-            var user = _systemUserRepository.GetAll().FirstOrDefault(u => u.Email == email);
+            var user = _systemUserRepository.GetAll().FirstOrDefault(u => u.UserName == userName);
             if (user == null || !PasswordHelper.VerifyPassword(password, user.Password))
                 return null; // Invalid credentials
 

@@ -40,15 +40,15 @@ namespace Mobi.Web.Controllers
         // Login POST
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(string email, string password, string returnUrl = null)
+        public async Task<IActionResult> Login(string userName, string password, string returnUrl = null)
         {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
             {
                 ModelState.AddModelError("", "Email and password are required.");
                 return View();
             }
 
-            var systemUser = _systemUserService.Authenticate(email, password);
+            var systemUser = _systemUserService.Authenticate(userName, password);
 
             // Replace with actual user validation logic
             if (systemUser != null)
@@ -56,8 +56,8 @@ namespace Mobi.Web.Controllers
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Sid, systemUser.Id.ToString()),
-                    new Claim(ClaimTypes.Name, email),
-                    new Claim(ClaimTypes.Email, email)
+                    new Claim(ClaimTypes.Name, userName),
+                    new Claim(ClaimTypes.Email, userName)
                 };
 
                 var claimsIdentity = new ClaimsIdentity(

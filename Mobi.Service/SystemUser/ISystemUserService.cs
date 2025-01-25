@@ -61,7 +61,7 @@ namespace Mobi.Service.SystemUser
         SystemUsers GetSystemUserByEmail(string email);
 
 
-        SystemUsers Authenticate(string email, string password);
+        SystemUsers Authenticate(string userName, string password);
         void ChangePassword(int userId, string newPassword);
         void ResetPassword(string username, string newPassword);
 
