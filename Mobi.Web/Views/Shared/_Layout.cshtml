@@ -3,6 +3,10 @@
 @{
     var languageCookie = HttpContextAccessor.HttpContext?.Request.Cookies["language"];
     var currentLanguage = languageCookie ?? "1"; // Default to "1" (English) if no cookie found
+    
+    var successMessage = TempData["SuccessMessage"] as string;
+    var errorMessage = TempData["ErrorMessage"] as string;
+
 }
 <!--begin::Head-->
 
@@ -37,7 +41,7 @@
                 <ul class="navbar-nav">
                     <li class="nav-item"> <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button"> <i class="bi bi-list"></i> </a> </li>
 
-                  @*   <li class="nav-item">
+                    @*   <li class="nav-item">
                         <select id="language-switcher" onchange="changeLanguage()">
                             <option value="1">English</option>
                             <option value="2">Arabic</option>
@@ -126,26 +130,31 @@
                     </li> <!--end::Notifications Dropdown Menu--> <!--begin::Fullscreen Toggle--> *@
                     <li class="nav-item"> <a class="nav-link" href="#" data-lte-toggle="fullscreen"> <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i> <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none;"></i> </a> </li> <!--end::Fullscreen Toggle--> <!--begin::User Menu Dropdown-->
                     <li class="nav-item dropdown user-menu">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"> <img src="../../dist/assets/img/user2-160x160.jpg" class="user-image rounded-circle shadow" alt="User Image"> <span class="d-none d-md-inline">Alexander Pierce</span> </a>
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"> @* <img src="../../dist/assets/img/user2-160x160.jpg" class="user-image rounded-circle shadow" alt="User Image">  *@<span class="d-none d-md-inline">  <i class="bi bi-list"></i></span> </a>
                         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                             <!--begin::User Image-->
-                            <li class="user-header text-bg-primary">
+                            @* <li class="user-header text-bg-primary">
                                 <img src="../../dist/assets/img/user2-160x160.jpg" class="rounded-circle shadow" alt="User Image">
                                 <p>
                                     Alexander Pierce - Web Developer
                                     <small>Member since Nov. 2023</small>
                                 </p>
-                            </li> <!--end::User Image--> <!--begin::Menu Body-->
+                            </li>  *@<!--end::User Image--> <!--begin::Menu Body-->
                             <li class="user-body">
                                 <!--begin::Row-->
                                 <div class="row">
-                                    <div class="col-4 text-center"> <a href="#">Followers</a> </div>
+                                    @*  <div class="col-4 text-center"> <a href="#">Followers</a> </div>
                                     <div class="col-4 text-center"> <a href="#">Sales</a> </div>
-                                    <div class="col-4 text-center"> <a href="#">Friends</a> </div>
+                                    <div class="col-4 text-center"> <a href="#">Friends</a> </div> *@
+
+                                    <select class="btn btn-primary dropdown-toggle" id="language-switcher" onchange="changeLanguage()">
+                                        <option value="1">English</option>
+                                        <option value="2">Arabic</option>
+                                    </select>
                                 </div> <!--end::Row-->
                             </li> <!--end::Menu Body--> <!--begin::Menu Footer-->
                             <li class="user-footer">
-                                <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                <a href="/systemusers/changepassword" class="btn btn-default btn-flat">Change Password</a>
                                 @if (User.Identity.IsAuthenticated)
                                 {
                                     <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
@@ -166,64 +175,146 @@
                     <!--begin::Sidebar Menu-->
                     <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
                         <li class="nav-item">
-                            <a href="/" class="nav-link">
-                                <i class="nav-icon bi bi-speedometer"></i>
-                                <p>Dashboard</p>
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon bi bi-tree-fill"></i>
+                                <p>
+                                    Basic Data
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+                                </p>
                             </a>
+                            <ul class="nav nav-treeview" style="display: none; box-sizing: border-box;">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/location/List">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Location</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/employee/List" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Employee</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon bi bi-tree-fill"></i>
+                                <p>
+                                    Manage
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview" style="display: none; box-sizing: border-box;">
+                                <li class="nav-item">
+                                    <a href="/mobilemanage/mobilemanage" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Employee Mobile</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/employeelocation/employeelocation" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Employee Location</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/employeeattendance/logs" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Employees Attendance</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="/employee/List" class="nav-link">
-                                <i class="nav-icon bi bi-palette"></i>
-                                <p>Employee</p>
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon bi bi-tree-fill"></i>
+                                <p>
+                                    Permissions
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+                                </p>
                             </a>
+                            <ul class="nav nav-treeview" style="display: none; box-sizing: border-box;">
+                                <li class="nav-item">
+                                    <a href="/systemusers/index" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>System Users</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="/location/List" class="nav-link">
-                                <i class="nav-icon bi bi-palette"></i>
-                                <p>Location</p>
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon bi bi-tree-fill"></i>
+                                <p>
+                                    Reports
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+                                </p>
                             </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/employeelocation/employeelocation" class="nav-link">
-                                <i class="nav-icon bi bi-palette"></i>
-                                <p>Employee Location</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/employeelocation/setlocation" class="nav-link">
-                                <i class="nav-icon bi bi-palette"></i>
-                                <p>Set Employee Location</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/employeeattendance/logs" class="nav-link">
-                                <i class="nav-icon bi bi-palette"></i>
-                                <p>Employees Attendance Logs</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/mobilemanage/mobilemanage" class="nav-link">
-                                <i class="nav-icon bi bi-palette"></i>
-                                <p>Mobile Manage</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/systemusers/index" class="nav-link">
-                                <i class="nav-icon bi bi-palette"></i>
-                                <p>System Users</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/accesscontrol/index" class="nav-link">
-                                <i class="nav-icon bi bi-palette"></i>
-                                <p>Access Control</p>
-                            </a>
+                            <ul class="nav nav-treeview" style="display: none; box-sizing: border-box;">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Daily Transaction Report</p>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Total Working Hours Report</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Employee Data Report</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Registered Phones Report</p>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Employee Location Report</p>
+                                    </a>
+                                </li>
+
+
+                            </ul>
                         </li>
                     </ul> <!--end::Sidebar Menu-->
                 </nav>
             </div> <!--end::Sidebar Wrapper-->
         </aside> <!--end::Sidebar--> <!--begin::App Main-->
         <main class="app-main">
+            <div id="notificationContainer" class="notification-container" style="display: none;">
+                <div id="notificationMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <!-- Dynamic message will be inserted here -->
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+            @if (!string.IsNullOrEmpty(successMessage))
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert">
+                    @successMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorAlert">
+                    @errorMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
             @RenderBody()
         </main> <!--end::App Main--> <!--begin::Footer-->
         <footer class="app-footer">
@@ -282,7 +373,7 @@
         });
     </script> <!-- apexcharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@@3.37.1/dist/apexcharts.min.js" integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script> <!-- ChartJS -->
-  @*   <script>
+    @*   <script>
         // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
         // IT'S ALL JUST JUNK FOR DEMO
         // ++++++++++++++++++++++++++++++++++++++++++
@@ -341,7 +432,7 @@
     </script>  *@<!-- jsvectormap -->
     <script src="https://cdn.jsdelivr.net/npm/jsvectormap@@1.5.3/dist/js/jsvectormap.min.js" integrity="sha256-/t1nN2956BT869E6H4V1dnt0X5pAQHPytli+1nTZm2Y=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsvectormap@@1.5.3/dist/maps/world.js" integrity="sha256-XPpPaZlU8S/HWf7FZLAncLg2SAkP8ScUTII89x9D3lY=" crossorigin="anonymous"></script> <!-- jsvectormap -->
-  @*   <script>
+    @*   <script>
         const visitorsData = {
             US: 398, // USA
             SA: 400, // Saudi Arabia
@@ -482,7 +573,21 @@
         var currentLanguage = '@currentLanguage'; // Server-side Razor variable
 
         // Set the selected option in the dropdown based on the current language
-        document.getElementById("language-switcher").value = currentLanguage;
+             // Close success alert after 4 seconds
+        var successAlert = document.getElementById('successAlert');
+        if (successAlert) {
+            setTimeout(function () {
+                $(successAlert).alert('close');
+            }, 4000); // 4 seconds
+        }
+
+        // Close error alert after 4 seconds
+        var errorAlert = document.getElementById('errorAlert');
+        if (errorAlert) {
+            setTimeout(function () {
+                $(errorAlert).alert('close');
+            }, 4000); // 4 seconds
+        }
     </script>
 </body><!--end::Body-->
 

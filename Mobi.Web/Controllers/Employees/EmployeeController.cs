@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Mobi.Data.Domain;
 using Mobi.Data.Domain.Employees;
 using Mobi.Data.Enums;
 using Mobi.Service.AccessControls;
@@ -7,6 +8,7 @@ using Mobi.Service.Employees;
 using Mobi.Service.Helpers;
 using Mobi.Web.Factories.Employees;
 using Mobi.Web.Models.Employees;
+using System.Security.Claims;
 
 namespace Mobi.Web.Controllers.Employees
 {
@@ -75,10 +77,10 @@ namespace Mobi.Web.Controllers.Employees
 
             return Json(new
             {
-                draw = Request.Query["draw"], // DataTables 'draw' parameter
-                recordsTotal = employees.Count(), // Total records before filtering
-                recordsFiltered = employees.Count(), // Filtered records after applying search
-                data = employeeViewModels // The filtered data
+                draw = Request.Query["draw"],
+                recordsTotal = employees.Count(),
+                recordsFiltered = employees.Count(),
+                data = employeeViewModels
             });
         }
 
@@ -220,7 +222,7 @@ namespace Mobi.Web.Controllers.Employees
         }
 
         [HttpPost]
-        public IActionResult ChangePassword([FromBody] ChangePasswordModel model)
+        public IActionResult AjaxChangePassword([FromBody] ChangePasswordModel model)
         {
             if (string.IsNullOrWhiteSpace(model.NewPassword))
             {
@@ -239,7 +241,5 @@ namespace Mobi.Web.Controllers.Employees
 
             return Json(new { success = true, message = "Password updated successfully." });
         }
-
-
     }
 }

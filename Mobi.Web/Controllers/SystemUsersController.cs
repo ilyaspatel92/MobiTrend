@@ -1,12 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Mvc;
 using Mobi.Data.Domain;
 using Mobi.Data.Enums;
 using Mobi.Service.AccessControls;
+using Mobi.Service.Employees;
 using Mobi.Service.Factories;
+using Mobi.Service.Helpers;
 using Mobi.Service.SystemUser;
+using Mobi.Service.SystemUserAuthoritys;
 using Mobi.Web.Areas.Admin.Utilities;
 using Mobi.Web.Models;
+using Mobi.Web.Models.AccessControl;
+using Mobi.Web.Models.Employees;
 using Mobi.Web.Models.SystemUser;
+using System.Security.Claims;
 
 namespace Mobi.Web.Controllers
 {
@@ -15,12 +22,16 @@ namespace Mobi.Web.Controllers
         private readonly ISystemUserService _systemUserService;
         private readonly ISystemUserFactory _systemUserFactory;
         private readonly IAccessControlService _accessControlService;
+        private readonly ISystemUserAuthorityService _systemUserAuthorityService;
+        private readonly IEmployeeService _employeeService;
 
-        public SystemUsersController(ISystemUserService systemUserService, ISystemUserFactory systemUserFactory, IAccessControlService accessControlService)
+        public SystemUsersController(ISystemUserService systemUserService, ISystemUserFactory systemUserFactory, IAccessControlService accessControlService, ISystemUserAuthorityService systemUserAuthorityService, IEmployeeService employeeService)
         {
             _systemUserService = systemUserService;
             _systemUserFactory = systemUserFactory;
             _accessControlService = accessControlService;
+            _systemUserAuthorityService = systemUserAuthorityService;
+            _employeeService = employeeService;
         }
 
         [HttpGet]
@@ -159,14 +170,15 @@ namespace Mobi.Web.Controllers
                 EmployeeName = user.EmployeeName,
                 UserName = user.UserName,
                 CompanyID = user.CompanyID,
-                UserStatus = user.UserStatus
+                UserStatus = user.UserStatus,
+                Email = user.Email
             };
 
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult Edit(int id, RegisterModel model)
+        public IActionResult Edit(int id, RegisterModel model, SaveAccessRequest request)
         {
             if (string.IsNullOrEmpty(model.Password))
             {
@@ -185,33 +197,63 @@ namespace Mobi.Web.Controllers
             }
 
             // Check for duplicate username
-            var duplicateUser = _systemUserService.GetSystemUserByUserName(model.UserName);
-            if (duplicateUser != null && duplicateUser.Id != id)
-            {
-                ModelState.AddModelError("UserName", "A user with this username already exists.");
-                return View(model);
-            }
+            //var duplicateUser = _systemUserService.GetSystemUserByUserName(model.UserName);
+            //if (duplicateUser != null && duplicateUser.Id != id)
+            //{
+            //    ModelState.AddModelError("UserName", "A user with this username already exists.");
+            //    return View(model);
+            //}
+
+            //var duplicateEmail = _systemUserService.GetSystemUserByEmail(model.Email);
+            //if (duplicateEmail != null && duplicateEmail.Id != id)
+            //{
+            //    ModelState.AddModelError("Email", "A user with this email already exists.");
+            //    return View(model);
+            //}
 
             try
             {
                 // Update the entity
-                existingUser.EmployeeName = model.EmployeeName;
-                existingUser.UserName = model.UserName;
-                existingUser.CompanyID = model.CompanyID;
-                existingUser.UserStatus = model.UserStatus;
+                //existingUser.EmployeeName = model.EmployeeName;
+                //existingUser.UserName = model.UserName;
+                //existingUser.CompanyID = model.CompanyID;
+                //existingUser.UserStatus = model.UserStatus;
+                //existingUser.Email = model.Email;
+                //// Save changes
+                //_systemUserService.UpdateSystemUser(existingUser);
 
-                // Save changes
-                _systemUserService.UpdateSystemUser(existingUser);
+                // Now handle access control update
+                if (request.Authorities != null && request.Authorities.Any())
+                {
+                    // First delete existing mappings for the user
+                    _systemUserAuthorityService.DeleteByUserId(id);
 
-                TempData["SuccessMessage"] = "System user updated successfully!";
-                return RedirectToAction("Index");
-            }
-            catch (Exception ex)
-            {
-                // Log the error (in a real-world scenario)
-                ModelState.AddModelError(string.Empty, "An error occurred while updating the system user.");
-                return View(model);
-            }
+                    // Insert new mappings for the selected authorities
+                    foreach (var authority in request.Authorities)
+                    {
+                        var mapping = new SystemUserAuthorityMapping
+                        {
+                            SystemUserID = id,
+                            ScreenAuthority = authority,
+                            ScreenAuthoritySystemName = authority.Replace(" ", "").ToLower()
+                        };
+
+                        _systemUserAuthorityService.Insert(mapping);
+                    }
+
+
+                    TempData["SuccessMessage"] = "System user updated successfully!";
+                }
+                }
+                catch (Exception ex)
+                {
+                    // Log the error (in a real-world scenario)
+                    ModelState.AddModelError(string.Empty, "An error occurred while updating the system user.");
+                    return View(model);
+                }
+
+            return RedirectToAction("Index");
+
         }
 
         [HttpPost]
@@ -224,5 +266,124 @@ namespace Mobi.Web.Controllers
 
             return RedirectToAction("Index");
         }
+
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ChangePassword(ChangePasswordModel changePasswordModel)
+        {
+            // Get user information from claims
+            var userId = User.FindFirst(ClaimTypes.Sid)?.Value;
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var systemUser = _systemUserService.GetSystemUserById(int.Parse(userId));
+
+                if (systemUser != null)
+                {
+                    // Check if the old password matches
+                    if (!PasswordHelper.VerifyPassword(changePasswordModel.OldPassword, systemUser.Password))
+                    {
+                        ModelState.AddModelError("OldPassword", "Old password is incorrect.");
+                    }
+
+                    // Check if NewPassword matches ConfirmNewPassword
+                    if (changePasswordModel.NewPassword != changePasswordModel.ConfirmNewPassword)
+                    {
+                        ModelState.AddModelError("ConfirmNewPassword", "New password and confirm password do not match.");
+                    }
+
+                    // If no errors, update the password
+                    if (ModelState.IsValid)
+                    {
+                        systemUser.Password = PasswordHelper.HashPassword(changePasswordModel.NewPassword);
+                        _systemUserService.UpdateSystemUser(systemUser);
+
+                        TempData["SuccessMessage"] = "Password changed successfully.";
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "User not found.");
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "Invalid user session.");
+            }
+
+            return View(changePasswordModel);
+        }
+
+
+        [HttpGet]
+        public JsonResult GetEmployeeNames(string term)
+        {
+            if (string.IsNullOrEmpty(term) || term.Length < 3)
+                return Json(new List<string>());
+
+            var employeeNames = _employeeService
+                .GetAllEmployees()
+                .Where(x => x.NameEng.ToLower().Contains(term.ToLower()) || x.NameArabic.ToLower().Contains(term.ToLower()))
+                .Select(x => new { x.Id, x.NameEng, x.UserName })
+                .ToList();
+
+            return Json(employeeNames);
+        }
+
+        [HttpGet]
+        public JsonResult GetAccessForEmployee(int userId)
+        {
+            var accessList = _systemUserAuthorityService
+                .GetAuthoritiesByUserId(userId)
+                .Select(x => new
+                {
+                    x.ScreenAuthority,
+                    x.ScreenAuthoritySystemName
+                })
+                .ToList();
+
+            return Json(accessList);
+        }
+
+        [HttpPost]
+        public IActionResult SaveAccess([FromBody] SaveAccessRequest request)
+        {
+            if (request.UserId == 0)
+            {
+                TempData["ErrorMessage"] = "Invalid user selection.";
+                return RedirectToAction("Index");
+            }
+
+            try
+            {
+                _systemUserAuthorityService.DeleteByUserId(request.UserId);
+                if (request.Authorities != null && request.Authorities.Any())
+                {
+                    foreach (var authority in request.Authorities)
+                    {
+                        var mapping = new SystemUserAuthorityMapping
+                        {
+                            SystemUserID = request.UserId,
+                            ScreenAuthority = authority,
+                            ScreenAuthoritySystemName = authority.Replace(" ", "").ToLower()
+                        };
+                        _systemUserAuthorityService.Insert(mapping);
+                    }
+                }
+                TempData["SuccessMessage"] = "Access control updated successfully.";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"An error occurred: {ex.Message}";
+            }
+
+            return RedirectToAction("Index");
+        }
+
     }
 }

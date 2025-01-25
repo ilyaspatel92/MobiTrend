@@ -42,7 +42,7 @@ namespace Mobi.Web.Controllers
             var employeeNames = _systemUserService
                 .GetAllUsers()
                 .Where(x => x.EmployeeName.ToLower().Contains(term.ToLower()))
-                .Select(x => new { x.Id, x.EmployeeName })
+                .Select(x => new { x.Id, x.EmployeeName,x.UserName })
                 .ToList();
 
             return Json(employeeNames);

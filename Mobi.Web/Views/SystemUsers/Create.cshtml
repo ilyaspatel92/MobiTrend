@@ -1,118 +1,169 @@
-﻿@model RegisterModel
+﻿@{
+    ViewData["Title"] = "System User";
+}
 
-<div class="content-wrapper">
-    <!-- Page Header -->
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-            </div>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-info text-white">
+            <h3 class="card-title mb-0">System User</h3>
         </div>
-    </section>
+        <div class="card-body">
+            <!-- Notification Section -->
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
 
-    <!-- Main Content -->
-    <section class="content">
-        <div class="container-fluid">
-            <div class="card card-primary">
-                <div class="card-header">
-                    <h3 class="card-title">Add System User</h3>
-                    <div class="card-tools">
-                        <a asp-action="Index" class="btn btn-secondary btn-sm">
-                            <i class="fas fa-arrow-left"></i> Back to List
-                        </a>
+            <!-- Form Section -->
+            <form id="userForm">
+                <div class="row mb-3">
+                    <div class="col-md-6 position-relative">
+                        <label for="EmployeeName" class="form-label">Employee Name</label>
+                        <input id="EmployeeName" class="form-control" placeholder="Enter 3 characters to search" autocomplete="off" />
+                        <ul id="EmployeeNameDropdown" class="list-group position-absolute mt-1" style="display: none; z-index: 1000;"></ul>
                     </div>
                 </div>
-                <div class="card-body">
-                    <!-- Display Validation Errors -->
-                    @if (ViewData.ModelState != null && !ViewData.ModelState.IsValid)
-                    {
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                                {
-                                    <li>@error.ErrorMessage</li>
-                                }
-                            </ul>
-                        </div>
-                    }
-
-                    <form asp-action="Create" method="post">
-                        <!-- Form Fields -->
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="EmployeeName">Employee Name</label>
-                                    <input asp-for="EmployeeName" class="form-control" placeholder="Enter employee name" />
-                                    <span asp-validation-for="EmployeeName" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="UserName">User Name</label>
-                                    <input asp-for="UserName" class="form-control" placeholder="Enter username" />
-                                    <span asp-validation-for="UserName" class="text-danger"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="Email">Email</label>
-                                </div>
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <input asp-for="Email" class="form-control" type="text" placeholder="Enter Email" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="Password">Password</label>
-                                   
-                                </div>
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <input asp-for="Password" class="form-control" type="password" placeholder="Enter password" />                                        
-                                        <button type="button" class="btn btn-secondary generateGuidButton">Change Password</button>
-                                    </div>
-                                </div>
-                            </div>
-                          
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="CompanyID">Company ID</label>
-                                    <input asp-for="CompanyID" class="form-control" type="number" placeholder="Enter company ID" />
-                                    <span asp-validation-for="CompanyID" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="UserStatus">User Status</label>
-                                    <select asp-for="UserStatus" class="form-control">
-                                        <option value="true">Active</option>
-                                        <option value="false">Inactive</option>
-                                    </select>
-                                    <span asp-validation-for="UserStatus" class="text-danger"></span>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <!-- Submit and Cancel Buttons -->
-                        <div class="row">
-                            <div class="col-12 d-flex justify-content-end">
-                                <button type="submit" class="btn btn-primary me-2">
-                                    <i class="fas fa-save"></i> Save
-                                </button>
-                                <a asp-action="Index" class="btn btn-secondary">
-                                    <i class="fas fa-times"></i> Cancel
-                                </a>
-                            </div>
-                        </div>
-                    </form>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="UserName" class="form-label">User Name</label>
+                        <input id="UserName" class="form-control" placeholder="User Name" readonly />
+                    </div>
                 </div>
-            </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Screen Authority</h5>
+                        <div id="authority-list">
+                            @foreach (var authority in Enum.GetValues(typeof(ScreenAuthorityEnum)))
+                            {
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="@authority" name="authorities" value="@authority">
+                                    <label class="form-check-label" for="@authority">@authority</label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>                
+                <div class="d-flex justify-content-end mt-3">
+                    <a href="@Url.Action("index")" class="btn btn-light">
+                        Cancel
+                    </a>
+                    <button id="saveAccess" type="button" class="btn btn-success">Save</button>
+                </div>
+            </form>
         </div>
-    </section>
+    </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let selectedUserId = 0;
+        const employeeNameInput = document.getElementById("EmployeeName");
+        const employeeNameDropdown = document.getElementById("EmployeeNameDropdown");
+        const userNameInput = document.getElementById("UserName");
+
+        // Adjust Dropdown
+        function adjustDropdownWidth() {
+            employeeNameDropdown.style.width = `${employeeNameInput.offsetWidth}px`;
+        }
+
+        employeeNameInput.addEventListener("focus", adjustDropdownWidth);
+        window.addEventListener("resize", adjustDropdownWidth);
+
+        employeeNameInput.addEventListener("input", function () {
+            const term = employeeNameInput.value;
+
+            if (term.length < 3) {
+                employeeNameDropdown.style.display = "none";
+                return;
+            }
+
+            employeeNameDropdown.innerHTML = '<li class="list-group-item">Loading...</li>';
+            employeeNameDropdown.style.display = "block";
+
+            fetch(`/SystemUsers/GetEmployeeNames?term=${term}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    employeeNameDropdown.innerHTML = "";
+                    if (data.length === 0) {
+                        employeeNameDropdown.innerHTML = '<li class="list-group-item text-muted">No record found</li>';
+                    } else {
+                        data.forEach((item) => {
+                            const option = document.createElement("li");
+                            option.textContent = item.nameEng;
+                            option.setAttribute("data-id", item.id);
+                            option.setAttribute("data-username", item.userName);
+                            option.classList.add("list-group-item");
+                            option.style.cursor = "pointer";
+                            option.addEventListener("click", function () {
+                                employeeNameInput.value = item.nameEng;
+                                userNameInput.value = item.userName || "";
+                                selectedUserId = item.id;
+                                employeeNameDropdown.style.display = "none";
+                                fetchAccess(selectedUserId);
+                            });
+                            employeeNameDropdown.appendChild(option);
+                        });
+                    }
+                })
+                .catch(() => {
+                    employeeNameDropdown.innerHTML = '<li class="list-group-item text-danger">Error fetching data</li>';
+                });
+        });
+
+        document.addEventListener("click", function (event) {
+            if (!employeeNameInput.contains(event.target) && !employeeNameDropdown.contains(event.target)) {
+                employeeNameDropdown.style.display = "none";
+            }
+        });
+
+        function fetchAccess(userId) {
+            fetch(`/SystemUsers/GetAccessForEmployee?userId=${userId}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    document.querySelectorAll("input[name='authorities']").forEach((input) => {
+                        input.checked = false;
+                    });
+                    data.forEach((item) => {
+                        const checkbox = document.querySelector(`#authority-list input[value='${item.screenAuthority}']`);
+                        if (checkbox) checkbox.checked = true;
+                    });
+                })
+                .catch(() => alert("Error fetching access."));
+        }
+
+        document.getElementById("saveAccess").addEventListener("click", function () {
+            if (selectedUserId === 0) {
+                alert("Please select an employee first.");
+                return;
+            }
+
+            const selectedAuthorities = Array.from(document.querySelectorAll("input[name='authorities']:checked"))
+                .map(input => input.value);
+
+            fetch(`/SystemUsers/SaveAccess`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ userId: selectedUserId, authorities: selectedAuthorities })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Access saved successfully.");
+                        location.reload();
+                    } else {
+                        alert("Error saving access.");
+                    }
+                })
+                .catch(() => alert("Error saving access."));
+        });
+    });
+</script>

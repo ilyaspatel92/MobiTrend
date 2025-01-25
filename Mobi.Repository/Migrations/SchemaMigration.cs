@@ -17,28 +17,7 @@ namespace Mobi.Repository.Migrations
                     .WithColumn("CreatedDate").AsDateTime().NotNullable();
             }
 
-            if (!Schema.Table("SystemUsers").Exists())
-            {
-                // Create the SystemUsers table
-                Create.Table("SystemUsers")
-                    .WithColumn("Id").AsInt32().PrimaryKey().Identity() // Auto-increment primary key
-                    .WithColumn("EmployeeName").AsString(255).NotNullable()
-                    .WithColumn("Email").AsString(255).NotNullable()
-                    .WithColumn("UserName").AsString(255).NotNullable()
-                    .WithColumn("UserStatus").AsString(50).NotNullable()
-                    .WithColumn("Password").AsString(255).NotNullable()
-                    .WithColumn("CompanyID").AsString(255).NotNullable()
-                    .WithColumn("CreatedDate").AsDateTime().NotNullable()
-                    .WithColumn("PasswordResetToken").AsString(255).Nullable()
-                    .WithColumn("PasswordResetTokenExpiry").AsDateTime().Nullable()
-                    .WithColumn("Deleted").AsBoolean().NotNullable();
-
-                // Add foreign key only if the table was created
-                Create.ForeignKey("FK_SystemUsers_Company")
-                    .FromTable("SystemUsers").ForeignColumn("CompanyID")
-                    .ToTable("Company").PrimaryColumn("Id");
-            }
-
+           
             // Create Employee table
             if (!Schema.Table("Employee").Exists())
             {
@@ -66,6 +45,34 @@ namespace Mobi.Repository.Migrations
                     .FromTable("Employee").ForeignColumn("CompanyId")
                     .ToTable("Company").PrimaryColumn("Id");
             }
+
+            if (!Schema.Table("SystemUsers").Exists())
+            {
+                // Create the SystemUsers table
+                Create.Table("SystemUsers")
+                    .WithColumn("Id").AsInt32().PrimaryKey().Identity() // Auto-increment primary key
+                    .WithColumn("EmployeeName").AsString(255).NotNullable()
+                    .WithColumn("Email").AsString(255).NotNullable()
+                    .WithColumn("UserName").AsString(255).NotNullable()
+                    .WithColumn("UserStatus").AsString(50).NotNullable()
+                    .WithColumn("Password").AsString(255).NotNullable()
+                    .WithColumn("CompanyID").AsString(255).NotNullable()
+                    .WithColumn("EmployeeId").AsInt32().NotNullable()
+                    .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                    .WithColumn("PasswordResetToken").AsString(255).Nullable()
+                    .WithColumn("PasswordResetTokenExpiry").AsDateTime().Nullable()
+                    .WithColumn("Deleted").AsBoolean().NotNullable();
+
+                // Add foreign key only if the table was created
+                Create.ForeignKey("FK_SystemUsers_Company")
+                    .FromTable("SystemUsers").ForeignColumn("CompanyID")
+                    .ToTable("Company").PrimaryColumn("Id");
+
+                Create.ForeignKey("FK_SystemUsers_Employee")
+                   .FromTable("SystemUsers").ForeignColumn("EmployeeId")
+                   .ToTable("Employee").PrimaryColumn("Id");
+            }
+
 
             if (!Schema.Table("Location").Exists())
             {
