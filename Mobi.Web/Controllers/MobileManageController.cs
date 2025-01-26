@@ -106,11 +106,20 @@ namespace Mobi.Web.Controllers
 
             if (action == "register")
             {
+                employee.MobileType = 0;
+                employee.RegistrationType = 0;
+                employee.DeviceId = string.Empty;
+                employee.RegisterStatus = false;
+                employee.IsQrVerify = false;
+                employee.MobRegistrationDate = null;
+                employee.MobileNumber = null;
+
                 // Redirect to the RegisterMobile action with the employee ID
                 return RedirectToAction(nameof(RegisterMobile), new { id });
             }
             else if (action == "remove")
             {
+                employee.MobileNumber = null;
                 employee.MobileType = 0;
                 employee.RegistrationType = 0;
                 employee.DeviceId = string.Empty;

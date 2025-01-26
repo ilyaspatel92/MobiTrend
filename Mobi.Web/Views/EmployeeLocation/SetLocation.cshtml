@@ -240,6 +240,8 @@
             .then(data => {
                 if (data.success) {
                     alert("Locations saved successfully!");
+                    window.location.href = "/employeelocation/employeelocation";
+
                 } else {
                     alert("Error saving locations.");
                 }

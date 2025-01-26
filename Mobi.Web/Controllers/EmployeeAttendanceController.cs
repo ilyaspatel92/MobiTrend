@@ -67,6 +67,7 @@ namespace Mobi.Web.Controllers
                 EmployeeName = entry.EmployeeName,
                 DateAndTime = entry.Log.AttendanceDateTime.ToString("MM/dd/yyyy @ hh:mm tt"),
                 ActionTypeName = GetActionTypeName(entry.Log.ActionTypeId),
+                ActionTypeStatus = entry.Log.ActionTypeStatus,
                 ActionTypeClass = GetActionTypeClass(entry.Log.ActionTypeId),
                 ProofType = GetProofType(entry.Log.ProofTypeId),
                 Location = _locationService.GetLocationById(Convert.ToInt32(entry.Log.LocationId))?.LocationNameEnglish
