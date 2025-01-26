@@ -15,8 +15,8 @@
                     <input type="text" name="name" id="employeeName" class="form-control" placeholder="Search by name" value="@ViewData["Name"]">
                 </div>
                 <div class="col-md-2">
-                    <label for="employeeId" class="form-label">ID</label>
-                    <input type="text" name="id" id="employeeId" class="form-control" placeholder="ID" value="@ViewData["Id"]">
+                    <label for="filenumber" class="form-label">File Number</label>
+                    <input type="text" name="filenumber" id="filenumber" class="form-control" placeholder="Search by file number" value="@ViewData["FileNumber"]">
                 </div>
                 <div class="col-md-3 d-flex align-items-end">
                     <button type="submit" class="btn btn-primary w-100">Search</button>
@@ -29,12 +29,13 @@
                 <tr>
                     <th>No</th>
                     <th>Employee Name</th>
+                    <th>File Number</th>
                     <th>Mobile Type</th>
                     <th>Reg Date</th>
                     <th>Reg Via</th>
                     <th>Admin</th>
                     <th>Reg Status</th>
-                    @* <th>Action</th> *@
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,6 +46,7 @@
                         <tr>
                             <td>@employee.Id</td>
                             <td>@employee.NameEng</td>
+                            <td>@employee.FileNumber</td>
                             <td>@Enum.GetName(typeof(MobileType), employee.MobileType)</td>
                             <td>@employee.CreatedDate.ToString("dd/MM/yyyy")</td>
                             <td>@Enum.GetName(typeof(RegistrationType), employee.RegistrationVia)</td>

@@ -101,6 +101,11 @@ namespace Mobi.Web.Controllers.Employees
             if (string.IsNullOrEmpty(model.CompanyId))
                 model.CompanyId = _companyService.GetCompanies(string.Empty).FirstOrDefault()?.CompanyId ?? "";
 
+            if (_employeeService.IsFileNumberExists(model.FileNumber))
+            {
+                ModelState.AddModelError("FileNumber", "The FileNumber is already exsist");
+            }
+
             if (ModelState.IsValid)
             {
                 var employee = new Employee
@@ -157,6 +162,12 @@ namespace Mobi.Web.Controllers.Employees
             {
                 ModelState.Remove("Password");
             }
+
+            if (_employeeService.IsFileNumberExists(model.FileNumber,id))
+            {
+                ModelState.AddModelError("FileNumber", "The FileNumber is already exsist");
+            }
+
             if (ModelState.IsValid)
             {
                 // Retrieve the existing employee record

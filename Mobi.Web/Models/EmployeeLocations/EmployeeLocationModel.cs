@@ -3,6 +3,7 @@
     public class EmployeeLocationViewModel
     {
         public int EmployeeId { get; set; }
+        public string FileNumber { get; set; }
         public string EmployeeName { get; set; }
         public List<LocationViewModel> Locations { get; set; }
         public string LocationNames { get; set; }

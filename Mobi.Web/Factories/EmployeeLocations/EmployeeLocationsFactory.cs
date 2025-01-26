@@ -28,6 +28,7 @@ namespace Mobi.Web.Factories.EmployeeLocations
             {
                 EmployeeId = employee.Id,
                 EmployeeName = employee.NameEng,
+                FileNumber= employee.FileNumber
             };
 
             var selectedLocations = _employeeLocationService.GetSelectedLocationsByEmployeeId(employee.Id);
@@ -37,6 +38,11 @@ namespace Mobi.Web.Factories.EmployeeLocations
                 .Select(l => l.LocationNameEnglish).ToList();
 
             emp.LocationNames = string.Join(",", locations);
+
+            if (_employeeLocationService.IsFreeLocationSelected(employee.Id))
+            {
+                emp.LocationNames = "Free Location";
+            }
 
             return emp;
         }

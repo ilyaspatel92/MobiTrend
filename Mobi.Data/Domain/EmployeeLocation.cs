@@ -5,5 +5,6 @@ namespace Mobi.Data.Domain
     {
         public int EmployeeId { get; set; }
         public int LocationId { get; set; }
+        public bool IsFreeLocation { get; set; }
     }
 }

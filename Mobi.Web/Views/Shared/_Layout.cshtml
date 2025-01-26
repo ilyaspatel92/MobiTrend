@@ -148,8 +148,8 @@
                                     <div class="col-4 text-center"> <a href="#">Friends</a> </div> *@
 
                                     <select class="btn btn-primary dropdown-toggle" id="language-switcher" onchange="changeLanguage()">
-                                        <option value="1">English</option>
-                                        <option value="2">Arabic</option>
+                                        <option value="1" selected="@(currentLanguage == "1" ? "selected" : null)">English</option>
+                                        <option value="2" selected="@(currentLanguage == "2" ? "selected" : null)">Arabic</option>
                                     </select>
                                 </div> <!--end::Row-->
                             </li> <!--end::Menu Body--> <!--begin::Menu Footer-->
@@ -549,7 +549,7 @@
             var selectedLanguage = this.value;
 
             // Use the Fetch API to send a POST request
-            fetch('Language/SetLanguage', {
+            fetch('/Language/SetLanguage', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

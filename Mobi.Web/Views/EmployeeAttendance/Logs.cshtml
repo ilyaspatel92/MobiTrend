@@ -28,6 +28,14 @@
                     <label for="employeeId" class="form-label">Employee ID</label>
                     <input type="text" id="employeeId" class="form-control" placeholder="Enter Employee ID">
                 </div>
+                <div class="col-md-3">
+                    <label for="TransStatus" class="form-label">Trans Status</label>
+                    <select name="transstatus" id="transstatus" class="form-select">
+                        <option value="" selected="@(ViewData["TransStatus"]?.ToString() == "" ? "selected" : null)">All</option>
+                        <option value="approved" selected="@(ViewData["TransStatus"]?.ToString() == "approved" ? "selected" : null)">Approved</option>
+                        <option value="rejected" selected="@(ViewData["TransStatus"]?.ToString() == "rejected" ? "selected" : null)">Rejected</option>
+                    </select>
+                </div>
             </div>
 
             <!-- Buttons -->
@@ -47,6 +55,7 @@
                             <th>Employee Name</th>
                             <th>Date and Time</th>
                             <th>Trans Type</th>
+                            <th>Trans Status</th>
                             <th>Proof Type</th>
                             <th>Location</th>
                         </tr>
@@ -63,6 +72,17 @@
                                     <td>@log.DateAndTime</td>
                                     <td>
                                         <span class="badge @log.ActionTypeClass">@log.ActionTypeName</span>
+                                    </td>
+                                    <td>
+                                        @if (@log.ActionTypeStatus)
+                                        {
+                                            <span class="badge badge-custom-in">Approved</span>
+                                        }
+                                        else 
+                                        {
+                                            <span class="badge badge-custom-rejected">Rejected</span>
+                                        }
+                                        
                                     </td>
                                     <td>@log.ProofType</td>
                                     <td>@log.Location</td>
@@ -93,6 +113,7 @@
             const endDateInput = document.getElementById("endDate");
             const employeeNameInput = document.getElementById("employeeName");
             const employeeIdInput = document.getElementById("employeeId");
+            const transstatusInput = document.getElementById("transstatus");
             const tableBody = document.getElementById("attendanceTableBody");
 
             // Add event listener for the search button
@@ -103,7 +124,7 @@
                 const employeeId = employeeIdInput.value;
 
                 // Make an AJAX request using the Fetch API
-                fetch(`/EmployeeAttendance/Search?startDate=${startDate}&endDate=${endDate}&employeeName=${employeeName}&employeeId=${employeeId}`)
+                fetch(`/EmployeeAttendance/Search?startDate=${startDate}&endDate=${endDate}&employeeName=${employeeName}&employeeId=${employeeId}&transstatus=${transstatusInput.value}`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error("Error loading attendance logs.");

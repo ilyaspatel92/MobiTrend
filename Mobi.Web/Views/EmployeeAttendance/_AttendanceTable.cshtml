@@ -12,6 +12,17 @@
             <td>
                 <span class="badge @log.ActionTypeClass">@log.ActionTypeName</span>
             </td>
+            <td>
+                @if (log.ActionTypeStatus)
+                {
+                    <span class="badge badge-custom-in">Approved</span>
+                }
+                else
+                {
+                    <span class="badge badge-custom-rejected">Rejected</span>
+                }
+
+            </td>
             <td>@log.ProofType</td>
             <td>@log.Location</td>
         </tr>

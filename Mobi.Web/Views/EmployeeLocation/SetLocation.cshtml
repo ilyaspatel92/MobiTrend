@@ -9,6 +9,9 @@
         <div class="d-flex justify-content-between align-items-center">
             <!-- Title -->
             <h5 class="fw-bold mb-0">Set Employee Locations</h5>
+
+            <!-- Back to List Button -->
+            <a href="employeelocation/employeelocation" class="btn btn-outline-secondary btn-sm">Back to List</a>
         </div>
         <!-- begin::Card Body -->
         <div class="card-body">
@@ -26,18 +29,24 @@
 
                 <!-- Employee ID -->
                 <div class="col-md-6">
-                    <label for="employeeId" class="form-label">Employee ID</label>
-                    <input type="text" id="employeeId" class="form-control" value="@Model?.EmployeeId" readonly>
+                    <label for="filenumber" class="form-label">File Number</label>
+                    <input type="text" id="filenumber" name="filenumber" class="form-control" value="@Model?.FileNumber" readonly>
                 </div>
+                <input type="text" id="employeeId" class="form-control" value="@Model?.EmployeeId" hidden>
+
             </div>
 
             <div class="row g-4">
                 <div class="col">
                     <label class="form-label">Select Locations</label>
-                    <div class="d-flex justify-content-between mb-2">
+                    <div class="d-flex gap-3 align-items-center mb-2">
                         <div>
                             <input type="checkbox" id="selectAll">
                             <label for="selectAll" class="form-check-label">Select All</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="freeLocation">
+                            <label for="freeLocation" class="form-check-label">Free Location</label>
                         </div>
                     </div>
                     <div id="locationList" class="border p-3" style="max-height: 300px; overflow-y: auto;">
@@ -68,7 +77,9 @@
     document.addEventListener("DOMContentLoaded", function () {
         const employeeNameInput = document.getElementById("employeeName");
         const employeeIdInput = document.getElementById("employeeId");
+        const filenumberInput = document.getElementById("filenumber");
         const autocompleteResults = document.getElementById("autocomplete-results");
+        const freeLocationCheckbox = document.getElementById("freeLocation");
 
         let typingTimer; // Timer to handle debounce
         const typingInterval = 500; // Wait 500ms after typing stops
@@ -124,8 +135,10 @@
 
         // Handle employee selection from the autocomplete results
         function selectEmployee(employee) {
+            console.log(employee);
             employeeNameInput.value = employee.label; // Set employee name
             employeeIdInput.value = employee.id; // Set employee ID
+            filenumberInput.value = employee.filenumber; // Set filenumber
 
             // Load locations for the selected employee
             loadLocations(employee.id);
@@ -135,16 +148,22 @@
         }
 
         // Load Locations by Employee ID
-        function loadLocations(employeeId) {
-            fetch(`/EmployeeLocation/GetLocationsByEmployeeId?employeeId=${employeeId}`)
-                .then(response => response.json())
-                .then(locations => {
-                    renderLocationList(locations);
-                })
-                .catch(error => {
+            function loadLocations(employeeId) {
+        fetch(`/EmployeeLocation/GetLocationsByEmployeeId?employeeId=${employeeId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data) {
+                    renderLocationList(data.locations, data.isFreeLocation);
+                    document.getElementById("freeLocation").checked = data.isFreeLocation;
+                } else {
                     alert("Error loading locations.");
-                });
-        }
+                }
+            })
+            .catch(error => {
+                alert("Error loading locations.");
+            });
+    }
+
 
         // Render locations as checkboxes
         function renderLocationList(locations) {
@@ -199,10 +218,11 @@
                 return;
             }
 
-            if (selectedLocations.length === 0) {
+            if (selectedLocations.length === 0 && !freeLocationCheckbox.checked) {
                 alert("Please select at least one location.");
                 return;
             }
+            const isFreeLocationChecked = freeLocationCheckbox.checked;
 
             // Send the selected locations and employee ID to the server
             fetch("/EmployeeLocation/SaveEmployeeLocations", {
@@ -212,13 +232,16 @@
                 },
                 body: JSON.stringify({
                     employeeId: employeeId,         // Send employee ID
-                    locationIds: selectedLocations.length > 0 ? selectedLocations : null  // Send the array of selected location IDs
+                    locationIds: selectedLocations.length > 0 ? selectedLocations : null,  // Send the array of selected location IDs
+                    isFreeLocation: isFreeLocationChecked
                 })
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     alert("Locations saved successfully!");
+                    window.location.href = "/employeelocation/employeelocation";
+
                 } else {
                     alert("Error saving locations.");
                 }
@@ -231,6 +254,37 @@
          {
              loadLocations(employeeIdInput.value);
          }
+
+             const selectAllCheckbox = document.getElementById("selectAll");
+
+    selectAllCheckbox.addEventListener("change", function () {
+        const locationCheckboxes = document.querySelectorAll(".location-checkbox");
+        const isChecked = selectAllCheckbox.checked;
+
+        // Check/uncheck all location checkboxes
+        locationCheckboxes.forEach(checkbox => {
+            checkbox.checked = isChecked;
+        });
+
+        // If "Select All" is checked, uncheck "Free Location"
+        if (isChecked) {
+            freeLocationCheckbox.checked = false;
+        }
+    });
+
+    freeLocationCheckbox.addEventListener("change", function () {
+        const locationCheckboxes = document.querySelectorAll(".location-checkbox");
+        const isFreeLocationChecked = freeLocationCheckbox.checked;
+
+        // Uncheck all location checkboxes if "Free Location" is checked
+        if (isFreeLocationChecked) {
+            locationCheckboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            // Uncheck "Select All"
+            selectAllCheckbox.checked = false;
+        }
+    });
     });
 </script>
 
