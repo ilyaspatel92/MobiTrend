@@ -1,5 +1,6 @@
 ﻿using Azure.Core;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Mobi.Data.Domain;
 using Mobi.Data.Enums;
 using Mobi.Service.AccessControls;
@@ -14,6 +15,7 @@ using Mobi.Web.Models.AccessControl;
 using Mobi.Web.Models.Employees;
 using Mobi.Web.Models.SystemUser;
 using System.Security.Claims;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Mobi.Web.Controllers
 {
@@ -277,8 +279,12 @@ namespace Mobi.Web.Controllers
         {
             // Get user information from claims
             var userId = User.FindFirst(ClaimTypes.Sid)?.Value;
-
-            if (!string.IsNullOrEmpty(userId))
+            if (!ModelState.IsValid)
+            {
+                return View(changePasswordModel);
+            }
+            if (!string.IsNullOrEmpty(userId)|| string.IsNullOrEmpty(changePasswordModel.OldPassword) ||
+                string.IsNullOrEmpty(changePasswordModel.NewPassword) || string.IsNullOrEmpty(changePasswordModel.ConfirmNewPassword))
             {
                 var systemUser = _systemUserService.GetSystemUserById(int.Parse(userId));
 
