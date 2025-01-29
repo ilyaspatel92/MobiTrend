@@ -8,7 +8,6 @@
         MobileManage,
         EmployeeLocation,
         SystemUsers,
-        Reports,
-        ControlACL
+        Reports
     }
 }

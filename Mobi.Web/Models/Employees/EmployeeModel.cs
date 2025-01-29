@@ -31,7 +31,8 @@ namespace Mobi.Web.Models.Employees
         [StringLength(150, ErrorMessage = "Email cannot exceed 150 characters.")]
         public string Email { get; set; }
         public string? UserName { get; set; }
-        
+        public bool IsQrVerify { get; set; }
+
         public string? PhotoPath { get; set; }
 
         [Required(ErrorMessage = "Cid is required.")]

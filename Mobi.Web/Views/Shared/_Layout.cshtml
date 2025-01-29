@@ -574,20 +574,18 @@
 
         // Set the selected option in the dropdown based on the current language
              // Close success alert after 4 seconds
-        var successAlert = document.getElementById('successAlert');
-        if (successAlert) {
-            setTimeout(function () {
-                $(successAlert).alert('close');
-            }, 4000); // 4 seconds
+          function closeAlert(alertId) {
+            var alertElement = document.getElementById(alertId);
+            if (alertElement) {
+                setTimeout(function () {
+                    alertElement.classList.add("fade");
+                    setTimeout(() => alertElement.remove(), 500); // Ensure smooth removal
+                }, 4000);
+            }
         }
 
-        // Close error alert after 4 seconds
-        var errorAlert = document.getElementById('errorAlert');
-        if (errorAlert) {
-            setTimeout(function () {
-                $(errorAlert).alert('close');
-            }, 4000); // 4 seconds
-        }
+        closeAlert("successAlert");
+        closeAlert("errorAlert");
     </script>
 </body><!--end::Body-->
 

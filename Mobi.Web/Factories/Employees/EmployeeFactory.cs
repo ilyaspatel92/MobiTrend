@@ -31,7 +31,8 @@ namespace Mobi.Web.Factories.Employees
                 MobileNumber = employee.MobileNumber,
                 Email = employee.Email,
                 PhotoPath = "",
-                //CompanyId = "1",
+                CompanyId = employee.CompanyId.ToString(),
+                //CompanyId = _companyService.GetCompanyById(employee.CompanyId)?.CompanyId,
                 Password = employee.Password,
                 MobileType = employee.MobileType,
                 DeviceId = employee.DeviceId,
@@ -40,10 +41,11 @@ namespace Mobi.Web.Factories.Employees
                 CreatedDate = employee.CreatedDate,
                 CID = employee.CID,
                 UserName = employee.UserName,
+                IsQrVerify = employee.IsQrVerify
                 //QrCode = GenerateQrCode(employee.Email)
             };
 
-            emp.CompanyId = _companyService.GetCompanyById(employee.CompanyId)?.CompanyId;
+            //emp.CompanyId = _companyService.GetCompanyById(employee.CompanyId)?.CompanyId;
 
             return emp;
         }

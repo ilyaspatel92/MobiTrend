@@ -86,6 +86,11 @@ namespace Mobi.Service.SystemUser
             return _systemUserRepository.GetById(id);
         }
 
+        public SystemUsers GetSystemUserByEmployeeId(int id)
+        {
+            return _systemUserRepository.GetAll().FirstOrDefault(u => u.EmployeeId == id);
+        }
+
         /// <summary>
         /// Retrieves the details of a system user by their unique identifier.
         /// </summary>

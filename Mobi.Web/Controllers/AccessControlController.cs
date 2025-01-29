@@ -23,15 +23,15 @@ namespace Mobi.Web.Controllers
             _accessControlService = accessControlService;
         }
 
-        public IActionResult Index()
-        {
-            bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.ControlACL));
+        //public IActionResult Index()
+        //{
+        //    bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.ControlACL));
 
-            if (!hasAccess)
-                return RedirectToAction("AccessDenied", "AccessControl");
+        //    if (!hasAccess)
+        //        return RedirectToAction("AccessDenied", "AccessControl");
 
-            return View();
-        }
+        //    return View();
+        //}
 
         [HttpGet]
         public JsonResult GetEmployeeNames(string term)
