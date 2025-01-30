@@ -5,26 +5,33 @@
     int index = 1;
     foreach (var log in Model)
     {
-        <tr>
+        <tr data-id="@log.Id">
             <td>@index</td>
             <td>@log.EmployeeName</td>
             <td>@log.DateAndTime</td>
             <td>
-                <span class="badge @log.ActionTypeClass">@log.ActionTypeName</span>
+                <span class="display-mode badge @log.ActionTypeClass">@log.ActionTypeName</span>
+                <select class="edit-mode form-select form-control d-none action-type-dropdown">
+                    <option value="1" selected="@(log.ActionTypeId == 1 ? "selected" : null)">IN</option>
+                    <option value="2" selected="@(log.ActionTypeId == 2 ? "selected" : null)">OUT</option>
+                </select>
             </td>
             <td>
-                @if (log.ActionTypeStatus)
-                {
-                    <span class="badge badge-custom-in">Approved</span>
-                }
-                else
-                {
-                    <span class="badge badge-custom-rejected">Rejected</span>
-                }
-
+                <span class="display-mode badge @(log.ActionTypeStatus ? "badge-custom-in" : "badge-custom-rejected")">
+                    @(log.ActionTypeStatus ? "Approved" : "Rejected")
+                </span>
+                <select class="edit-mode form-select form-control d-none action-status-dropdown">
+                    <option value="true" selected="@(log.ActionTypeStatus ? "selected" : null)">Approved</option>
+                    <option value="false" selected="@(log.ActionTypeStatus ? "" : "selected")">Rejected</option>
+                </select>
             </td>
             <td>@log.ProofType</td>
             <td>@log.Location</td>
+            <td>
+                <button class="btn btn-warning btn-sm edit-btn">Edit</button>
+                <button class="btn btn-success btn-sm save-btn d-none">Save</button>
+                <button class="btn btn-danger btn-sm cancel-btn d-none">Cancel</button>
+            </td>
         </tr>
         index++;
     }
@@ -32,6 +39,6 @@
 else
 {
     <tr>
-        <td colspan="6" class="text-center">No records found</td>
+        <td colspan="8" class="text-center">No records found</td>
     </tr>
 }

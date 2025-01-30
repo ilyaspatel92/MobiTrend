@@ -64,9 +64,11 @@ namespace Mobi.Web.Controllers
 
             var viewModel = joinedLogs.Select(entry => new EmployeeAttendanceLogModel
             {
+                Id = entry.Log.Id,
                 EmployeeName = entry.EmployeeName,
                 DateAndTime = entry.Log.AttendanceDateTime.ToString("MM/dd/yyyy @ hh:mm tt"),
                 ActionTypeName = GetActionTypeName(entry.Log.ActionTypeId),
+                ActionTypeId = entry.Log.ActionTypeId,
                 ActionTypeStatus = entry.Log.ActionTypeStatus,
                 ActionTypeClass = GetActionTypeClass(entry.Log.ActionTypeId),
                 ProofType = GetProofType(entry.Log.ProofTypeId),
@@ -111,7 +113,7 @@ namespace Mobi.Web.Controllers
             {
                 joinedLogs = joinedLogs.Where(entry => entry.EmployeeName.Contains(employeeName, StringComparison.OrdinalIgnoreCase));
             }
-            
+
 
             if (!string.IsNullOrWhiteSpace(employeeId) && int.TryParse(employeeId, out int parsedEmployeeId))
             {
@@ -130,9 +132,11 @@ namespace Mobi.Web.Controllers
 
             var viewModel = joinedLogs.Select(entry => new EmployeeAttendanceLogModel
             {
+                Id = entry.Log.Id,
                 EmployeeName = entry.EmployeeName,
                 DateAndTime = entry.Log.AttendanceDateTime.ToString("MM/dd/yyyy @ hh:mm tt"),
                 ActionTypeName = GetActionTypeName(entry.Log.ActionTypeId),
+                ActionTypeId = entry.Log.ActionTypeId,
                 ActionTypeClass = GetActionTypeClass(entry.Log.ActionTypeId),
                 ActionTypeStatus = entry.Log.ActionTypeStatus,
                 ProofType = GetProofType(entry.Log.ProofTypeId),
@@ -140,6 +144,25 @@ namespace Mobi.Web.Controllers
             }).ToList();
 
             return PartialView("_AttendanceTable", viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateAttendance([FromBody] UpdateAttendanceModel model)
+        {
+            var log = _attendanceRepository.GetById(model.Id);
+            if (log == null)
+            {
+                return Json(new { success = false, message = "Attendance record not found." });
+            }
+
+            log.ActionTypeId = model.ActionTypeId;
+            log.ActionTypeStatus = model.ActionTypeStatus;
+
+            _attendanceRepository.Update(log);
+
+            TempData["SuccessMessage"] = "Employees Attendance Logs has been Successfully updated.";
+
+            return Json(new { success = true });
         }
 
         // Helper methods for mapping ActionType and ProofType

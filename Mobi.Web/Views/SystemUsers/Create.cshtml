@@ -158,7 +158,7 @@
                 .then(response => {
                     if (response.ok) {
                         alert("Access saved successfully.");
-                        location.reload();
+                         window.location.href = "/systemusers/index";
                     } else {
                         alert("Error saving access.");
                     }

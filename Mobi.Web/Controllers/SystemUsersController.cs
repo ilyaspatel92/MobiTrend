@@ -182,16 +182,6 @@ namespace Mobi.Web.Controllers
         [HttpPost]
         public IActionResult Edit(int id, RegisterModel model, SaveAccessRequest request)
         {
-            if (string.IsNullOrEmpty(model.Password))
-            {
-                ModelState.Remove(nameof(model.Password));
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
             var existingUser = _systemUserService.GetSystemUserById(id);
             if (existingUser == null)
             {
@@ -246,13 +236,13 @@ namespace Mobi.Web.Controllers
 
                     TempData["SuccessMessage"] = "System user updated successfully!";
                 }
-                }
-                catch (Exception ex)
-                {
-                    // Log the error (in a real-world scenario)
-                    ModelState.AddModelError(string.Empty, "An error occurred while updating the system user.");
-                    return View(model);
-                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error (in a real-world scenario)
+                ModelState.AddModelError(string.Empty, "An error occurred while updating the system user.");
+                return View(model);
+            }
 
             return RedirectToAction("Index");
 
@@ -263,8 +253,12 @@ namespace Mobi.Web.Controllers
         {
             var user = _systemUserService.GetSystemUserById(id);
 
-            if (user != null)
+            if (user != null) 
+            {
+                _systemUserAuthorityService.DeleteByUserId(user.Id);
                 _systemUserService.DeleteSystemUser(user);
+            }
+                
 
             return RedirectToAction("Index");
         }
@@ -283,7 +277,7 @@ namespace Mobi.Web.Controllers
             {
                 return View(changePasswordModel);
             }
-            if (!string.IsNullOrEmpty(userId)|| string.IsNullOrEmpty(changePasswordModel.OldPassword) ||
+            if (!string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(changePasswordModel.OldPassword) ||
                 string.IsNullOrEmpty(changePasswordModel.NewPassword) || string.IsNullOrEmpty(changePasswordModel.ConfirmNewPassword))
             {
                 var systemUser = _systemUserService.GetSystemUserById(int.Parse(userId));
@@ -344,8 +338,9 @@ namespace Mobi.Web.Controllers
         [HttpGet]
         public JsonResult GetAccessForEmployee(int userId)
         {
+            var systemUser = _systemUserService.GetSystemUserByEmployeeId(userId);
             var accessList = _systemUserAuthorityService
-                .GetAuthoritiesByUserId(userId)
+                .GetAuthoritiesByUserId(systemUser?.Id ?? 0)
                 .Select(x => new
                 {
                     x.ScreenAuthority,
@@ -367,14 +362,37 @@ namespace Mobi.Web.Controllers
 
             try
             {
-                _systemUserAuthorityService.DeleteByUserId(request.UserId);
+                var systemUser = _systemUserService.GetSystemUserByEmployeeId(request.UserId);
+
+                if (systemUser == null)
+                {
+                    var employee = _employeeService.GetEmployeeById(request.UserId);
+
+                    _systemUserService.InsertSystemUser(new SystemUsers
+                    {
+                        EmployeeName = employee.NameEng,
+                        UserName = employee.UserName,
+                        Email = employee.Email,
+                        Password = employee.Password,
+                        CompanyID = employee.CompanyId,
+                        CreatedDate = DateTime.UtcNow,
+                        Deleted = false,
+                        UserStatus = true,
+                        EmployeeId = employee.Id
+                    });
+
+                    systemUser = _systemUserService.GetSystemUserByEmployeeId(request.UserId);
+                }
+
+                _systemUserAuthorityService.DeleteByUserId(systemUser.Id);
+
                 if (request.Authorities != null && request.Authorities.Any())
                 {
                     foreach (var authority in request.Authorities)
                     {
                         var mapping = new SystemUserAuthorityMapping
                         {
-                            SystemUserID = request.UserId,
+                            SystemUserID = systemUser.Id,
                             ScreenAuthority = authority,
                             ScreenAuthoritySystemName = authority.Replace(" ", "").ToLower()
                         };

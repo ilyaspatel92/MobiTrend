@@ -53,7 +53,7 @@
                             <td>@employee.UserName</td>
                             <td>@(employee.RegisterStatus ? "Registered" : "Not Registered")</td>
                             <td>
-                                @if (string.IsNullOrEmpty(employee.MobileNumber))
+                                @if (!employee.IsQrVerify)
                                 {
                                     <a href="@Url.Action("RegisterMobile", "MobileManage", new { id = employee.Id })" class="btn btn-link">Register</a>
                                 }

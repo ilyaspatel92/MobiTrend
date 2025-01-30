@@ -27,6 +27,7 @@ namespace Mobi.Service.SystemUser
         /// <param name="id">The unique identifier of the system user.</param>
         /// <returns>The details of the specified system user.</returns>
         SystemUsers GetSystemUserById(int id);
+        SystemUsers GetSystemUserByEmployeeId(int id);
 
         /// <summary>
         /// Inserts a new system user into the system.
