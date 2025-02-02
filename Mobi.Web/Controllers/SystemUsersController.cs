@@ -37,6 +37,54 @@ namespace Mobi.Web.Controllers
         }
 
         [HttpGet]
+        public IActionResult GetUserData(string employeeName, string userName, bool? userStatus)
+        {
+            try
+            {
+                var query = _systemUserService.GetAllUsers();
+
+                if (!string.IsNullOrEmpty(employeeName))
+                    query = query.Where(x => x.EmployeeName.Contains(employeeName));
+
+                if (!string.IsNullOrEmpty(userName))
+                    query = query.Where(x => x.UserName.Contains(userName));
+
+                if (userStatus.HasValue)
+                    query = query.Where(x => x.UserStatus == userStatus.Value);
+
+                var totalRecords = query.Count();
+
+                var data = query.Select(user => new
+                {
+                    id = user.Id,
+                    employeeName = user.EmployeeName,
+                    companyId = user.CompanyID,
+                    userName = user.UserName,
+                    userStatus = user.UserStatus,
+                    actions = $@"
+                <a href='/SystemUsers/Edit/{user.Id}' class='btn btn-warning btn-sm'>Edit</a>
+                <button class='btn btn-danger btn-sm delete-btn' data-id='{user.Id}'>Delete</button>"
+                }).ToList();
+
+                return Json(new
+                {
+                    draw = Request.Query["draw"].FirstOrDefault() ?? "1",
+                    recordsTotal = totalRecords,
+                    recordsFiltered = totalRecords,
+                    data = data
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = "An error occurred while fetching data.", details = ex.Message });
+            }
+        }
+
+
+
+
+
+        [HttpGet]
         public IActionResult Index(string employeeName, string userName, bool? userStatus, int page = 1, int pageSize = 10)
         {
             bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.SystemUsers));

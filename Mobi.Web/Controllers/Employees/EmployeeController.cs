@@ -39,23 +39,6 @@ namespace Mobi.Web.Controllers.Employees
             if (!hasAccess)
                 return RedirectToAction("AccessDenied", "AccessControl");
 
-
-            //// Retrieve all employees
-            //var employees = _employeeService.GetAllEmployees();
-
-            //// Apply filters if the parameters are provided
-            //if (!string.IsNullOrEmpty(name))
-            //{
-            //    employees = employees.Where(e => e.NameEng.Contains(name, StringComparison.OrdinalIgnoreCase) || e.NameArabic.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
-            //}
-            //if (id.HasValue)
-            //{
-            //    employees = employees.Where(e => e.Id == id.Value).ToList();
-            //}
-
-            //// Convert to ViewModels and pass to the view
-            //var employeeViewModels = _employeeFactory.PrepareEmployeeViewModels(employees);
-
             return View(new List<EmployeeModel>());
         }
 

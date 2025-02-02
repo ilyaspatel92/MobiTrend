@@ -1,5 +1,4 @@
-﻿@model PaginatedList<EmployeeLocationViewModel>
-@{
+﻿@{
     ViewData["Title"] = "Employee Locations";
 }
 <!-- Search Section -->
@@ -7,26 +6,29 @@
     <div class="card-header">
         <h3 class="card-title">Search Employee</h3>
     </div>
-    <form id="searchForm" method="get" action="@Url.Action("EmployeeLocation", "EmployeeLocation")">
+    <form id="searchForm">
         <div class="card-body">
             <div class="row mb-4">
                 <div class="col-md-4">
                     <label for="employeeName" class="form-label">Employee Name</label>
-                    <input type="text" name="employeeName" id="employeeName" class="form-control" placeholder="Search by name" value="@ViewData["EmployeeName"]">
+                    <input type="text" name="employeeName" id="employeeName" class="form-control" placeholder="Search by name">
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <label for="filenumber" class="form-label">File Number</label>
-                    <input type="text" name="filenumber" id="filenumber" class="form-control" placeholder="Search by file number" value="@ViewData["filenumber"]">
+                    <input type="text" name="filenumber" id="filenumber" class="form-control" placeholder="Search by file number">
                 </div>
                 <div class="col-md-3">
                     <label for="siteStatus" class="form-label">Site Status</label>
                     <select name="siteStatus" id="siteStatus" class="form-select">
-                        <option value="" selected="@(ViewData["SiteStatus"]?.ToString() == "" ? "selected" : null)">All</option>
-                        <option value="set" selected="@(ViewData["SiteStatus"]?.ToString() == "set" ? "selected" : null)">Set</option>
+                        <option value="">All</option>
+                        <option value="set">Set</option>
                     </select>
                 </div>
-                <div class="col-md-3 d-flex align-items-end">
-                    <button class="btn btn-primary w-100">Search</button>
+                <div class="col-md-1 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                </div>
+                <div class="col-md-1 d-flex align-items-end">
+                    <button type="button" id="showAll" class="btn btn-secondary w-100">Show All</button>
                 </div>
             </div>
         </div>
@@ -43,7 +45,7 @@
                         <h3 class="card-title">Employee Location Details</h3>
                     </div>
                     <div class="card-body table-responsive">
-                        <table class="table table-bordered">
+                        <table id="employeeLocationTable" class="table table-bordered">
                             <thead class="table-light">
                                 <tr>
                                     <th>File Number</th>
@@ -52,51 +54,99 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                @if (Model != null && Model.Items.Any())
-                                {
-                                    foreach (var employee in Model.Items)
-                                    {
-                                        <tr>
-                                            <td>@employee.FileNumber</td>
-                                            <td>@employee.EmployeeName</td>
-                                            <td>@employee.LocationNames</td>
-                                            <td>
-                                                @if (string.IsNullOrEmpty(employee.LocationNames))
-                                                {
-                                                    <a href="@Url.Action("SetLocation", "EmployeeLocation", new { EmployeeId = employee.EmployeeId })" class="btn btn-link p-0">Set Location</a>
-                                                }
-                                                else
-                                                {
-                                                    <a href="@Url.Action("SetLocation", "EmployeeLocation", new { EmployeeId = employee.EmployeeId })" class="btn btn-link p-0">Edit</a>
-                                                }
-                                            </td>
-                                        </tr>
-                                    }
-                                }
-                                else
-                                {
-                                    <tr>
-                                        <td colspan="4" class="text-center">No Records Found</td>
-                                    </tr>
-                                }
-                            </tbody>
+                            <tbody></tbody>
                         </table>
-                    </div>
-                    <div class="card-footer">
-                        <nav aria-label="Pagination">
-                            <ul class="pagination justify-content-center">
-                                @for (int i = 1; i <= Model.TotalPages; i++)
-                                {
-                                    <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                                        <a class="page-link" href="@Url.Action("EmployeeLocation", "EmployeeLocation", new { page = i })">@i</a>
-                                    </li>
-                                }
-                            </ul>
-                        </nav>
+                        <div id="initialMessage" class="text-center mt-4" style="display: none;">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {    
+    <script>
+        $(document).ready(function () {
+            var table = $('#employeeLocationTable').DataTable({
+                processing: true,
+                serverSide: false,
+                paging: true,
+                searching: false,
+                lengthChange: true,
+                pageLength: 10,
+                language: {
+                    emptyTable: "Please use the search form or click 'Show All' to load data.",
+                    paginate: {
+                        previous: "Previous",
+                        next: "Next"
+                    },
+                    info: "Showing _START_ to _END_ of _TOTAL_ entries"
+                },
+                columns: [
+                    { data: 'fileNumber' },
+                    { data: 'employeeName' },
+                    { data: 'locationNames' },
+                    {
+                        data: 'employeeId',
+                        render: function (data, type, row) {
+                            if (!row.locationNames) {
+                                return `<a href="@Url.Action("SetLocation", "EmployeeLocation")?EmployeeId=${data}" class="btn btn-link p-0">Set Location</a>`;
+                            } else {
+                                return `<a href="@Url.Action("SetLocation", "EmployeeLocation")?EmployeeId=${data}" class="btn btn-link p-0">Edit</a>`;
+                            }
+                        }
+                    }
+                ],
+                ajax: null // No initial ajax call
+            });
+
+            // Show the initial message
+            $('#initialMessage').show();
+
+            // Function to load data and reload table
+            function loadData(name = "", filenumber = "", sitestatus = "") {
+                $('#initialMessage').hide(); // Hide the initial message
+                $.ajax({
+                    url: `/EmployeeLocation/GetEmployeeLocationData`,
+                    type: 'GET',
+                    data: {
+                        employeeName: name,
+                        filenumber: filenumber,
+                        siteStatus: sitestatus,
+                        draw: table.settings()[0].iDraw + 1 // pass the draw parameter
+                    },
+                    success: function (result) {
+                        // Clear and add the formatted data to the DataTable
+                        table.clear().rows.add(result.data.map((employee, index) => ({
+                            fileNumber: employee.fileNumber,
+                            employeeName: employee.employeeName,
+                            locationNames: employee.locationNames,
+                            employeeId: employee.employeeId
+                        }))).draw();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error fetching data:", error);
+                    }
+                });
+            }
+
+            // Trigger the AJAX request on form submit
+            $('#searchForm').on('submit', function (e) {
+                e.preventDefault();
+                const name = $('#employeeName').val();
+                const filenumber = $('#filenumber').val();
+                const sitestatus = $('#siteStatus').val();
+                loadData(name, filenumber, sitestatus);
+            });
+
+            // Handle show all button click
+            $('#showAll').on('click', function () {
+                $('#employeeName').val('');
+                $('#filenumber').val('');
+                $('#siteStatus').val('');
+                loadData();
+            });
+        });
+    </script>
+}

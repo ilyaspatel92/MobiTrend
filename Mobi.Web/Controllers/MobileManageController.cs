@@ -24,46 +24,37 @@ namespace Mobi.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult MobileManage(string name, string? filenumber, int page = 1, int pageSize = 10)
+        public IActionResult MobileManage()
         {
             bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.MobileManage));
-
             if (!hasAccess)
                 return RedirectToAction("AccessDenied", "AccessControl");
-            // Pass query string values to the view
-            ViewData["Name"] = name;
-            ViewData["FileNumber"] = filenumber;
+            return View();
+        }
 
-            // Retrieve all employees
+        [HttpGet]
+        public IActionResult GetMobileManageData(string name, string? filenumber)
+        {
             var query = _employeeService.GetAllEmployees();
 
-            // Apply filters if the parameters are provided
             if (!string.IsNullOrEmpty(name))
             {
                 query = query.Where(e => e.NameEng.Contains(name, StringComparison.OrdinalIgnoreCase) || e.NameArabic.Contains(name, StringComparison.OrdinalIgnoreCase));
             }
-
             if (!string.IsNullOrEmpty(filenumber))
             {
                 query = query.Where(e => e.FileNumber == filenumber);
             }
 
-            // Pagination
-            var totalItems = query.Count();
-            var items = query.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            var employeeViewModels = _employeeFactory.PrepareEmployeeViewModels(query.ToList());
 
-            // Convert to ViewModels and pass to the view
-            var employeeViewModels = _employeeFactory.PrepareEmployeeViewModels(items);
-
-            var model = new PaginatedList<EmployeeModel>
+            return Json(new
             {
-                Items = employeeViewModels.ToList(),
-                TotalItems = totalItems,
-                CurrentPage = page,
-                PageSize = pageSize
-            };
-
-            return View(model);
+                draw = Request.Query["draw"],
+                recordsTotal = employeeViewModels.Count(),
+                recordsFiltered = employeeViewModels.Count(),
+                data = employeeViewModels
+            });
         }
 
 
