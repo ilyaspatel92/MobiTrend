@@ -56,13 +56,19 @@ namespace Mobi.Web.Controllers
                 query = query.Where(entry => entry.Log.EmployeeId == parsedEmployeeId);
             }
 
-            if (transstatus == "approved")
+            if (!string.IsNullOrWhiteSpace(transstatus))
             {
-                query = query.Where(entry => entry.Log.ActionTypeStatus == true);
-            }
-            else if (transstatus == "rejected")
-            {
-                query = query.Where(entry => entry.Log.ActionTypeStatus == false);
+                bool? transStatusBool = transstatus.ToLower() switch
+                {
+                    "approved" => true,
+                    "rejected" => false,
+                    _ => null
+                };
+
+                if (transStatusBool.HasValue)
+                {
+                    query = query.Where(entry => entry.Log.ActionTypeStatus == transStatusBool);
+                }
             }
 
             var employeeViewModels = query.Select(entry => new EmployeeAttendanceLogModel
@@ -73,6 +79,7 @@ namespace Mobi.Web.Controllers
                 ActionTypeName = GetActionTypeName(entry.Log.ActionTypeId),
                 ActionTypeId = entry.Log.ActionTypeId,
                 ActionTypeStatus = entry.Log.ActionTypeStatus,
+                TransStatusName = entry.Log.ActionTypeStatus ? "Approved" : "Rejected",  // Added TransStatusName
                 ActionTypeClass = GetActionTypeClass(entry.Log.ActionTypeId),
                 ProofType = GetProofType(entry.Log.ProofTypeId),
                 Location = _locationService.GetLocationById(Convert.ToInt32(entry.Log.LocationId))?.LocationNameEnglish
@@ -86,6 +93,7 @@ namespace Mobi.Web.Controllers
                 data = employeeViewModels
             });
         }
+
 
 
         [HttpGet]
