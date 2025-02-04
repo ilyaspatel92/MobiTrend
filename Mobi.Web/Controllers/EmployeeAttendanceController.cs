@@ -90,7 +90,7 @@ namespace Mobi.Web.Controllers
                 draw = Request.Query["draw"],
                 recordsTotal = query.Count(),
                 recordsFiltered = employeeViewModels.Count(),
-                data = employeeViewModels
+                data = employeeViewModels ?? new List<EmployeeAttendanceLogModel>()
             });
         }
 
