@@ -6,6 +6,7 @@ using Mobi.Repository;
 using Mobi.Service.AccessControls;
 using Mobi.Service.Locations;
 using Mobi.Web.Models.EmployeeAttendance;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Mobi.Web.Controllers
 {
@@ -36,7 +37,8 @@ namespace Mobi.Web.Controllers
                 (log, emp) => new
                 {
                     Log = log,
-                    EmployeeName = emp.NameEng
+                    EmployeeName = emp.NameEng,
+                    FileNumber = emp.FileNumber
                 });
 
             if (startDate.HasValue && endDate.HasValue)
@@ -74,8 +76,9 @@ namespace Mobi.Web.Controllers
             var employeeViewModels = query.Select(entry => new EmployeeAttendanceLogModel
             {
                 Id = entry.Log.Id,
+                FileNumber = entry.FileNumber,
                 EmployeeName = entry.EmployeeName,
-                DateAndTime = entry.Log.AttendanceDateTime.ToString("MM/dd/yyyy @ hh:mm tt"),
+                DateAndTime = entry.Log.AttendanceDateTime.ToString("dd/MM/yyyy @ hh:mm tt"),
                 ActionTypeName = GetActionTypeName(entry.Log.ActionTypeId),
                 ActionTypeId = entry.Log.ActionTypeId,
                 ActionTypeStatus = entry.Log.ActionTypeStatus,
@@ -95,8 +98,21 @@ namespace Mobi.Web.Controllers
         }
 
 
-
         [HttpGet]
+        public IActionResult GetEmptyEmployeeAttendanceData(DateTime? startDate, DateTime? endDate, string employeeName, string employeeId, string transstatus)
+        {
+            return Json(new
+            {
+                draw = Request.Query["draw"],
+                recordsTotal = 0,
+                recordsFiltered =0,
+                data = new List<EmployeeAttendanceLogModel>()
+            });
+
+        }
+
+
+            [HttpGet]
         public IActionResult Logs(DateTime? startDate, DateTime? endDate, string employeeName, string employeeId, string TransStatus)
         {
             bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.EmployeeAttendance));
@@ -112,7 +128,8 @@ namespace Mobi.Web.Controllers
                              select new
                              {
                                  Log = log,
-                                 EmployeeName = emp.NameEng
+                                 EmployeeName = emp.NameEng,
+                                 FileNumber = emp.FileNumber
                              };
 
             if (startDate.HasValue && endDate.HasValue)
@@ -135,6 +152,7 @@ namespace Mobi.Web.Controllers
             var viewModel = joinedLogs.Select(entry => new EmployeeAttendanceLogModel
             {
                 Id = entry.Log.Id,
+                FileNumber = entry.FileNumber,
                 EmployeeName = entry.EmployeeName,
                 DateAndTime = entry.Log.AttendanceDateTime.ToString("MM/dd/yyyy @ hh:mm tt"),
                 ActionTypeName = GetActionTypeName(entry.Log.ActionTypeId),
@@ -168,7 +186,8 @@ namespace Mobi.Web.Controllers
                              select new
                              {
                                  Log = log,
-                                 EmployeeName = emp.NameEng
+                                 EmployeeName = emp.NameEng,
+                                 FileNumber = emp.FileNumber
                              };
 
             if (startDate.HasValue && endDate.HasValue)
@@ -203,6 +222,7 @@ namespace Mobi.Web.Controllers
             var viewModel = joinedLogs.Select(entry => new EmployeeAttendanceLogModel
             {
                 Id = entry.Log.Id,
+                FileNumber = entry.FileNumber,
                 EmployeeName = entry.EmployeeName,
                 DateAndTime = entry.Log.AttendanceDateTime.ToString("MM/dd/yyyy @ hh:mm tt"),
                 ActionTypeName = GetActionTypeName(entry.Log.ActionTypeId),

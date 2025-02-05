@@ -15,6 +15,7 @@
     public class EmployeeAttendanceLogModel
     {
         public int Id { get; set; }
+        public string FileNumber { get; set; }
         public string EmployeeName { get; set; }
         public string DateAndTime { get; set; }
         public string ActionTypeName { get; set; }

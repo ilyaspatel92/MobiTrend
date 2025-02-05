@@ -28,7 +28,6 @@
         <table id="mobileManageTable" class="table table-bordered text-center" style="width:100%;">
             <thead class="table-light">
                 <tr>
-                    <th>No</th>
                     <th>Employee Name</th>
                     <th>File Number</th>
                     <th>Mobile Type</th>
@@ -51,6 +50,7 @@
             var table = $('#mobileManageTable').DataTable({
                 processing: true,
                 serverSide: false,
+                order :[[0,"asc"]],
                 paging: true,
                 searching: false,
                 lengthChange: true,
@@ -62,8 +62,7 @@
                     },
                     info: "Showing _START_ to _END_ of _TOTAL_ entries (filtered from _MAX_ total entries)"
                 },
-                columns: [
-                    { data: 'no' },
+                columns: [                    
                     { data: 'nameEng' },
                     { data: 'fileNumber' },
                     { data: 'mobileType' },
@@ -87,9 +86,9 @@
                             no: index + 1,
                             nameEng: employee.nameEng,
                             fileNumber: employee.fileNumber,
-                            mobileType: employee.mobileType,
+                            mobileType: employee.mobileTypeName,
                             createdDate: employee.createdDate,
-                            registrationVia: employee.registrationVia,
+                            registrationVia: employee.registrationTypeName,
                             userName: employee.userName,
                             registerStatus: employee.registerStatus ? "Registered" : "Not Registered",
                             action: employee.isQrVerify

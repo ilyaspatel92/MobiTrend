@@ -55,7 +55,7 @@
 				<table id="attendanceTable" class="table table-bordered table-hover">
 					<thead class="table-dark">
 						<tr>
-							<th>#</th>
+							<th>File Number</th>
 							<th>Employee Name</th>
 							<th>Date and Time</th>
 							<th>Trans Type</th>
@@ -73,18 +73,24 @@
 </div>
 
 @section Scripts {
+	<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css">
+	<script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+
 	<script>
 		$(document).ready(function () {
 			let table = $('#attendanceTable').DataTable({
 				 processing: true,
-				serverSide: true,
+				serverSide: false,
 				paging: true,
-				searching: false, // Disable default search box
+				searching: false, 
+				order :[[0,"asc"]],
 				ordering: true,
 				ajax: {
-					url: "/EmployeeAttendance/GetEmployeeAttendanceData",
+					url: "/EmployeeAttendance/GetEmptyEmployeeAttendanceData",
 					type: "GET",
-					data: function (d) {
+					data: function (d) {						
 						d.startDate = $('#startDate').val();
 						d.endDate = $('#endDate').val();
 						d.employeeName = $('#employeeName').val();
@@ -93,7 +99,7 @@
 					}
 				},
 				columns: [
-					{ data: null, render: (data, type, row, meta) => meta.row + 1 },
+					{ data: "fileNumber" },
 					{ data: "employeeName" },
 					{ data: "dateAndTime" },
 					{
