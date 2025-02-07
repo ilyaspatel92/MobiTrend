@@ -1,85 +1,135 @@
-﻿@model PaginatedList<SystemUsers>
-
-@{
+﻿@{
     ViewData["Title"] = "System Users";
 }
 
-<div class="container mt-4">
-    <h1>System Users</h1>
-    <form method="get" action="@Url.Action("Index", "SystemUsers")">
-        <div class="row">
-            <div class="col-md-3">
-                <label>Employee Name</label>
-                <input type="text" name="employeeName" class="form-control" value="@ViewData["EmployeeName"]">
-            </div>
-            <div class="col-md-3">
-                <label>User Name</label>
-                <input type="text" name="userName" class="form-control" value="@ViewData["UserName"]">
-            </div>
-            <div class="col-md-3">
-                <label>User Status</label>
-                <select name="userStatus" class="form-control">
-                    <option value="" selected="@(ViewData["UserStatus"]?.ToString() == "" ? "selected" : null)">All</option>
-                    <option value="true" selected="@(ViewData["UserStatus"]?.ToString() == "True" ? "selected" : null)">Active</option>
-                    <option value="false" selected="@(ViewData["UserStatus"]?.ToString() == "False" ? "selected" : null)">Inactive</option>
-                </select>
-            </div>
-            <div class="col-md-3 d-flex align-items-end">
-                <button class="btn btn-primary">Search</button>
-                <a href="@Url.Action("Create", "SystemUsers")" class="btn btn-success ml-2">Add</a>
+<div class="container-fluid mt-4">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white d-flex align-items-center">
+            <h4 class="mb-0"><i class="fas fa-users"></i> System Users</h4>
+            <a href="@Url.Action("Create", "SystemUsers")" class="btn btn-light btn-sm ms-auto">
+                <i class="fas fa-plus"></i> Add User
+            </a>
+        </div>
+        <div class="card-body">
+            <!-- Search Form -->
+            <form id="searchForm" class="mb-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="form-label"><i class="fas fa-user"></i> Employee Name</label>
+                        <input type="text" id="searchByName" name="employeeName" class="form-control" placeholder="Enter Employee Name">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label"><i class="fas fa-user-tag"></i> User Name</label>
+                        <input type="text" id="searchByUserName" name="userName" class="form-control" placeholder="Enter Username">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label"><i class="fas fa-toggle-on"></i> User Status</label>
+                        <select id="searchByStatus" name="userStatus" class="form-control">
+                            <option value="">All</option>
+                            <option value="true">Active</option>
+                            <option value="false">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end mt-3">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                    <button type="reset" class="btn btn-secondary ml-2">
+                        <i class="fas fa-undo"></i> Reset
+                    </button>
+                    <button type="button" id="showAllBtn" class="btn btn-warning px-4">Show All</button>
+                </div>
+            </form>
+
+            <!-- DataTable -->
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered text-center" id="userTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>File Number</th>
+                            <th>Employee Name</th>
+                            <th>Company ID</th>
+                            <th>User Name</th>
+                            <th>User Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
         </div>
-    </form>
-
-    <table class="table table-bordered mt-3 text-center">
-        <thead class="table-light">
-            <tr>
-                <th>No</th>
-                <th>Employee Name</th>
-                <th>ID</th>
-                <th>User Name</th>
-                <th>User Status</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model.Items.Any())
-            {
-                foreach (var user in Model.Items)
-                {
-                    <tr>
-                        <td>@user.Id</td>
-                        <td>@user.EmployeeName</td>
-                        <td>@user.CompanyID</td>
-                        <td>@user.UserName</td>
-                        <td>@(user.UserStatus ? "Active" : "Inactive")</td>
-                        <td>
-                            <a href="@Url.Action("Edit", "SystemUsers", new { id = user.Id })" class="btn btn-sm btn-warning">Edit</a>
-                            <form method="post" action="@Url.Action("Delete", "SystemUsers")" class="d-inline">
-                                <input type="hidden" name="id" value="@user.Id" />
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="6">No records found</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    <nav>
-        <ul class="pagination justify-content-center">
-            @for (int i = 1; i <= Model.TotalPages; i++)
-            {
-                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                    <a class="page-link" href="@Url.Action("Index", "SystemUsers", new { page = i })">@i</a>
-                </li>
-            }
-        </ul>
-    </nav>
+    </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var table = $('#userTable').DataTable({
+                processing: true,
+                serverSide: false,
+                responsive: true,
+                ajax: null,
+                columns: [
+                    { data: 'fileNumber' },
+                    { data: 'employeeName' },
+                    { data: 'companyId' },
+                    { data: 'userName' },
+                    {
+                        data: 'userStatus',
+                        render: function (data) {
+                            return data
+                                ? "<span class='badge bg-success'><i class='fas fa-check'></i> Active</span>"
+                                : "<span class='badge bg-danger'><i class='fas fa-times'></i> Inactive</span>";
+                        }
+                    },
+                    {
+                        data: 'actions',
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
+                paging: true,
+                order :[[0,"asc"]],
+                searching: false,
+                lengthChange: true,
+                pageLength: 10,
+                language: {
+                    paginate: { previous: "«", next: "»" },
+                    info: "Showing _START_ to _END_ of _TOTAL_ entries"
+                }
+            });
+
+            // Search Form Submission
+            $('#searchForm').on('submit', function (e) {
+                e.preventDefault();
+                //table.ajax.reload();
+                table.ajax.url('/SystemUsers/GetUserData').load();
+            });
+             $('#showAllBtn').on('click', function (e) {
+                e.preventDefault();
+                //table.ajax.reload();
+                table.ajax.url('/SystemUsers/GetUserData').load();
+            });
+
+            // Delete User
+            $('#userTable').on('click', '.delete-btn', function () {
+                var id = $(this).data('id');
+                if (confirm("Are you sure you want to delete this user?")) {
+                    $.ajax({
+                        url: '/SystemUsers/Delete/' + id,
+                        type: 'POST',
+                        success: function () {
+                            alert("User deleted successfully!");
+                            //table.ajax.reload();
+                            table.ajax.url('/SystemUsers/GetUserData').load();
+                        },
+                        error: function () {
+                            alert("Failed to delete user.");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

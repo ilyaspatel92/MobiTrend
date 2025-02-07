@@ -2,11 +2,10 @@
 
 @if (Model != null && Model.Any())
 {
-    int index = 1;
     foreach (var log in Model)
     {
         <tr data-id="@log.Id">
-            <td>@index</td>
+            <td>@log.FileNumber</td>
             <td>@log.EmployeeName</td>
             <td>@log.DateAndTime</td>
             <td>
@@ -32,8 +31,7 @@
                 <button class="btn btn-success btn-sm save-btn d-none">Save</button>
                 <button class="btn btn-danger btn-sm cancel-btn d-none">Cancel</button>
             </td>
-        </tr>
-        index++;
+        </tr> 
     }
 }
 else

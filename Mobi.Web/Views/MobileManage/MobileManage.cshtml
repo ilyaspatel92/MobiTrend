@@ -1,6 +1,4 @@
-﻿@model PaginatedList<EmployeeModel>
-
-@{
+﻿@{
     ViewData["Title"] = "Mobile Manage";
 }
 <div class="card card-info card-outline mb-4 mx-3 custom-top-spacing">
@@ -8,26 +6,28 @@
         <h3 class="card-title">Mobile Manage</h3>
     </div>
     <div class="card-body">
-        <form id="searchForm" method="get" action="@Url.Action("MobileManage", "MobileManage")">
+        <form id="searchForm">
             <div class="row mb-4">
                 <div class="col-md-4">
                     <label for="employeeName" class="form-label">Employee Name</label>
-                    <input type="text" name="name" id="employeeName" class="form-control" placeholder="Search by name" value="@ViewData["Name"]">
+                    <input type="text" name="name" id="employeeName" class="form-control" placeholder="Search by name">
                 </div>
                 <div class="col-md-2">
                     <label for="filenumber" class="form-label">File Number</label>
-                    <input type="text" name="filenumber" id="filenumber" class="form-control" placeholder="Search by file number" value="@ViewData["FileNumber"]">
+                    <input type="text" name="filenumber" id="filenumber" class="form-control" placeholder="Search by file number">
                 </div>
                 <div class="col-md-3 d-flex align-items-end">
                     <button type="submit" class="btn btn-primary w-100">Search</button>
                 </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="button" id="showAll" class="btn btn-secondary w-100">Show All</button>
+                </div>
             </div>
         </form>
 
-        <table class="table table-bordered text-center">
+        <table id="mobileManageTable" class="table table-bordered text-center" style="width:100%;">
             <thead class="table-light">
                 <tr>
-                    <th>No</th>
                     <th>Employee Name</th>
                     <th>File Number</th>
                     <th>Mobile Type</th>
@@ -38,54 +38,84 @@
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody>
-                @if (Model.Items != null && Model.Items.Any())
-                {
-                    foreach (var employee in Model.Items)
-                    {
-                        <tr>
-                            <td>@employee.Id</td>
-                            <td>@employee.NameEng</td>
-                            <td>@employee.FileNumber</td>
-                            <td>@Enum.GetName(typeof(MobileType), employee.MobileType)</td>
-                            <td>@employee.CreatedDate.ToString("dd/MM/yyyy")</td>
-                            <td>@Enum.GetName(typeof(RegistrationType), employee.RegistrationVia)</td>
-                            <td>@employee.UserName</td>
-                            <td>@(employee.RegisterStatus ? "Registered" : "Not Registered")</td>
-                            <td>
-                                @if (!employee.IsQrVerify)
-                                {
-                                    <a href="@Url.Action("RegisterMobile", "MobileManage", new { id = employee.Id })" class="btn btn-link">Register</a>
-                                }
-                                else
-                                {
-                                    <a href="@Url.Action("EditMobile", "MobileManage", new { id = employee.Id })" class="btn btn-link">Edit</a>
-                                }
-                            </td>
-                        </tr>
-                    }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="9" class="text-center">No Records Found</td>
-                    </tr>
-                }
-            </tbody>
+            <tbody></tbody>
         </table>
-
-        <!-- Pagination Section -->
-        <div class="card-footer">
-            <nav aria-label="Pagination">
-                <ul class="pagination justify-content-center">
-                    @for (int i = 1; i <= Model.TotalPages; i++)
-                    {
-                        <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                            <a class="page-link" href="@Url.Action("MobileManage", "MobileManage", new { page = i, name = ViewData["Name"], id = ViewData["Id"] })">@i</a>
-                        </li>
-                    }
-                </ul>
-            </nav>
-        </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Initialize DataTable without loading data
+            var table = $('#mobileManageTable').DataTable({
+                processing: true,
+                serverSide: false,
+                order :[[0,"asc"]],
+                paging: true,
+                searching: false,
+                lengthChange: true,
+                pageLength: 10,
+                language: {
+                    paginate: {
+                        previous: "Previous",
+                        next: "Next"
+                    },
+                    info: "Showing _START_ to _END_ of _TOTAL_ entries (filtered from _MAX_ total entries)"
+                },
+                columns: [                    
+                    { data: 'nameEng' },
+                    { data: 'fileNumber' },
+                    { data: 'mobileType' },
+                    { data: 'createdDate' },
+                    { data: 'registrationVia' },
+                    { data: 'userName' },
+                    { data: 'registerStatus' },
+                    { data: 'action' }
+                ],
+                ajax: null // No initial ajax call
+            });
+
+            // Function to load data and reload table
+            function loadData(name = "", filenumber = "") {
+                $.ajax({
+                    url: `/MobileManage/GetMobileManageData?name=${name}&filenumber=${filenumber}`,
+                    type: 'GET',
+                    success: function (result) {
+                        // Clear and add the formatted data to the DataTable
+                        table.clear().rows.add(result.data.map((employee, index) => ({
+                            no: index + 1,
+                            nameEng: employee.nameEng,
+                            fileNumber: employee.fileNumber,
+                            mobileType: employee.mobileTypeName,
+                            createdDate: employee.createdDate,
+                            registrationVia: employee.registrationTypeName,
+                            userName: employee.userName,
+                            registerStatus: employee.registerStatus ? "Registered" : "Not Registered",
+                            action: employee.isQrVerify
+                                ? `<a href="/MobileManage/EditMobile/${employee.id}" class="btn btn-link">Edit</a>`
+                                : `<a href="/MobileManage/RegisterMobile/${employee.id}" class="btn btn-link">Register</a>`
+                        }))).draw();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error fetching data:", error);
+                    }
+                });
+            }
+
+            // Trigger the AJAX request on form submit
+            $('#searchForm').on('submit', function (e) {
+                e.preventDefault();
+                const name = $('#employeeName').val();
+                const filenumber = $('#filenumber').val();
+                loadData(name, filenumber);
+            });
+
+            // Handle show all button click
+            $('#showAll').on('click', function () {
+                $('#employeeName').val('');
+                $('#filenumber').val('');
+                loadData();
+            });
+        });
+    </script>
+}

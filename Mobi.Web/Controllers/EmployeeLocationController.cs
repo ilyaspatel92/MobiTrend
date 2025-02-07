@@ -149,54 +149,97 @@ namespace Mobi.Web.Controllers
         #endregion
 
         #region Employee location
-
-
         [HttpGet]
-        public IActionResult EmployeeLocation(string employeeName, string? filenumber, string siteStatus, int page = 1, int pageSize = 10)
+        public IActionResult EmployeeLocation()
         {
             bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.EmployeeLocation));
 
             if (!hasAccess)
                 return RedirectToAction("AccessDenied", "AccessControl");
 
-            // Pass query string values to the view
-            ViewData["EmployeeName"] = employeeName;
-            ViewData["filenumber"] = filenumber?.ToString();
-            ViewData["SiteStatus"] = siteStatus;
+            return View();
+        }
 
+        [HttpGet]
+        public IActionResult GetEmployeeLocationData(string employeeName, string? filenumber, string siteStatus)
+        {
             var query = _employeeService.GetAllEmployees();
 
-            //// Apply search filters
             if (!string.IsNullOrEmpty(employeeName))
-                query = query.Where(e => e.NameEng.Contains(employeeName, StringComparison.OrdinalIgnoreCase) || e.NameArabic.Contains(employeeName, StringComparison.OrdinalIgnoreCase));
-
-            if (!string.IsNullOrEmpty(filenumber))
-                query = query.Where(e => e.FileNumber == filenumber);
-
-            if (siteStatus =="set")
             {
-                var alreadySetLocationEmp = _employeeLocationService.GetAllEmployeeLocations().DistinctBy(x=>x.EmployeeId).Select(x=>x.EmployeeId).ToList();
+                query = query.Where(e => e.NameEng.Contains(employeeName, StringComparison.OrdinalIgnoreCase) || e.NameArabic.Contains(employeeName, StringComparison.OrdinalIgnoreCase));
+            }
+            if (!string.IsNullOrEmpty(filenumber))
+            {
+                query = query.Where(e => e.FileNumber == filenumber);
+            }
+            if (siteStatus == "set")
+            {
+                var alreadySetLocationEmp = _employeeLocationService.GetAllEmployeeLocations().DistinctBy(x => x.EmployeeId).Select(x => x.EmployeeId).ToList();
 
                 if (alreadySetLocationEmp.Any())
                     query = query.Where(e => !alreadySetLocationEmp.Contains(e.Id));
             }
 
-            // Pagination
-            var totalItems = query.Count();
-            var items = query.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            var employeeViewModels = _employeeLocationsFactory.PrepareEmployeeLocationModels(query.ToList());
 
-            var employeeLocationViewModel = _employeeLocationsFactory.PrepareEmployeeLocationModels(items).ToList();
-
-            var model = new PaginatedList<EmployeeLocationViewModel>
+            return Json(new
             {
-                Items = employeeLocationViewModel,
-                TotalItems = totalItems,
-                CurrentPage = page,
-                PageSize = pageSize
-            };
-
-            return View(model);
+                draw = Request.Query["draw"],
+                recordsTotal = query.Count(),
+                recordsFiltered = employeeViewModels.Count(),
+                data = employeeViewModels
+            });
         }
+
+
+
+        //[HttpGet]
+        //public IActionResult EmployeeLocation(string employeeName, string? filenumber, string siteStatus, int page = 1, int pageSize = 10)
+        //{
+        //    bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.EmployeeLocation));
+
+        //    if (!hasAccess)
+        //        return RedirectToAction("AccessDenied", "AccessControl");
+
+        //    // Pass query string values to the view
+        //    ViewData["EmployeeName"] = employeeName;
+        //    ViewData["filenumber"] = filenumber?.ToString();
+        //    ViewData["SiteStatus"] = siteStatus;
+
+        //    var query = _employeeService.GetAllEmployees();
+
+        //    //// Apply search filters
+        //    if (!string.IsNullOrEmpty(employeeName))
+        //        query = query.Where(e => e.NameEng.Contains(employeeName, StringComparison.OrdinalIgnoreCase) || e.NameArabic.Contains(employeeName, StringComparison.OrdinalIgnoreCase));
+
+        //    if (!string.IsNullOrEmpty(filenumber))
+        //        query = query.Where(e => e.FileNumber == filenumber);
+
+        //    if (siteStatus =="set")
+        //    {
+        //        var alreadySetLocationEmp = _employeeLocationService.GetAllEmployeeLocations().DistinctBy(x=>x.EmployeeId).Select(x=>x.EmployeeId).ToList();
+
+        //        if (alreadySetLocationEmp.Any())
+        //            query = query.Where(e => !alreadySetLocationEmp.Contains(e.Id));
+        //    }
+
+        //    // Pagination
+        //    var totalItems = query.Count();
+        //    var items = query.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+        //    var employeeLocationViewModel = _employeeLocationsFactory.PrepareEmployeeLocationModels(items).ToList();
+
+        //    var model = new PaginatedList<EmployeeLocationViewModel>
+        //    {
+        //        Items = employeeLocationViewModel,
+        //        TotalItems = totalItems,
+        //        CurrentPage = page,
+        //        PageSize = pageSize
+        //    };
+
+        //    return View(model);
+        //}
 
 
         //[HttpGet]

@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Mobi.Data.Domain;
+using Mobi.Data.Domain.Employees;
 using Mobi.Data.Enums;
 using Mobi.Service.AccessControls;
+using Mobi.Service.Compnay;
 using Mobi.Service.Employees;
 using Mobi.Service.Factories;
 using Mobi.Service.Helpers;
@@ -26,15 +28,65 @@ namespace Mobi.Web.Controllers
         private readonly IAccessControlService _accessControlService;
         private readonly ISystemUserAuthorityService _systemUserAuthorityService;
         private readonly IEmployeeService _employeeService;
-
-        public SystemUsersController(ISystemUserService systemUserService, ISystemUserFactory systemUserFactory, IAccessControlService accessControlService, ISystemUserAuthorityService systemUserAuthorityService, IEmployeeService employeeService)
+        private readonly ICompanyService _companyService;
+        public SystemUsersController(ISystemUserService systemUserService, ISystemUserFactory systemUserFactory, IAccessControlService accessControlService, ISystemUserAuthorityService systemUserAuthorityService, IEmployeeService employeeService, ICompanyService companyService)
         {
             _systemUserService = systemUserService;
             _systemUserFactory = systemUserFactory;
             _accessControlService = accessControlService;
             _systemUserAuthorityService = systemUserAuthorityService;
             _employeeService = employeeService;
+            _companyService = companyService;
         }
+
+        [HttpGet]
+        public IActionResult GetUserData(string employeeName, string userName, bool? userStatus)
+        {
+            try
+            {
+                var query = _systemUserService.GetAllUsers();
+
+                if (!string.IsNullOrEmpty(employeeName))
+                    query = query.Where(x => x.EmployeeName.Contains(employeeName));
+
+                if (!string.IsNullOrEmpty(userName))
+                    query = query.Where(x => x.UserName.Contains(userName));
+
+                if (userStatus.HasValue)
+                    query = query.Where(x => x.UserStatus == userStatus.Value);
+
+                var totalRecords = query.Count();
+
+                var data = query.Select(user => new
+                {
+                    id = user.Id,
+                    fileNumber = _employeeService.GetEmployeeById(user.EmployeeId)?.FileNumber,
+                    employeeName = user.EmployeeName,
+                    companyId = _companyService.GetCompanyById(user.CompanyID)?.CompanyId,
+                    userName = user.UserName,
+                    userStatus = user.UserStatus,
+                    actions = $@"
+                <a href='/SystemUsers/Edit/{user.Id}' class='btn btn-warning btn-sm'>Edit</a>
+                <button class='btn btn-danger btn-sm delete-btn' data-id='{user.Id}'>Delete</button>"
+                }).ToList();
+
+                return Json(new
+                {
+                    draw = Request.Query["draw"].FirstOrDefault() ?? "1",
+                    recordsTotal = totalRecords,
+                    recordsFiltered = totalRecords,
+                    data = data
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = "An error occurred while fetching data.", details = ex.Message });
+            }
+        }
+
+
+
+
 
         [HttpGet]
         public IActionResult Index(string employeeName, string userName, bool? userStatus, int page = 1, int pageSize = 10)
