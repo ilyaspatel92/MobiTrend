@@ -121,6 +121,42 @@
     <!-- JavaScript to control collapsibles and beacon management -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+                    // Retrieve saved polygon and radius from hidden inputs
+        const savedPolygonData = document.getElementById("SetPolygon").value;
+        const savedRadius = parseFloat(document.getElementById("SetRadius").value);
+
+        if (savedPolygonData) {
+            const polygonCoords = JSON.parse(savedPolygonData);
+            polygon = new google.maps.Polygon({
+                paths: polygonCoords,
+                map: map,
+                fillColor: "#FF0000",
+                fillOpacity: 0.35,
+                strokeWeight: 2,
+                editable: true,
+            });
+
+            // Fit map to polygon bounds
+            const bounds = new google.maps.LatLngBounds();
+            polygonCoords.forEach(coord => bounds.extend(new google.maps.LatLng(coord.lat, coord.lng)));
+            map.fitBounds(bounds);
+        }
+
+        if (!isNaN(savedRadius) && savedRadius > 0) {
+            circle = new google.maps.Circle({
+                map: map,
+                radius: savedRadius,
+                center: marker.getPosition(),
+                fillColor: "#00FF00",
+                fillOpacity: 0.35,
+                strokeWeight: 2,
+            });
+
+            // Fit map to the circle bounds
+            map.fitBounds(circle.getBounds());
+        }
+
+
             const gpsRadio = document.getElementById("gpsProofRadio");
             const beaconRadio = document.getElementById("beaconProofRadio");
             const gpsSection = document.getElementById("gpsProofSection");

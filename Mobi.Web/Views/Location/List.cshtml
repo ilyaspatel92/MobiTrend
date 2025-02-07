@@ -73,6 +73,7 @@
 
 @section Scripts {
 	<script>
+		
 		$(document).ready(function () {
 			var table = $('#locationTable').DataTable({
 				ajax: null, // Do not load data initially
@@ -114,10 +115,19 @@
 					info: "Showing _START_ to _END_ of _TOTAL_ entries (filtered from _MAX_ total entries)"
 				}
 			});
+				 function loadData() {
+			var searchParams = {
+				name: $('#searchByName').val(),
+				status: $('#searchByStatus').val()
+			};
 
+			table.ajax.url('@Url.Action("GetLocations", "Location")' + '?' + $.param(searchParams)).load();
+		}
 			$('#searchForm').on('submit', function (e) {
 				e.preventDefault();
-				table.ajax.url('@Url.Action("GetLocations", "Location")').load();
+				loadData();
+				// e.preventDefault();
+				// table.ajax.url('@Url.Action("GetLocations", "Location")').load();
 			});
 
 			$('#showAllBtn').on('click', function () {

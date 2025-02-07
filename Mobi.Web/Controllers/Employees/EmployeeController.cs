@@ -43,7 +43,7 @@ namespace Mobi.Web.Controllers.Employees
         }
 
         [HttpGet]
-        public IActionResult GetEmployees(string name, int? id)
+        public IActionResult GetEmployees(string name, string? id)
         {
             var employees = _employeeService.GetAllEmployees();
 
@@ -51,9 +51,9 @@ namespace Mobi.Web.Controllers.Employees
             {
                 employees = employees.Where(e => e.NameEng.Contains(name, StringComparison.OrdinalIgnoreCase) || e.NameArabic.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
             }
-            if (id.HasValue)
+            if (!string.IsNullOrEmpty(id))
             {
-                employees = employees.Where(e => e.Id == id.Value).ToList();
+                employees = employees.Where(e => e.FileNumber == id).ToList();
             }
 
             var employeeViewModels = _employeeFactory.PrepareEmployeeViewModels(employees);

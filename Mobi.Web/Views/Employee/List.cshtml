@@ -117,9 +117,17 @@
                 }
             });
 
+                 function loadData() {
+            var searchParams = {
+                name: $('#searchByName').val(),
+                id: $('#searchById').val()
+            };
+
+             table.ajax.url('@Url.Action("GetEmployees", "Employee")' + '?' + $.param(searchParams)).load();
+        }
             $('#searchForm').on('submit', function (e) {
                 e.preventDefault();
-                table.ajax.url('@Url.Action("GetEmployees", "Employee")').load();
+                loadData();
             });
 
             $('#showAllBtn').on('click', function () {
