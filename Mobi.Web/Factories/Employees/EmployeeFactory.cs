@@ -1,4 +1,5 @@
 ﻿using Mobi.Data.Domain.Employees;
+using Mobi.Data.Enums;
 using Mobi.Service.Compnay;
 using Mobi.Service.Employees;
 using Mobi.Web.Models.Employees;
@@ -35,17 +36,19 @@ namespace Mobi.Web.Factories.Employees
                 //CompanyId = _companyService.GetCompanyById(employee.CompanyId)?.CompanyId,
                 Password = employee.Password,
                 MobileType = employee.MobileType,
+                MobileTypeName = Enum.GetName(typeof(MobileType), employee.MobileType),
                 DeviceId = employee.DeviceId,
                 RegistrationVia = employee.RegistrationType,
+                RegistrationTypeName = Enum.GetName(typeof(RegistrationType), employee.RegistrationType),
                 RegisterStatus = employee.RegisterStatus,
-                CreatedDate = employee.CreatedDate,
+                CreatedDate = employee.CreatedDate.ToString("dd/MM/yyyy @ hh:mm tt"),
                 CID = employee.CID,
                 UserName = employee.UserName,
                 IsQrVerify = employee.IsQrVerify
                 //QrCode = GenerateQrCode(employee.Email)
             };
 
-            //emp.CompanyId = _companyService.GetCompanyById(employee.CompanyId)?.CompanyId;
+            emp.CompanyId = _companyService.GetCompanyById(employee.CompanyId)?.CompanyId;
 
             return emp;
         }

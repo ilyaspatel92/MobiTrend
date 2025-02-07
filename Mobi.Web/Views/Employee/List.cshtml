@@ -52,7 +52,7 @@
                         <table class="table table-bordered" id="employeeTable">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>File Number</th>
                                     <th>Name (English)</th>
                                     <th>Name (Arabic)</th>
                                     <th>Status</th>
@@ -76,7 +76,7 @@
             var table = $('#employeeTable').DataTable({
                 ajax: null,
                 columns: [
-                    { data: 'id' },
+                    { data: 'fileNumber' },
                     { data: 'nameEng' },
                     { data: 'nameArabic' },
                     {
@@ -103,6 +103,7 @@
                 ],
                 processing: true,
                 serverSide: false,
+                order :[[0,"asc"]],
                 paging: true,
                 searching: false,
                 lengthChange: true,
