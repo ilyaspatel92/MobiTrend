@@ -99,12 +99,20 @@
                     info: "Showing _START_ to _END_ of _TOTAL_ entries"
                 }
             });
+                             function loadData() {
+            var searchParams = {
+                employeeName: $('#searchByName').val(),
+                userName: $('#searchByUserName').val(),
+                userStatus: $('#searchByStatus').val()
+            };
 
+             table.ajax.url('@Url.Action("GetUserData", "SystemUsers")' + '?' + $.param(searchParams)).load();
+        }
             // Search Form Submission
             $('#searchForm').on('submit', function (e) {
                 e.preventDefault();
                 //table.ajax.reload();
-                table.ajax.url('/SystemUsers/GetUserData').load();
+                loadData();
             });
              $('#showAllBtn').on('click', function (e) {
                 e.preventDefault();

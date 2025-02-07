@@ -28,8 +28,8 @@
 					<input type="text" id="employeeName" class="form-control" placeholder="Enter Employee Name">
 				</div>
 				<div class="col-md-3">
-					<label for="employeeId">Employee ID</label>
-					<input type="text" id="employeeId" class="form-control" placeholder="Enter Employee ID">
+					<label for="filenumber">File Number</label>
+					<input type="text" id="filenumber" class="form-control" placeholder="Enter File Number ID">
 				</div>
 				<div class="col-md-3">
 					<label for="transstatus">Trans Status</label>
@@ -94,7 +94,7 @@
 						d.startDate = $('#startDate').val();
 						d.endDate = $('#endDate').val();
 						d.employeeName = $('#employeeName').val();
-						d.employeeId = $('#employeeId').val();
+						d.filenumber = $('#filenumber').val();
 						d.transstatus = $('#transstatus').val();
 					}
 				},
@@ -152,7 +152,7 @@
 				$('#startDate').val('');
 				$('#endDate').val('');
 				$('#employeeName').val('');
-				$('#employeeId').val('');
+				$('#filenumber').val('');
 				$('#transstatus').val('');
 				table.ajax.url('@Url.Action("GetEmployeeAttendanceData", "EmployeeAttendance")').load();
 			});

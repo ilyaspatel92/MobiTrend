@@ -28,7 +28,7 @@ namespace Mobi.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetEmployeeAttendanceData(DateTime? startDate, DateTime? endDate, string employeeName, string employeeId, string transstatus)
+        public IActionResult GetEmployeeAttendanceData(DateTime? startDate, DateTime? endDate, string employeeName, string filenumber, string transstatus)
         {
             var query = _attendanceRepository.GetAll().Join(
                 _employeeRepository.GetAll(),
@@ -42,20 +42,20 @@ namespace Mobi.Web.Controllers
                 });
 
             if (startDate.HasValue && endDate.HasValue)
-                query = query.Where(entry => entry.Log.AttendanceDateTime.Date >= startDate.Value && entry.Log.AttendanceDateTime.Date <= endDate.Value);
+                query = query.Where(entry => entry.Log.AttendanceDateTime.Date >= startDate.Value.Date && entry.Log.AttendanceDateTime.Date <= endDate.Value.Date);
             else if (startDate.HasValue)
-                query = query.Where(entry => entry.Log.AttendanceDateTime.Date >= startDate.Value);
+                query = query.Where(entry => entry.Log.AttendanceDateTime.Date >= startDate.Value.Date);
             else if (endDate.HasValue)
-                query = query.Where(entry => entry.Log.AttendanceDateTime.Date <= endDate.Value);
+                query = query.Where(entry => entry.Log.AttendanceDateTime.Date <= endDate.Value.Date);
 
             if (!string.IsNullOrWhiteSpace(employeeName))
             {
                 query = query.Where(entry => entry.EmployeeName.Contains(employeeName, StringComparison.OrdinalIgnoreCase));
             }
 
-            if (!string.IsNullOrWhiteSpace(employeeId) && int.TryParse(employeeId, out int parsedEmployeeId))
+            if (!string.IsNullOrWhiteSpace(filenumber))
             {
-                query = query.Where(entry => entry.Log.EmployeeId == parsedEmployeeId);
+                query = query.Where(entry => entry.FileNumber == filenumber);
             }
 
             if (!string.IsNullOrWhiteSpace(transstatus))

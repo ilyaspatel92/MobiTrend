@@ -47,10 +47,10 @@ namespace Mobi.Web.Controllers
                 var query = _systemUserService.GetAllUsers();
 
                 if (!string.IsNullOrEmpty(employeeName))
-                    query = query.Where(x => x.EmployeeName.Contains(employeeName));
+                    query = query.Where(x => x.EmployeeName.ToLower().Contains(employeeName.ToLower()));
 
                 if (!string.IsNullOrEmpty(userName))
-                    query = query.Where(x => x.UserName.Contains(userName));
+                    query = query.Where(x => x.UserName.ToLower().Contains(userName.ToLower()));
 
                 if (userStatus.HasValue)
                     query = query.Where(x => x.UserStatus == userStatus.Value);
