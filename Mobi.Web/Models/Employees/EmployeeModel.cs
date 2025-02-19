@@ -55,7 +55,7 @@ namespace Mobi.Web.Models.Employees
         public string? CompanyId { get; set; }
 
         public string CreatedDate { get; set; }
-
+        public string MobRegistrationDate { get; set; }
         public string? QrCode { get; set; }
 
     }

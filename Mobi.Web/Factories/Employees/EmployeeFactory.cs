@@ -44,7 +44,8 @@ namespace Mobi.Web.Factories.Employees
                 CreatedDate = employee.CreatedDate.ToString("dd/MM/yyyy @ hh:mm tt"),
                 CID = employee.CID,
                 UserName = employee.UserName,
-                IsQrVerify = employee.IsQrVerify
+                IsQrVerify = employee.IsQrVerify,
+                MobRegistrationDate = employee.MobRegistrationDate?.ToString("dd/MM/yyyy")
                 //QrCode = GenerateQrCode(employee.Email)
             };
 
