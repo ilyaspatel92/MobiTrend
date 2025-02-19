@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Mobi.Data.Domain;
 using Mobi.Data.Domain.Employees;
+using Mobi.Data.Enums;
 using Mobi.Repository;
 using Mobi.Service.Employees;
 using Mobi.Service.Locations;
 using Mobi.Web.Factories.Employees;
 using Mobi.Web.Models.EmployeeAttendance;
+using Mobi.Web.Models.Employees;
 using static QRCoder.PayloadGenerator;
 
 namespace Mobi.Web.Controllers
@@ -63,7 +65,7 @@ namespace Mobi.Web.Controllers
 
         #endregion
 
-        #region Daily Transaction Reports
+        #region Daily Attendance Reports
 
         [HttpGet]
         public IActionResult DailyAttendanceReport()
@@ -72,7 +74,7 @@ namespace Mobi.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetDailyAttendanceData(DateTime? startDate, DateTime? endDate,int EmployeeId)
+        public IActionResult GetDailyAttendanceData(DateTime? startDate, DateTime? endDate, int EmployeeId)
         {
             var query = _attendanceRepository.GetAll()
         .Join(_employeeRepository.GetAll(),
@@ -150,6 +152,50 @@ namespace Mobi.Web.Controllers
 
         #endregion
 
+        #region Registered Phones Reports
+
+        [HttpGet]
+        public IActionResult RegisteredPhones()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult GetRegisteredPhones()
+        {
+            var employees = _employeeService.GetAllEmployees().ToList();
+
+            var employeeViewModels = employees.Select(emp =>
+            {
+                var employeeModel = new EmployeeModel
+                {
+                    FileNumber = emp.FileNumber,
+                    NameEng = emp.NameEng,
+                    Email = emp.Email,
+                    MobileType = emp.MobileType,
+                    MobileTypeName = Enum.GetName(typeof(MobileType), emp.MobileType),
+                    MobRegistrationDate = emp.MobRegistrationDate?.ToString("dd/MM/yyyy")
+                };
+
+                // Fetch last transaction date from attendance records
+                var lastTransaction = _attendanceRepository.GetAll().Where(x => x.EmployeeId == emp.Id).OrderBy(x => x.CreatedDateTime).LastOrDefault();
+                employeeModel.LastTransactionDate = lastTransaction?.CreatedDateTime.ToString("dd/MM/yyyy");
+
+                return employeeModel;
+            }).ToList();
+
+            return Json(new
+            {
+                draw = Request.Query["draw"],
+                recordsTotal = employeeViewModels.Count(),
+                recordsFiltered = employeeViewModels.Count(),
+                data = employeeViewModels
+            });
+        }
+
+
+        #endregion
+
         #region Total Working Hours Reports
 
         [HttpGet]
@@ -160,15 +206,7 @@ namespace Mobi.Web.Controllers
 
         #endregion
 
-        #region Registered Phones Reports
 
-        [HttpGet]
-        public IActionResult RegisteredPhones()
-        {
-            return View();
-        }
-
-        #endregion
 
         #region Employees Location Report
 
