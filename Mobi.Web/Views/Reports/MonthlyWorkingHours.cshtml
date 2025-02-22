@@ -1,0 +1,136 @@
+﻿@{
+    ViewData["Title"] = "Monthly Working Hours Report";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Monthly Working Hours Report</h1>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- DataTables -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<!-- DataTables Buttons -->
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css">
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h3 class="card-title">Monthly Working Hours Report</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Search Filters -->
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label for="year">Year:</label>
+                            <select id="year" class="form-control">
+                                @for (int i = DateTime.Now.Year; i >= DateTime.Now.Year - 5; i--)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="month">Month:</label>
+                            <select id="month" class="form-control">
+                                @for (int i = 1; i <= 12; i++)
+                                {
+                                    <option value="@i">@CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-3 mt-4">
+                            <button id="searchBtn" class="btn btn-primary">Search</button>
+                        </div>
+                    </div>
+
+                    <!-- Data Table -->
+                    <table id="workingHoursTable" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>ID</th>
+                                <th>Employee Name</th>
+                                <th>Total Hours</th>
+                                <th>Total Minutes</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            let table = $('#workingHoursTable').DataTable({
+                processing: true,
+                serverSide: false,
+                paging: true,
+                searching: false,
+                ordering: true,
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'print',
+                        text: 'Print Report',
+                        title: 'Monthly Working Hours Report',
+                        exportOptions: { columns: ':visible' },
+                        customize: function (win) {
+                            $(win.document.body).prepend('<h3 class="text-center">Company XYZ</h3>');
+                            $(win.document.body).prepend('<h4 class="text-center">Monthly Working Hours Report</h4>');
+
+                            let year = $('#year').val();
+                            let month = $('#month').find(':selected').text();
+                            $(win.document.body).prepend('<h5 class="text-center">Year: ' + year + ' | Month: ' + month + '</h5>');
+                            $(win.document.body).find('table').addClass('display').css('font-size', 'inherit');
+                        }
+                    }
+                ],
+                columns: [
+                    { data: null, orderable: false, render: function (data, type, row, meta) { return meta.row + 1; } },
+                    { data: 'employeeId' },
+                    { data: 'employeeName' },
+                    { data: 'totalHours' },
+                    { data: 'totalMinutes' },
+                    { data: 'notes' }
+                ]
+            });
+
+            // Search Button Click
+            $('#searchBtn').click(function () {
+                let year = $('#year').val();
+                let month = $('#month').val();
+
+                $.ajax({
+                    url: '@Url.Action("GetMonthlyWorkingHours", "Reports")',
+                    type: 'GET',
+                    data: { year: year, month: month },
+                    success: function (response) {
+                        table.clear();
+                        if (response.data) {
+                            table.rows.add(response.data).draw();
+                        } else {
+                            table.rows.add(response).draw();
+                        }
+                    },
+                    error: function (xhr) {
+                        console.error("Error fetching data:", xhr);
+                    }
+                });
+            });
+        });
+    </script>
+}

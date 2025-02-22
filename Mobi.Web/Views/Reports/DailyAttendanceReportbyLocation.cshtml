@@ -1,0 +1,200 @@
+﻿@{
+    ViewData["Title"] = "Daily Attendance Report by Location";
+}
+
+<div class="text-center">
+    <h2>Daily Attendance Report by Location</h2>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- DataTables -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<!-- DataTables Buttons -->
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css">
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+
+<!-- Toastr for notifications -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-12">
+                <div class="card-header">
+                    <h3 class="card-title">Daily Attendance Report by Location</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Search Filters -->
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label for="EmployeeName">Employee Name:</label>
+                            <input id="EmployeeName" class="form-control" placeholder="Enter 3 characters to search" autocomplete="on" />
+                            <input type="hidden" id="EmployeeId" />
+                            <ul id="EmployeeNameDropdown" class="list-group position-absolute mt-1" style="display: none; z-index: 1000;"></ul>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="startDate">Start Date:</label>
+                            <input type="date" id="startDate" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="endDate">End Date:</label>
+                            <input type="date" id="endDate" class="form-control">
+                        </div>
+                        <div class="col-md-3 mt-4">
+                            <button id="searchBtn" class="btn btn-primary">Search</button>
+                        </div>
+                    </div>
+                    <div id="attendanceTables"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            let selectedEmployeeId = 0;
+
+            $('#searchBtn').click(function () {
+                let employeeId = $('#EmployeeId').val();
+                let startDate = $('#startDate').val();
+                let endDate = $('#endDate').val();
+
+                if (!employeeId) {
+                    toastr.error('Please select an employee first!');
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("GetDailyAttendanceReportbyLocation", "Reports")',
+                    type: 'GET',
+                    data: { startDate: startDate, endDate: endDate, employeeId: employeeId },
+                    success: function (response) {
+                        $('#attendanceTables').empty();
+
+                        if (response.data && response.data.length > 0) {
+                            let groupedData = {};
+                            response.data.forEach(item => {
+                                if (!groupedData[item.location]) {
+                                    groupedData[item.location] = [];
+                                }
+                                groupedData[item.location].push(item);
+                            });
+
+                            let combinedTableId = 'attendanceTableCombined';
+                            let tableHtml = `
+                                <h3 class="text-center">Daily Attendance Report</h3>
+                                <h5>Employee: ${$('#EmployeeName').val()}</h5>
+                                <h5>Date Range: ${startDate} to ${endDate}</h5>
+                                <table id="${combinedTableId}" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Location</th>
+                                            <th>Date</th>
+                                            <th>Time</th>
+                                            <th>Event Type</th>
+                                            <th>Proof Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>`;
+
+                            $('#attendanceTables').append(tableHtml);
+                            let dataTableData = [];
+
+                            for (const location in groupedData) {
+                                groupedData[location].forEach((item, index) => {
+                                    dataTableData.push({
+                                        index: dataTableData.length + 1,
+                                        location: location,
+                                        date: item.date,
+                                        time: item.time,
+                                        eventType: item.eventType,
+                                        proofType: item.proofType
+                                    });
+                                });
+                            }
+
+                            let combinedTable = $('#' + combinedTableId).DataTable({
+                                dom: 'Bfrtip',
+                                buttons: [
+                                    {
+                                        extend: 'print',
+                                        text: 'Print Full Report',
+                                        title: '',
+                                        exportOptions: { columns: ':visible' },
+                                        customize: function (win) {
+                                            $(win.document.body)
+                                                .css('font-size', '10pt')
+                                                .prepend(`<h3 class="text-center">Company XYZ</h3>`)
+                                                .prepend(`<h4 class="text-center">Daily Attendance Report</h4>`)
+                                                .prepend(`<h5>Employee: ${$('#EmployeeName').val()}</h5>`)
+                                                .prepend(`<h5>Date Range: ${startDate} to ${endDate}</h5>`);
+                                        }
+                                    }
+                                ],
+                                data: dataTableData,
+                                columns: [
+                                    { data: 'index' },
+                                    { data: 'location' },
+                                    { data: 'date' },
+                                    { data: 'time' },
+                                    { data: 'eventType' },
+                                    { data: 'proofType' }
+                                ]
+                            });
+
+                            $('#printAllBtn').show().off('click').on('click', function () {
+                                combinedTable.button('.buttons-print').trigger();
+                            });
+                        }
+                    },
+                    error: function (xhr) {
+                        console.error("Error fetching data:", xhr);
+                    }
+                });
+            });
+
+            // Employee Autocomplete
+            $('#EmployeeName').on('input', function () {
+                let term = $(this).val();
+                if (term.length < 3) {
+                    $('#EmployeeNameDropdown').hide();
+                    return;
+                }
+
+                $('#EmployeeNameDropdown').html('<li class="list-group-item">Loading...</li>').show();
+
+                $.getJSON('/SystemUsers/GetEmployeeNames', { term: term }, function (data) {
+                    $('#EmployeeNameDropdown').empty();
+                    if (data.length === 0) {
+                        $('#EmployeeNameDropdown').html('<li class="list-group-item text-muted">No record found</li>');
+                    } else {
+                        data.forEach(function (item) {
+                            let listItem = $('<li class="list-group-item"></li>').text(item.nameEng);
+                            listItem.attr("data-id", item.id);
+                            listItem.css("cursor", "pointer");
+                            listItem.on("click", function () {
+                                $('#EmployeeName').val(item.nameEng);
+                                $('#EmployeeId').val(item.id);
+                                selectedEmployeeId = item.id;
+                                $('#EmployeeNameDropdown').hide();
+                            });
+                            $('#EmployeeNameDropdown').append(listItem);
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
+}
