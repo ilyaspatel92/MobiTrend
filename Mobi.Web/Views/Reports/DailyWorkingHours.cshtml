@@ -1,0 +1,192 @@
+﻿@{
+    ViewData["Title"] = "Daily Working Hours Report";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Daily Working Hours Report</h1>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- DataTables -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<!-- DataTables Buttons -->
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css">
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+
+<!-- Toastr for notifications -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-12">
+                <div class="card-header">
+                    <h3 class="card-title">Daily Working Hours Report</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Search Filters -->
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label for="EmployeeName">Employee Name:</label>
+                            <input id="EmployeeName" class="form-control" placeholder="Enter 3 characters to search" autocomplete="on" />
+                            <input type="hidden" id="EmployeeId" />
+                            <ul id="EmployeeNameDropdown" class="list-group position-absolute mt-1" style="display: none; z-index: 1000;"></ul>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="startDate">Start Date:</label>
+                            <input type="date" id="startDate" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="endDate">End Date:</label>
+                            <input type="date" id="endDate" class="form-control">
+                        </div>
+                        <div class="col-md-3 mt-4">
+                            <button id="searchBtn" class="btn btn-primary">Search</button>
+                        </div>
+                    </div>
+
+                    <!-- Data Table -->
+                    <table id="workingHoursTable" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Date</th>
+                                <th>Day</th>
+                                <th>Total Hours</th>
+                                <th>Total Minutes</th>
+                                <th>Total Transactions</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            let selectedEmployeeId = 0;
+
+            let table = $('#workingHoursTable').DataTable({
+                processing: true,
+                serverSide: false,
+                paging: true,
+                searching: false,
+                ordering: true,
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'print',
+                        text: 'Print Report',
+                        title: '',
+                        exportOptions: { columns: ':visible' },
+                        customize: function (win) {
+                            $(win.document.head).find('title').text('');
+                            $(win.document.body).css('font-size', '10pt')
+                                .prepend('<h3 class="text-center">Company XYZ</h3>')
+                                .prepend('<h4 class="text-center">Daily Working Hours Report</h4>');
+
+                            let startDate = $('#startDate').val();
+                            let endDate = $('#endDate').val();
+                            let employeeName = $('#EmployeeName').val();
+
+                            if (startDate && endDate) {
+                                $(win.document.body).prepend('<h5 class="text-center">From ' + startDate + ' To ' + endDate + '</h5>');
+                            }
+                            if (employeeName) {
+                                $(win.document.body).prepend('<h5 class="text-center">Employee: ' + employeeName + '</h5>');
+                            }
+                        }
+                    }
+                ],
+                columns: [
+                    { data: null, orderable: false, render: function (data, type, row, meta) { return meta.row + 1; } },
+                    { data: 'date' },
+                    { data: 'day' },
+                    { data: 'totalHours' },
+                    { data: 'totalMinutes' },
+                    { data: 'totalTransactions' },
+                    { data: 'notes' }
+                ]
+            });
+
+            $('#searchBtn').click(function () {
+                let employeeId = $('#EmployeeId').val();
+                if (!employeeId) {
+                    toastr.error('Please select an employee first!');
+                    return;
+                }
+                let startDate = $('#startDate').val();
+                let endDate = $('#endDate').val();
+
+                $.ajax({
+                    url: '@Url.Action("GetDailyWorkingHours", "Reports")',
+                    type: 'GET',
+                    data: { startDate: startDate, endDate: endDate, employeeId: employeeId },
+                    success: function (response) {
+                        table.clear();
+                        if (response.data) {
+                            table.rows.add(response.data).draw();
+                        } else {
+                            table.rows.add(response).draw();
+                        }
+                    },
+                    error: function (xhr) {
+                        console.error("Error fetching data:", xhr);
+                    }
+                });
+            });
+
+            // Employee Autocomplete
+            $('#EmployeeName').on('input', function () {
+                let term = $(this).val();
+                if (term.length < 3) {
+                    $('#EmployeeNameDropdown').hide();
+                    return;
+                }
+
+                $('#EmployeeNameDropdown').html('<li class="list-group-item">Loading...</li>').show();
+
+                $.getJSON('/SystemUsers/GetEmployeeNames', { term: term }, function (data) {
+                    $('#EmployeeNameDropdown').empty();
+                    if (data.length === 0) {
+                        $('#EmployeeNameDropdown').html('<li class="list-group-item text-muted">No record found</li>');
+                    } else {
+                        data.forEach(function (item) {
+                            let listItem = $('<li class="list-group-item"></li>').text(item.nameEng);
+                            listItem.attr("data-id", item.id);
+                            listItem.css("cursor", "pointer");
+                            listItem.on("click", function () {
+                                $('#EmployeeName').val(item.nameEng);
+                                $('#EmployeeId').val(item.id);
+                                selectedEmployeeId = item.id;
+                                $('#EmployeeNameDropdown').hide();
+                            });
+                            $('#EmployeeNameDropdown').append(listItem);
+                        });
+                    }
+                }).fail(function () {
+                    $('#EmployeeNameDropdown').html('<li class="list-group-item text-danger">Error fetching data</li>');
+                });
+            });
+
+            // Hide Dropdown on Outside Click
+            $(document).on("click", function (e) {
+                if (!$('#EmployeeName').is(e.target) && !$('#EmployeeNameDropdown').is(e.target) && $('#EmployeeNameDropdown').has(e.target).length === 0) {
+                    $('#EmployeeNameDropdown').hide();
+                }
+            });
+        });
+    </script>
+}

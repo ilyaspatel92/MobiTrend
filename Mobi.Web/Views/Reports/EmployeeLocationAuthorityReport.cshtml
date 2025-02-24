@@ -1,0 +1,90 @@
+﻿@{
+    ViewData["Title"] = "Employee Location Authority Report";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Employee Location Authority Report</h3>
+        <div class="card-tools">
+            <button id="printReport" class="btn btn-primary">
+                <i class="fas fa-print"></i> Print Report
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <table id="employeeReportTable" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Employee Name</th>
+                    <th>Location Name</th>
+                    <th>Proof Type</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            var table = $('#employeeReportTable').DataTable({
+                processing: true,
+                serverSide: false,
+                searching: true,
+                ajax: {
+                    url: '/Reports/GetEmployeeLocationAuthorityReport',
+                    type: 'GET',
+                    dataSrc: function(json) {
+                        console.log("Received data:", json);
+                        return json.data || [];
+                    }
+                },
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'print',
+                        text: 'Print',
+                        className: 'btn btn-secondary buttons-print',
+                        customize: function (win) {
+                            win.document.addEventListener('DOMContentLoaded', function () {
+                                let body = win.document.body;
+                                if (body) {
+                                    $(body).css({
+                                        'font-size': '14px',
+                                        'text-align': 'center'
+                                    });
+
+                                    $(body).find('table').addClass('display').css({
+                                        'width': '100%',
+                                        'border-collapse': 'collapse'
+                                    });
+
+                                    $(body).find('table th, table td').css({
+                                        'border': '1px solid black',
+                                        'padding': '8px'
+                                    });
+                                }
+                            });
+                        }
+                    }
+                ],
+                columns: [
+                    { data: 'employeeId', title: 'ID', className: 'text-center' },
+                    { data: 'employeeName', title: 'Employee Name', className: 'text-left' },
+                    { data: 'locationName', title: 'Location Name', className: 'text-left' },
+                    { data: 'proofType', title: 'Proof Type', className: 'text-center' }
+                ]
+            });
+
+            // Print button trigger
+            $('#printReport').on('click', function () {
+                table.button('.buttons-print').trigger();
+            });
+        });
+    </script>
+}

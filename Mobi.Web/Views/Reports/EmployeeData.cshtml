@@ -1,0 +1,140 @@
+﻿@{
+    ViewData["Title"] = "Employee Data";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Employee Data</h1>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- DataTables -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<!-- DataTables Buttons -->
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css">
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+
+
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-12">
+                    <div class="card-header">
+                        <h3 class="card-title">Employees Data Report</h3>
+                    </div> <!-- /.card-header -->
+                    <div class="card-body">
+                        <table class="table table-bordered" id="employeeTable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>File Number</th>
+                                    <th>Name (English)</th>
+                                    <th>Email</th>
+                                    <th>Reg Date</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div> <!-- /.card-body -->
+                </div> <!-- /.card -->
+            </div> <!-- /.col -->
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div> <!--end::App Content-->
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var table = $('#employeeTable').DataTable({
+                ajax: {
+                    url: '@Url.Action("GetEmployeeDataReport", "Reports")',
+                    type: 'GET',
+                    dataSrc: 'data'
+                },
+                columns: [
+                    { data: null, title: "#" , orderable: false },
+                    { data: 'fileNumber' },
+                    { data: 'nameEng' },
+                    { data: 'email' },
+                    { data: 'mobRegistrationDate' }
+                ],
+                processing: true,
+                serverSide: false,
+                order: [[0, "asc"]],
+                paging: true,
+                searching: false,
+                lengthChange: true,
+                pageLength: 10,
+                language: {
+                    paginate: {
+                        previous: "Previous",
+                        next: "Next"
+                    },
+                    info: "Showing _START_ to _END_ of _TOTAL_ entries"
+                },
+                createdRow: function (row, data, dataIndex) {
+                    $('td:eq(0)', row).html(dataIndex + 1);
+                },
+                dom: 'Bfrtip', // This enables the buttons
+                buttons: [
+            {
+                extend: 'print',
+                text: 'Print Report',
+                title: 'Employee Data Report',
+                messageTop: '',
+                footer: true,
+                exportOptions: {
+                    columns: ':visible'
+                },
+                        customize: function (win) {
+            // Remove the default title and adjust the body style
+            $(win.document.head).find('title').text('');
+            $(win.document.body).css('font-size', '10pt')
+                .prepend('<h3 class="text-center">Employee Data Report</h3>')
+                .prepend('<h4 class="text-center">List of Employees</h4>');
+
+            // Style the table for print view
+            $(win.document.body).find('table')
+                .addClass('display')
+                .css('font-size', 'inherit');
+
+            // Remove the duplicate header
+            $(win.document.body).find('h1').remove();
+
+            $(win.document.body).find('table tbody tr').each(function (index) {
+                $(this).find('td:first').text(index + 1);
+            });
+
+            // Add Total Records row in print view
+            var totalRecords = table.data().count();
+            $(win.document.body).find('table tbody').append(
+                '<tr>' +
+                '<td colspan="3" style="text-align:right; font-weight:bold;">Total Records</td>' +
+                '<td style="font-weight:bold; text-align:center;">' + totalRecords + '</td>' +
+                '</tr>'
+            );
+        }
+
+            }
+        ],
+                drawCallback: function (settings) {
+                    var api = this.api();
+                    $('#totalRecordsRow').remove();
+                    var totalRecords = api.data().count();
+                    $(api.table().body()).append(
+                        '<tr id="totalRecordsRow" class="total-records-row">' +
+                        '<td colspan="3" class="text-right font-weight-bold">Total Records</td>' +
+                        '<td class="font-weight-bold text-center">' + totalRecords + '</td>' +
+                        '</tr>'
+                    );
+                }
+            });
+        });
+    </script>
+}

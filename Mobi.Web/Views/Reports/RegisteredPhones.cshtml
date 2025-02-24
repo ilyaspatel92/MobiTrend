@@ -1,0 +1,87 @@
+﻿@{
+    ViewData["Title"] = "Registered Employees Mobile Report";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Registered Employees Mobile Report</h3>
+                </div>
+                <div class="card-body">
+                    <table id="mobileTable" class="table table-bordered table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>#</th>
+                                <th>File Number</th>
+                                <th>Employee Name</th>
+                                <th>Email</th>
+                                <th>Mob Type</th>
+                                <th>Reg Date</th>
+                                <th>Last Trans Date</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="card-footer text-right">
+                    <button class="btn btn-primary" id="printReport"><i class="fas fa-print"></i> Print Report</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+
+    <script>
+               $(document).ready(function () {
+            var table = $('#mobileTable').DataTable({
+                processing: true,
+                serverSide: false,
+                paging: true,
+                searching: false,
+                ordering: true,
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'print',
+                        text: 'Print Report',
+                        title: '',
+                        exportOptions: { columns: ':visible' },
+                        customize: function (win) {
+                            $(win.document.head).find('title').text('');
+                            $(win.document.body).css('font-size', '10pt')
+                                .prepend('<h3 class="text-center">Company XYZ</h3>')
+                                .prepend('<h4 class="text-center">Registered Employees Mobile Report</h4>');
+
+                            $(win.document.body).find('table')
+                                .addClass('display')
+                                .css('font-size', 'inherit');
+
+                            $(win.document.body).find('table tbody tr').each(function (index) {
+                                $(this).find('td:first').text(index + 1);
+                            });
+                        }
+                    }
+                ],
+                ajax: '@Url.Action("GetRegisteredPhones", "Reports")',
+                columns: [
+                    { data: null, orderable: false, render: function (data, type, row, meta) { return meta.row + 1; } },
+                    { data: 'fileNumber' },
+                    { data: 'nameEng' },
+                    { data: 'email' },
+                    { data: 'mobileTypeName' },
+                    { data: 'mobRegistrationDate' },
+                    { data: 'lastTransactionDate' }
+                ]
+            });
+        });
+
+    </script>
+}
