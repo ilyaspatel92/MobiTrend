@@ -20,24 +20,26 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@@2.3.0/styles/overlayscrollbars.min.css" integrity="sha256-dSokZseQNT08wYEWiz5iLI8QPlKxG+TswNRD8k35cpg=" crossorigin="anonymous"><!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Third Party Plugin(Bootstrap Icons)-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@@1.11.0/font/bootstrap-icons.min.css" integrity="sha256-Qsx5lrStHZyR9REqhUF8iQt73X06c8LGIUPzpOhwRrI=" crossorigin="anonymous"><!--end::Third Party Plugin(Bootstrap Icons)--><!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css"><!--end::Required Plugin(AdminLTE)-->
+
+    <link rel="stylesheet" href="~/css/custom.css">
     <style>
-        .login-page {
-            align-items: flex-start;
-        }
+        
+
     </style>
 </head> <!--end::Head--> <!--begin::Body-->
 <body class="login-page bg-body-secondary">
-<div class="row">
-    <div class="col-sm-7">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
         <div class="">
                 <img src="~/Uploads/logo.jpeg" class="img-fluid" alt="Full-Width Image">
         </div>
     </div>
-    <div class="col-sm-5">
+            <div class="col-sm-6">
 
-          <div class="login-box" style="width: 100%;margin-top: 150px;">
-        <div class="login-logo"> <a href="../index2.html"><b>Mobi </b>Admin</a> </div> <!-- /.login-logo -->
-        <div class="card">
+          <div class="login-box">
+            <div class="login-logo"> <a href="../index2.html"><b>Mobi </b>Admin</a> </div> <!-- /.login-logo -->
+            <div class="card">
             <div class="card-body login-card-body">
                 <p class="login-box-msg">Sign in</p>
                 <form asp-action="Login" method="post">
@@ -53,10 +55,7 @@
                     <div class="text-danger">
                         @Html.ValidationSummary(false, "", new { @class = "text-danger" })
                     </div>
-                  @*   @if (ViewBag.Error != null)
-                    {
-                        <p style="color: red;">@ViewBag.Error</p>
-                    } *@
+                  
                     <div class="row">
                         <div class="col-12">
                             <div class="d-grid gap-2"> <button type="submit" class="btn btn-primary  btn-lg btn-block">Login</button> </div>
@@ -70,7 +69,8 @@
                 </form>
             </div> <!-- /.login-card-body -->
         </div>
-    </div> <!-- /.login-box --> <!--begin::Third Party Plugin(OverlayScrollbars)-->
+        </div> <!-- /.login-box --> <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    </div>
     </div>
 </div>
 
