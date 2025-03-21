@@ -2,6 +2,7 @@
 using Mobi.Data.Domain;
 using Mobi.Data.Enums;
 using Mobi.Service.AccessControls;
+using Mobi.Service.LocationBeacons;
 using Mobi.Service.Locations;
 using Mobi.Web.Factories.Locations;
 using Mobi.Web.Models.Locations;
@@ -13,13 +14,16 @@ namespace Mobi.Web.Controllers.Locations
         private readonly ILocationService _locationService;
         private readonly ILocationFactory _locationFactory;
         private readonly IAccessControlService _accessControlService;
+        private readonly ILocationBeaconService _locationBeaconService;
         public LocationController(ILocationService locationService,
                                   ILocationFactory locationFactory,
-                                  IAccessControlService accessControlService)
+                                  IAccessControlService accessControlService,
+                                  ILocationBeaconService locationBeaconService)
         {
             _locationService = locationService;
             _locationFactory = locationFactory;
             _accessControlService = accessControlService;
+            _locationBeaconService = locationBeaconService;
         }
 
         [HttpGet]
@@ -173,13 +177,18 @@ namespace Mobi.Web.Controllers.Locations
         public IActionResult Delete(int id)
         {
             var location = _locationService.GetLocationById(id);
-            if (location == null)
-            {
-                return NotFound();
-            }
 
-            _locationService.RemoveLocation(location);            
-            return RedirectToAction(nameof(List));
+            if (location == null)
+                return Json(false);
+
+            var beacons = _locationBeaconService.GetAllLocationBeaconMappingsByLocationId(location.Id);
+
+            foreach (var beacon in beacons)
+                _locationBeaconService.RemoveLocationBeaconMapping(beacon);
+
+            _locationService.RemoveLocation(location);
+
+            return Json(true);
         }
 
         public IActionResult Details(int id)

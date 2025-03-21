@@ -73,6 +73,16 @@
     </div> <!-- /.login-box --> <!--begin::Third Party Plugin(OverlayScrollbars)-->
     </div>
 </div>
+    <!-- Background Overlay (hidden by default) -->
+    <div id="background-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 9999;">
+        <!-- Loader (centered) -->
+        <div id="loader" class="d-flex justify-content-center align-items-center" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+
 
   
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@@2.3.0/browser/overlayscrollbars.browser.es6.min.js" integrity="sha256-H2VM7BKda+v2Z4+DRy69uknwxjyDRhszjXFhsL4gD3w=" crossorigin="anonymous"></script> <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
@@ -102,6 +112,39 @@
             }
         });
     </script> <!--end::OverlayScrollbars Configure--> <!--end::Script-->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Grab the form, loader, and background overlay elements
+            const form = document.querySelector('form');
+            const loader = document.getElementById('loader');
+            const backgroundOverlay = document.getElementById('background-overlay');
+
+            // Add event listener to the form submit event
+            form.addEventListener('submit', function(event) {
+                // Show the loader and overlay when the form is submitted
+                backgroundOverlay.style.display = 'block';
+                loader.style.display = 'flex';  // Show the loader centered
+
+                // Optionally, disable the form's submit button to prevent multiple submissions
+                const submitButton = form.querySelector('button[type="submit"]');
+                submitButton.disabled = true;
+
+                // Prevent the form from submitting immediately to allow for the loader to appear
+                event.preventDefault();
+
+                // Simulate an async action (e.g., form submission) with a delay
+                setTimeout(function() {
+                    // Proceed with form submission after the loader has been visible for a bit
+                    form.submit(); // Uncomment if you are ready to submit the form after delay
+
+                    // For testing, remove this line if you are actually submitting the form via AJAX
+                }, 1000); // Adjust this timeout to control how long the loader is visible
+            });
+        });
+    </script>
+
+
+
 </body><!--end::Body-->
 
 </html>
