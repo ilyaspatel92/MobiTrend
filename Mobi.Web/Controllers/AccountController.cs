@@ -12,13 +12,21 @@ namespace Mobi.Web.Controllers
 {
     public class AccountController : BasePublicController
     {
+        #region Fields
 
         private readonly ISystemUserService _systemUserService;
+
+        #endregion
+
+        #region Ctor
 
         public AccountController(ISystemUserService systemUserService)
         {
             _systemUserService = systemUserService;
         }
+        #endregion
+
+        #region Methods
 
         [HttpGet]
         [AllowAnonymous]
@@ -78,6 +86,7 @@ namespace Mobi.Web.Controllers
 
             // Invalid login
             ModelState.AddModelError("", "Invalid username or password.");
+
             return View();
         }
 
@@ -86,6 +95,7 @@ namespace Mobi.Web.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
             return RedirectToAction("Login", "Account");
         }
 
@@ -199,5 +209,7 @@ namespace Mobi.Web.Controllers
             ViewBag.Message = "Password reset successfully!";
             return RedirectToAction("Login");
         }
+
+        #endregion
     }
 }

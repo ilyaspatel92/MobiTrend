@@ -76,14 +76,14 @@ public class ApplicationContext : DbContext
             {
                 Id = 1,
                 ResourceName = "Mobi.Test",
-                ResourceValue = "This is English : Welcome to Mobi",
+                ResourceValue = "This is English : Welcome to Mobitend",
                 LanguageId = 1
             },
             new LocaleStringResource
             {
                 Id = 2,
                 ResourceName = "Mobi.Test",
-                ResourceValue = "This is Arabic : مرحبا بكم في موبي",
+                ResourceValue = "This is Arabic : مرحباً بكم في Mobitend",
                 LanguageId = 2
             }
         );

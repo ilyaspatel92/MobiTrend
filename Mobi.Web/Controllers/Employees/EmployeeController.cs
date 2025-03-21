@@ -108,6 +108,9 @@ namespace Mobi.Web.Controllers.Employees
                 };
 
                 _employeeService.AddEmployee(employee);
+
+                TempData["SuccessMessage"] = "Employee has been Added Successfully.";
+
                 return RedirectToAction(nameof(List));
             }
 
@@ -181,6 +184,9 @@ namespace Mobi.Web.Controllers.Employees
 
                 // Update the record
                 _employeeService.UpdateEmployee(existingEmployee);
+
+                TempData["SuccessMessage"] = "Employee has been Updated Successfully.";
+
                 return RedirectToAction(nameof(List));
             }
 

@@ -45,19 +45,19 @@ namespace Mobi.Web.Models.Employees
         public string? Password { get; set; }
 
         public int MobileType { get; set; }
-        public string MobileTypeName { get; set; }
+        public string? MobileTypeName { get; set; }
         public int RegistrationVia { get; set; }
-        public string RegistrationTypeName { get; set; }
+        public string? RegistrationTypeName { get; set; }
 
         public string? DeviceId { get; set; }
 
         public bool RegisterStatus { get; set; }
         public string? CompanyId { get; set; }
 
-        public string CreatedDate { get; set; }
-        public string MobRegistrationDate { get; set; }
+        public string? CreatedDate { get; set; }
+        public string? MobRegistrationDate { get; set; }
         public string? QrCode { get; set; }
-        public string LastTransactionDate { get; set; }
+        public string? LastTransactionDate { get; set; }
 
     }
 }

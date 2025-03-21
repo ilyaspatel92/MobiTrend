@@ -60,7 +60,7 @@ namespace Mobi.Web
             //    options.Filters.Add(new AuthorizeFilter("ApiPolicy"));
             //});
             services.AddControllers();
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddHttpContextAccessor();
 
             // Configure Kestrel's request limits
