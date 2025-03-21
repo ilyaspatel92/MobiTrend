@@ -10,25 +10,25 @@
         <div class="card-body">
             <div class="row mb-4">
                 <div class="col-md-4">
-                    <label for="employeeName" class="form-label">Employee Name</label>
+                    <label for="employeeName" class="form-label"><i class="fas fa-user"></i> Employee Name</label>
                     <input type="text" name="employeeName" id="employeeName" class="form-control" placeholder="Search by name">
                 </div>
                 <div class="col-md-3">
-                    <label for="filenumber" class="form-label">File Number</label>
+                    <label for="filenumber" class="form-label"><i class="fas fa-file"></i> File Number</label>
                     <input type="text" name="filenumber" id="filenumber" class="form-control" placeholder="Search by file number">
                 </div>
                 <div class="col-md-3">
-                    <label for="siteStatus" class="form-label">Site Status</label>
+                    <label for="siteStatus" class="form-label"><i class="fa-solid fa-square-poll-vertical"></i> Site Status</label>
                     <select name="siteStatus" id="siteStatus" class="form-select">
                         <option value="">All</option>
                         <option value="set">Set</option>
                     </select>
                 </div>
                 <div class="col-md-1 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                    <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search"></i> Search</button>
                 </div>
                 <div class="col-md-1 d-flex align-items-end">
-                    <button type="button" id="showAll" class="btn btn-secondary w-100">Show All</button>
+                    <button type="button" id="showAll" class="btn btn-secondary w-100"><i class="fas fa-list"></i> Show All</button>
                 </div>
             </div>
         </div>
@@ -94,7 +94,7 @@
                             if (!row.locationNames) {
                                 return `<a href="@Url.Action("SetLocation", "EmployeeLocation")?EmployeeId=${data}" class="btn btn-link p-0">Set Location</a>`;
                             } else {
-                                return `<a href="@Url.Action("SetLocation", "EmployeeLocation")?EmployeeId=${data}" class="btn btn-link p-0">Edit</a>`;
+                                return `<a href="@Url.Action("SetLocation", "EmployeeLocation")?EmployeeId=${data}" class="btn btn-link p-0"><i class="fas fa-edit"></i></a>`;
                             }
                         }
                     }

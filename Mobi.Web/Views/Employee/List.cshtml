@@ -9,7 +9,7 @@
             <h5 class="fw-bold mb-0">Employees</h5>
             <!-- Buttons -->
             <div class="d-flex gap-2">
-                <a href="@Url.Action("Create", "Employee")" class="btn btn-success btn-sm">Add Employee</a>
+                <a href="@Url.Action("Create", "Employee")" class="btn btn-success btn-sm"><i class="fa-solid fa-user-plus"></i>  Add Employee</a>
             </div>
         </div>
         <form id="searchForm" method="get" action="@Url.Action("GetEmployees", "Employee")">
@@ -19,21 +19,21 @@
                     <!-- Spacing between form elements -->
                     <!-- Search by Name -->
                     <div class="col-md-6">
-                        <label for="searchByName" class="form-label">Search by Name</label>
+                        <label for="searchByName" class="form-label"><i class="fas fa-user"></i> Search by Name</label>
                         <input type="text" id="searchByName" name="name" class="form-control" placeholder="Enter Name" />
                     </div>
 
                     <!-- Search by ID -->
                     <div class="col-md-6">
-                        <label for="searchById" class="form-label">Search by ID</label>
-                        <input type="text" id="searchById" name="id" class="form-control" placeholder="Enter ID" />
+                        <label for="searchById" class="form-label"><i class="fas fa-file"></i> Search by File Number</label>
+                        <input type="text" id="searchById" name="id" class="form-control" placeholder="Enter  File Number" />
                     </div>
                 </div> <!-- end::Row -->
             </div> <!-- end::Card Body -->
             <!-- begin::Card Footer -->
             <div class="card-footer d-flex justify-content-end gap-2">
-                <button type="submit" class="btn btn-primary px-4">Search</button>
-                <button type="button" id="showAllBtn" class="btn btn-warning px-4">Show All</button>
+                <button type="submit" class="btn btn-primary px-4"><i class="fas fa-search"></i> Search</button>
+                <button type="button" id="showAllBtn" class="btn btn-warning px-4"><i class="fas fa-list"></i> Show All</button>
             </div> <!-- end::Card Footer -->
         </form>
     </div>
@@ -92,9 +92,9 @@
                         data: null,
                         render: function (data) {
                             return `
-                                <a href="/Employee/Details/${data.id}" class="btn btn-info btn-sm">Details</a>
-                                <a href="/Employee/Edit/${data.id}" class="btn btn-primary btn-sm">Edit</a>
-                                <button class="btn btn-danger btn-sm delete-btn" data-id="${data.id}">Delete</button>
+                                <a href="/Employee/Details/${data.id}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
+                                <a href="/Employee/Edit/${data.id}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
+                                <button class="btn btn-danger btn-sm delete-btn" data-id="${data.id}"><i class="fas fa-trash"></i></button>
                             `;
                         }
                     }

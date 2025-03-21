@@ -10,9 +10,11 @@
         <h2 class="mb-0">Employee Details</h2>
         <div class="btn-group">
             <div class="d-flex justify-content-end mt-4">
-                <a asp-action="List" class="btn btn-secondary btn-sm me-2">Back to List</a>
-                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm me-2">Edit</a>
-                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-sm">Delete</a>
+                <a asp-action="List" class="btn btn-secondary btn-sm me-2">
+                    <i class="fas fa-arrow-left"></i> Back to List
+                </a>
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm me-2"><i class="fas fa-edit"></i> Edit</a>
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a>
             </div>
         </div>
     </div>

@@ -3,33 +3,36 @@
 	ViewData["Title"] = "Employees Attendance Logs";
 }
 
-<div class="card card-info card-outline mb-4 mx-3 custom-top-spacing">
-		<div class="card-header bg-white py-3 border-bottom">
-		<div class="d-flex justify-content-between align-items-center">
-			<!-- Title -->
-			<h5 class="fw-bold mb-0">Employees Attendance Logs</h5>
+<div class="container-fluid mt-4">
+	<div class="card shadow-sm">
+		<div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+			<h4 class="mb-0"><i class="fas fa-users"></i> Employees Attendance Logs</h4>
+			<div>
+				@* <button id="refreshButton" class="btn btn-light btn-sm"><i class="fas fa-sync"></i> Refresh</button>
+                <button id="printButton" class="btn btn-light btn-sm"><i class="fas fa-print"></i> Print</button> *@
+			</div>
 		</div>
 		<div class="card-body">
 			<!-- Filters Section -->
 			<div class="row mb-4">
 				<div class="col-md-3">
-					<label for="startDate"><i class="fa-solid fa-calendar-days"></i> Start Date</label>
+					<label for="startDate">Start Date</label>
 					<input type="date" id="startDate" class="form-control">
 				</div>
 				<div class="col-md-3">
-					<label for="endDate"><i class="fa-solid fa-calendar-days"></i> End Date</label>
+					<label for="endDate">End Date</label>
 					<input type="date" id="endDate" class="form-control">
 				</div>
 				<div class="col-md-3">
-					<label for="employeeName"><i class="fas fa-user"></i> Employee Name</label>
+					<label for="employeeName">Employee Name</label>
 					<input type="text" id="employeeName" class="form-control" placeholder="Enter Employee Name">
 				</div>
 				<div class="col-md-3">
-					<label for="filenumber"><i class="fas fa-file"></i> File Number</label>
+					<label for="filenumber">File Number</label>
 					<input type="text" id="filenumber" class="form-control" placeholder="Enter File Number ID">
 				</div>
 				<div class="col-md-3">
-					<label for="transstatus"><i class="fa-solid fa-square-poll-vertical"></i> Trans Status</label>
+					<label for="transstatus">Trans Status</label>
 					<select id="transstatus" class="form-select">
 						<option value="">All</option>
 						<option value="approved">Approved</option>
@@ -50,7 +53,7 @@
 			<!-- Table -->
 			<div class="table-responsive">
 				<table id="attendanceTable" class="table table-bordered table-hover">
-					<thead >
+					<thead class="table-dark">
 						<tr>
 							<th>File Number</th>
 							<th>Employee Name</th>
@@ -124,8 +127,8 @@
 					{
 						data: "id",
 						render: function (data, type, row) {
-							return `<button class="btn btn-warning btn-sm edit-btn"><i class="fas fa-edit"></i> </button>
-									<button class="btn btn-success btn-sm save-btn d-none"><i class="fas fa-save"></i> </button>`;
+							return `<button class="btn btn-warning btn-sm edit-btn"><i class="fas fa-edit"></i> Edit</button>
+									<button class="btn btn-success btn-sm save-btn d-none"><i class="fas fa-save"></i> Save</button>`;
 						}
 					}
 				],

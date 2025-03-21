@@ -11,7 +11,7 @@
 			<h5 class="fw-bold mb-0">Locations</h5>
 			<!-- Buttons -->
 			<div class="d-flex gap-2">
-				<a href="@Url.Action("Create", "Location")" class="btn btn-success btn-sm">Add Location</a>
+				<a href="@Url.Action("Create", "Location")" class="btn btn-success btn-sm"><i class="fa-solid fa-user-plus"></i>  Add Location</a>
 			</div>
 		</div>
 		<form id="searchForm" method="get" action="@Url.Action("List", "Location")">
@@ -20,12 +20,12 @@
 				<div class="row g-4">
 					<!-- Search by Name -->
 					<div class="col-md-4">
-						<label for="searchByName" class="form-label">Search by Name</label>
+						<label for="searchByName" class="form-label"><i class="fas fa-user"></i> Search by Name</label>
 						<input type="text" id="searchByName" name="name" class="form-control" placeholder="Enter Name" />
 					</div>
 					<!-- Search by Status -->
 					<div class="col-md-4">
-						<label for="searchByStatus" class="form-label">Search by Status</label>
+						<label for="searchByStatus" class="form-label"><i class="fas fa-list"></i> Search by Status</label>
 						<select id="searchByStatus" name="searchByStatus" class="form-control">
 							<option value="">All</option>
 							<option value="True">Active</option>
@@ -36,8 +36,8 @@
 			</div> <!-- end::Card Body -->
 			<!-- begin::Card Footer -->
 			<div class="card-footer d-flex justify-content-end gap-2">
-				<button type="submit" class="btn btn-primary px-4">Search</button>
-				<button type="button" id="showAllBtn" class="btn btn-warning px-4">Show All</button>
+				<button type="submit" class="btn btn-primary px-4"><i class="fas fa-search"></i> Search</button>
+				<button type="button" id="showAllBtn" class="btn btn-warning px-4"><i class="fas fa-list"></i> Show All</button>
 			</div> <!-- end::Card Footer -->
 		</form>
 	</div>
@@ -86,8 +86,8 @@
 						data: null,
 						render: function (data) {
 							return `
-								<a href="/Location/Edit/${data.id}" class="btn btn-primary btn-sm">Edit</a>
-								 <button class="btn btn-danger btn-sm delete-btn" data-id="${data.id}">Delete</button>
+								<a href="/Location/Edit/${data.id}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
+								 <button class="btn btn-danger btn-sm delete-btn" data-id="${data.id}"><i class="fas fa-trash"></i></button>
 							`;
 						}
 					}

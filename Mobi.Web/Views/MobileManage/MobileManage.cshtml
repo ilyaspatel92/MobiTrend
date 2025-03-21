@@ -9,18 +9,18 @@
         <form id="searchForm">
             <div class="row mb-4">
                 <div class="col-md-4">
-                    <label for="employeeName" class="form-label">Employee Name</label>
+                    <label for="employeeName" class="form-label"><i class="fas fa-user"></i> Employee Name</label>
                     <input type="text" name="name" id="employeeName" class="form-control" placeholder="Search by name">
                 </div>
                 <div class="col-md-2">
-                    <label for="filenumber" class="form-label">File Number</label>
+                    <label for="filenumber" class="form-label"><i class="fas fa-file"></i>  File Number</label>
                     <input type="text" name="filenumber" id="filenumber" class="form-control" placeholder="Search by file number">
                 </div>
                 <div class="col-md-3 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                    <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search"></i> Search</button>
                 </div>
                 <div class="col-md-3 d-flex align-items-end">
-                    <button type="button" id="showAll" class="btn btn-secondary w-100">Show All</button>
+                    <button type="button" id="showAll" class="btn btn-secondary w-100"><i class="fas fa-list"></i> Show All</button>
                 </div>
             </div>
         </form>
@@ -92,8 +92,8 @@
                             userName: employee.userName,
                             registerStatus: employee.registerStatus ? "Registered" : "Not Registered",
                             action: employee.isQrVerify
-                                ? `<a href="/MobileManage/EditMobile/${employee.id}" class="btn btn-link">Edit</a>`
-                                : `<a href="/MobileManage/RegisterMobile/${employee.id}" class="btn btn-link">Register</a>`
+                                ? `<a href="/MobileManage/EditMobile/${employee.id}" class="btn btn-link"><i class="fas fa-edit"></a>`
+                                : `<a href="/MobileManage/RegisterMobile/${employee.id}" class="btn btn-link"><i class="fa-solid fa-user-plus"></i></a>`
                         }))).draw();
                     },
                     error: function (xhr, status, error) {

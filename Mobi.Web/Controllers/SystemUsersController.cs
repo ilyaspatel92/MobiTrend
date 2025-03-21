@@ -66,8 +66,8 @@ namespace Mobi.Web.Controllers
                     userName = user.UserName,
                     userStatus = user.UserStatus,
                     actions = $@"
-                <a href='/SystemUsers/Edit/{user.Id}' class='btn btn-warning btn-sm'>Edit</a>
-                <button class='btn btn-danger btn-sm delete-btn' data-id='{user.Id}'>Delete</button>"
+                <a href='/SystemUsers/Edit/{user.Id}' class='btn btn-warning btn-sm'><i class=""fas fa-edit""></i></a>
+                <button class='btn btn-danger btn-sm delete-btn' data-id='{user.Id}'><i class=""fas fa-trash""></i></button>"
                 }).ToList();
 
                 return Json(new

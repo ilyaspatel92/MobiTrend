@@ -151,6 +151,7 @@ namespace Mobi.Web.Controllers.Employees
 
             if (_employeeService.IsFileNumberExists(model.FileNumber,id))
             {
+
                 ModelState.AddModelError("FileNumber", "The FileNumber is already exsist");
             }
 
