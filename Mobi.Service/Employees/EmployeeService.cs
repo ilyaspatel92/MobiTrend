@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Azure.Core;
+using Mobi.Data.Domain;
 using Mobi.Data.Domain.Employees;
 using Mobi.Repository;
 
@@ -8,10 +9,12 @@ namespace Mobi.Service.Employees
     public class EmployeeService : IEmployeeService
     {
         private readonly IRepository<Employee> _employeeRepository;
+        private readonly IRepository<SystemUsers> _systemUserRepository;
 
-        public EmployeeService(IRepository<Employee> employeeRepository)
+        public EmployeeService(IRepository<Employee> employeeRepository, IRepository<SystemUsers> systemUserRepository)
         {
             _employeeRepository = employeeRepository;
+            _systemUserRepository= systemUserRepository;
         }
 
         public IEnumerable<Employee> GetAllEmployees()
@@ -64,6 +67,22 @@ namespace Mobi.Service.Employees
                 .FirstOrDefault(e => e.Email.Equals(email, StringComparison.OrdinalIgnoreCase) && e.CompanyId == companyId);
         }
 
+        public Employee GetEmployeeBySearchText(string searchText, int companyId)
+        {
+            if(searchText.ToLower().Contains("superadmin"))
+            {
+                return _employeeRepository
+                .GetAll()
+                .FirstOrDefault(e => e.Email.Equals(searchText, StringComparison.OrdinalIgnoreCase) || e.UserName.Equals(searchText, StringComparison.OrdinalIgnoreCase));
+            }
+            else
+            {
+                return _employeeRepository
+                .GetAll()
+                .FirstOrDefault(e => e.Email.Equals(searchText, StringComparison.OrdinalIgnoreCase) || e.UserName.Equals(searchText, StringComparison.OrdinalIgnoreCase) && e.CompanyId == companyId);
+            }
+        }
+        
         public IList<Employee> GetEmployeeByName(string name)
         {
             if (name == null)

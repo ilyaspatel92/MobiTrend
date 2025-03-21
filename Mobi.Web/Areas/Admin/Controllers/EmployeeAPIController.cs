@@ -51,11 +51,14 @@ namespace Mobi.Web.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    if (string.IsNullOrEmpty(queryModel.Email) || string.IsNullOrEmpty(queryModel.Email))
+                    if ( string.IsNullOrEmpty(queryModel.Username) || string.IsNullOrEmpty(queryModel.Username))
                     {
-                        response.Success = false;
-                        response.Message = "username or password is missing";
-                        return BadRequest(response);
+                        if(string.IsNullOrEmpty(queryModel.Email) || string.IsNullOrEmpty(queryModel.Email))
+                        {
+                            response.Success = false;
+                            response.Message = "username or password is missing";
+                            return BadRequest(response);
+                        }
                     }
 
                     if (queryModel.CompanyId <= 0)
@@ -65,7 +68,13 @@ namespace Mobi.Web.Areas.Admin.Controllers
                         return BadRequest(response);
                     }
 
-                    var employee = _employeeService.GetEmployeeByEmail(queryModel.Email.Trim(), queryModel.CompanyId);
+                    var searchText= queryModel.Username.Trim();
+
+                    if (!string.IsNullOrEmpty(queryModel.Email))
+                        searchText = queryModel.Email.Trim();
+
+
+                    var employee = _employeeService.GetEmployeeBySearchText(searchText, queryModel.CompanyId);
                     if (employee is null)
                     {
                         response.Success = false;

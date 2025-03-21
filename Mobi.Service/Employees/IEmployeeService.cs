@@ -18,6 +18,8 @@ namespace Mobi.Service.Employees
         IList<Employee> GetEmployeeByName(string name);
 
         bool IsFileNumberExists(string filenumber, int empId = 0);
+
+        Employee GetEmployeeBySearchText(string searchText, int companyId);
     }
 }
 
