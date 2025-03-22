@@ -38,7 +38,7 @@
     @RenderSection("Scripts", required: false)
 </head> <!--end::Head--> <!--begin::Body-->
 
-<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+<body class="layout-fixed sidebar-expand-lg sidebar-mini bg-body-tertiary">
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
         <!--begin::Header-->
@@ -182,17 +182,17 @@
                 <nav class="mt-2">
                     <!--begin::Sidebar Menu-->
                     <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
+                        <li class="nav-item menu-open">
+                            <a href="#" class="nav-link active ">
                                 <i class="nav-icon fas fa-edit"></i>
                                 <p>
                                     Basic Data
                                     <i class="nav-arrow bi bi-chevron-right"></i>
                                 </p>
                             </a>
-                            <ul class="nav nav-treeview" style="display: none; box-sizing: border-box;">
+                            <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/location/List">
+                                    <a class="nav-link active" href="/location/List">
                                         <i class="nav-icon bi bi-circle"></i>
                                         <p>Locations</p>
                                     </a>
@@ -214,7 +214,7 @@
                                     <i class="nav-arrow bi bi-chevron-right"></i>
                                 </p>
                             </a>
-                            <ul class="nav nav-treeview" style="display: none; box-sizing: border-box;">
+                            <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                     <a href="/mobilemanage/mobilemanage" class="nav-link">
                                         <i class="nav-icon bi bi-circle"></i>
@@ -243,7 +243,7 @@
                                     <i class="nav-arrow bi bi-chevron-right"></i>
                                 </p>
                             </a>
-                            <ul class="nav nav-treeview" style="display: none; box-sizing: border-box;">
+                            <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                     <a href="/systemusers/index" class="nav-link">
                                         <i class="nav-icon bi bi-circle"></i>
@@ -260,7 +260,7 @@
                                     <i class="nav-arrow bi bi-chevron-right"></i>
                                 </p>
                             </a>
-                            <ul class="nav nav-treeview" style="display: none; box-sizing: border-box;">
+                            <ul class="nav nav-treeview" >
                                 <li class="nav-item">
                                     <a href="/reports/dailyattendancereport" class="nav-link">
                                         <i class="nav-icon bi bi-circle"></i>
