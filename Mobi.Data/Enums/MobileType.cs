@@ -9,11 +9,11 @@ namespace Mobi.Data.Enums
         /// <summary>
         /// android
         /// </summary>
-        Android = 5,
+        Android =1,
 
         /// <summary>
         ///Ios device
         /// </summary>
-        iOS = 10,
+        iOS = 2,
     }
 }
