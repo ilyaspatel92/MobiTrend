@@ -68,7 +68,7 @@
                     { data: 'mobileType' },
                     { data: 'createdDate' },
                     { data: 'registrationVia' },
-                    { data: 'userName' },
+                    { data: 'createdBy' },
                     { data: 'registerStatus' },
                     { data: 'action' }
                 ],
@@ -89,7 +89,7 @@
                             mobileType: employee.mobileTypeName,
                             createdDate: employee.createdDate,
                             registrationVia: employee.registrationTypeName,
-                            userName: employee.userName,
+                            createdBy: employee.createdBy,
                             registerStatus: employee.registerStatus ? "Registered" : "Not Registered",
                             action: employee.isQrVerify
                                 ? `<a href="/MobileManage/EditMobile/${employee.id}" class="btn btn-link"><i class="fas fa-edit"></a>`

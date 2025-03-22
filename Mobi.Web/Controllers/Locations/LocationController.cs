@@ -112,7 +112,7 @@ namespace Mobi.Web.Controllers.Locations
 
                 TempData["SuccessMessage"] = "Location added successfully.";
 
-                return RedirectToAction(nameof(List));
+                return RedirectToAction(nameof(Edit), new { id = location.Id });
             }
 
             return View(model);

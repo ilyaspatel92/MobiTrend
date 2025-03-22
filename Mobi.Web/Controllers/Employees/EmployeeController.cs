@@ -104,7 +104,8 @@ namespace Mobi.Web.Controllers.Employees
                     CID = model.CID,
                     CreatedDate = DateTime.Now,
                     UserName = model.NameEng,
-                    RegistrationType = (int)RegistrationType.Web
+                    RegistrationType = (int)RegistrationType.Web,
+                    CreatedBy = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value)
                 };
 
                 _employeeService.AddEmployee(employee);
@@ -180,7 +181,7 @@ namespace Mobi.Web.Controllers.Employees
                 existingEmployee.FileNumber = model.FileNumber;
                 existingEmployee.MobileNumber = model.MobileNumber;
                 existingEmployee.Email = model.Email;
-                existingEmployee.UserName = model.Email;
+                //existingEmployee.UserName = model.Email;
                 //existingEmployee.CompanyId = model.CompanyId;
 
                 // Update the record

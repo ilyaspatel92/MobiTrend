@@ -2,6 +2,7 @@
 using Mobi.Data.Enums;
 using Mobi.Service.Compnay;
 using Mobi.Service.Employees;
+using Mobi.Service.SystemUser;
 using Mobi.Web.Models.Employees;
 using QRCoder;
 namespace Mobi.Web.Factories.Employees
@@ -9,10 +10,11 @@ namespace Mobi.Web.Factories.Employees
     public class EmployeeFactory : IEmployeeFactory
     {
         private readonly ICompanyService _companyService;
-
-        public EmployeeFactory(ICompanyService companyService)
+        private readonly ISystemUserService _systemUserService;
+        public EmployeeFactory(ICompanyService companyService, ISystemUserService systemUserService)
         {
-           _companyService = companyService;
+            _companyService = companyService;
+            _systemUserService = systemUserService;
         }
 
         /// <summary>
@@ -45,7 +47,8 @@ namespace Mobi.Web.Factories.Employees
                 CID = employee.CID,
                 UserName = employee.UserName,
                 IsQrVerify = employee.IsQrVerify,
-                MobRegistrationDate = employee.MobRegistrationDate?.ToString("dd/MM/yyyy")
+                MobRegistrationDate = employee.MobRegistrationDate?.ToString("dd/MM/yyyy"),
+                CreatedBy= _systemUserService.GetSystemUserById(employee.CreatedBy)?.EmployeeName
                 //QrCode = GenerateQrCode(employee.Email)
             };
 

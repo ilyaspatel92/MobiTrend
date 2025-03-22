@@ -39,6 +39,7 @@ namespace Mobi.Repository.Migrations
                     .WithColumn("RegisterStatus").AsString(50).Nullable()
                     .WithColumn("NameEng").AsString(255).NotNullable()
                     .WithColumn("CID").AsString(12).Nullable()
+                    .WithColumn("CreatedBy").AsInt32().NotNullable()
                     .WithColumn("CreatedDate").AsDateTime().NotNullable();
 
                 Create.ForeignKey("FK_Employee_Company")

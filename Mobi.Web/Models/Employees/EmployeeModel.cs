@@ -58,6 +58,7 @@ namespace Mobi.Web.Models.Employees
         public string? MobRegistrationDate { get; set; }
         public string? QrCode { get; set; }
         public string? LastTransactionDate { get; set; }
+        public string? CreatedBy { get; set; }
 
     }
 }

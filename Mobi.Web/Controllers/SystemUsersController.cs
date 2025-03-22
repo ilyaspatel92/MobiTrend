@@ -44,7 +44,7 @@ namespace Mobi.Web.Controllers
         {
             try
             {
-                var query = _systemUserService.GetAllUsers();
+                var query = _systemUserService.GetAllUsers().Where(x => x.EmployeeId != 0);
 
                 if (!string.IsNullOrEmpty(employeeName))
                     query = query.Where(x => x.EmployeeName.ToLower().Contains(employeeName.ToLower()));
@@ -305,12 +305,12 @@ namespace Mobi.Web.Controllers
         {
             var user = _systemUserService.GetSystemUserById(id);
 
-            if (user != null) 
+            if (user != null)
             {
                 _systemUserAuthorityService.DeleteByUserId(user.Id);
                 _systemUserService.DeleteSystemUser(user);
             }
-                
+
 
             return RedirectToAction("Index");
         }

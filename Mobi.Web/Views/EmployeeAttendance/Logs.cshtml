@@ -125,7 +125,10 @@
 						data: "id",
 						render: function (data, type, row) {
 							return `<button class="btn btn-warning btn-sm edit-btn"><i class="fas fa-edit"></i> </button>
-									<button class="btn btn-success btn-sm save-btn d-none"><i class="fas fa-save"></i> </button>`;
+									<button class="btn btn-success btn-sm save-btn d-none"><i class="fas fa-save"></i> </button>
+									<button class="btn btn-danger btn-sm cancel-btn d-none"><i class="fas fa-times"></i> </button>`;
+									
+
 						}
 					}
 				],
@@ -134,20 +137,55 @@
 					{
 						extend: 'print',
 						text: '<i class="fas fa-print"></i> Print',
-						className: 'btn btn-secondary'
+						className: 'btn btn-secondary',
+						action: function (e, dt, node, config)
+						{
+							let dataCount = dt.rows({ search: 'applied' }).count(); // Get count of filtered rows
+
+							if (dataCount === 0) {
+								alert("No data available to print.");
+							} else {
+								$.fn.dataTable.ext.buttons.print.action.call(this, e, dt, node, config);
+							}
+						}
 					}
 				]
 			});
+					$(document).on('click', '.buttons-print', function () {
+			let dataCount = $('#attendanceTable').DataTable().rows({ search: 'applied' }).count();
+
+			if (dataCount === 0) {
+				alert("No data available to print.");
+			} else {
+				$('.edit-mode, select, .d-none').addClass('hidden-print');
+
+				setTimeout(() => {
+					window.print();
+					$('.hidden-print').removeClass('hidden-print'); // Restore elements after printing
+				}, 200);
+			}
+		});
+
 
 			// Search functionality
 			$('#searchButton').click(function () {
+
+				let startDate = $('#startDate').val();
+				let endDate = $('#endDate').val();
+
+				if (!startDate || !endDate) {
+					alert("Please select both Start Date and End Date.");
+					return;
+				}
+
 				table.ajax.url('@Url.Action("GetEmployeeAttendanceData", "EmployeeAttendance")').load();
 			});
 
 			// Show All button - clear filters & load all data
 			$('#showAllButton').click(function () {
-				$('#startDate').val('');
-				$('#endDate').val('');
+				 let today = new Date().toISOString().split('T')[0];
+				$('#startDate').val(today);
+				$('#endDate').val(today);
 				$('#employeeName').val('');
 				$('#filenumber').val('');
 				$('#transstatus').val('');
@@ -159,19 +197,26 @@
 				table.ajax.url('@Url.Action("GetEmployeeAttendanceData", "EmployeeAttendance")').load();
 			});
 
-			// Print button using DataTables
-			$('#printButton').click(function () {
-				table.buttons('.buttons-print').trigger();
-			});
-
 			// Edit button toggles edit mode
 			$('#attendanceTable tbody').on('click', '.edit-btn', function () {
 				let row = $(this).closest('tr');
 				row.find('.view-mode').addClass('d-none');
 				row.find('.edit-mode').removeClass('d-none');
 				row.find('.edit-btn').addClass('d-none');
-				row.find('.save-btn').removeClass('d-none');
+				row.find('.save-btn').removeClass('d-none');				
+				row.find('.save-btn, .cancel-btn').removeClass('d-none');
 			});
+
+			$('#attendanceTable tbody').on('click', '.cancel-btn', function () {
+			    let row = $(this).closest('tr');
+			
+			    row.find('.view-mode').removeClass('d-none'); // Show text labels
+			    row.find('.edit-mode').addClass('d-none'); // Hide dropdowns
+			
+			    row.find('.edit-btn').removeClass('d-none'); // Show Edit button
+			    row.find('.save-btn, .cancel-btn').addClass('d-none'); // Hide Save & Cancel buttons
+			});
+
 
 			// Save button functionality
 			$('#attendanceTable tbody').on('click', '.save-btn', function () {
@@ -195,5 +240,24 @@
 				});
 			});
 		});
+
+		// 		$('#printButton').click(function () {
+		// 	let dataCount = $('#attendanceTable').DataTable().rows().count();
+
+		// 	if (dataCount === 0) {
+		// 		alert("No data available to print.");
+		// 	} else {
+		// 		table.buttons('.buttons-print').trigger();
+		// 	}
+		// });
+
 	</script>
 }
+<style>
+	@@media print {
+		select, .edit-mode {
+			display: none !important;
+		}
+	}
+
+</style>

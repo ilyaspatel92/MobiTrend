@@ -170,6 +170,7 @@
                 const place = autocomplete.getPlace();
                 if (!place.geometry) {
                     alert("No details available for the selected location.");
+                     event.preventDefault();
                     return;
                 }
 
