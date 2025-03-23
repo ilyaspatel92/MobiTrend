@@ -108,6 +108,7 @@
             // Function to load data and reload table
             function loadData(name = "", filenumber = "", sitestatus = "") {
                 $('#initialMessage').hide(); // Hide the initial message
+                 $(".dataTables_processing").show();
                 $.ajax({
                     url: `/EmployeeLocation/GetEmployeeLocationData`,
                     type: 'GET',
@@ -118,6 +119,7 @@
                         draw: table.settings()[0].iDraw + 1 // pass the draw parameter
                     },
                     success: function (result) {
+                         $(".dataTables_processing").hide();
                         // Clear and add the formatted data to the DataTable
                         table.clear().rows.add(result.data.map((employee, index) => ({
                             fileNumber: employee.fileNumber,
@@ -127,6 +129,7 @@
                         }))).draw();
                     },
                     error: function (xhr, status, error) {
+                        $(".dataTables_processing").hide();
                         console.error("Error fetching data:", error);
                     }
                 });

@@ -37,11 +37,11 @@
     </div>
             <div class="col-sm-6">
 
-          <div class="login-box">
-            <div class="login-logo"> <a href="../index2.html"><b>Mobi </b>Admin</a> </div> <!-- /.login-logo -->
+                <div class="login-box">
+            <div class="login-logo"> <b>Mobi </b>Admin </div> <!-- /.login-logo -->
             <div class="card">
             <div class="card-body login-card-body">
-                <p class="login-box-msg">Sign in</p>
+                <p class="login-box-msg" style="font-size:20px">Sign in</p>
                 <form asp-action="Login" method="post">
                     <input type="hidden" name="returnUrl" value="@returnUrl" />
                    <div class="input-group mb-3">
@@ -55,14 +55,14 @@
                     <div class="text-danger">
                         @Html.ValidationSummary(false, "", new { @class = "text-danger" })
                     </div>
-                  
-                    <div class="row">
+
+                                <div class="row" style="margin-top: 50px;">
                         <div class="col-12">
                             <div class="d-grid gap-2"> <button type="submit" class="btn btn-primary  btn-lg btn-block">Login</button> </div>
                         </div> <!-- /.col -->
                     </div> <!--end::Row-->
                       <div class="row">
-                        <div style="text-align: center;margin-top: 20px;">
+                        <div style="text-align: center;margin-top: 50px;">
                            Did you forgot your account information?<a href="ForgotPassword">Click Here</a>
                         </div>
                     </div> <!--end::Row-->

@@ -1,4 +1,5 @@
-﻿using Mobi.Data.Domain.Employees;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Mobi.Data.Domain.Employees;
 using Mobi.Data.Enums;
 using Mobi.Service.Compnay;
 using Mobi.Service.Employees;
@@ -22,7 +23,7 @@ namespace Mobi.Web.Factories.Employees
         /// </summary>
         /// <param name="employee">The domain Employee object.</param>
         /// <returns>The ViewModel EmployeeModel.</returns>
-        public EmployeeModel PrepareEmployeeViewModel(Employee employee)
+        public EmployeeModel PrepareEmployeeViewModel(Employee employee, bool isMobileManage=false )
         {
             var emp = new EmployeeModel
             {
@@ -48,11 +49,13 @@ namespace Mobi.Web.Factories.Employees
                 UserName = employee.UserName,
                 IsQrVerify = employee.IsQrVerify,
                 MobRegistrationDate = employee.MobRegistrationDate?.ToString("dd/MM/yyyy"),
-                CreatedBy= _systemUserService.GetSystemUserById(employee.CreatedBy)?.EmployeeName
                 //QrCode = GenerateQrCode(employee.Email)
             };
 
-            emp.CompanyId = _companyService.GetCompanyById(employee.CompanyId)?.CompanyId;
+            if (isMobileManage)
+                emp.CreatedBy = _systemUserService.GetSystemUserById(employee.CreatedBy)?.EmployeeName;
+            else
+                emp.CompanyId = _companyService.GetCompanyById(employee.CompanyId)?.CompanyId;
 
             return emp;
         }
@@ -62,9 +65,9 @@ namespace Mobi.Web.Factories.Employees
         /// </summary>
         /// <param name="employees">The collection of Employee domain objects.</param>
         /// <returns>The collection of ViewModel EmployeeModels.</returns>
-        public IEnumerable<EmployeeModel> PrepareEmployeeViewModels(IEnumerable<Employee> employees)
+        public IEnumerable<EmployeeModel> PrepareEmployeeViewModels(IEnumerable<Employee> employees, bool isMobileManage = false)
         {
-            return employees.Select(emp => PrepareEmployeeViewModel(emp));
+            return employees.Select(emp => PrepareEmployeeViewModel(emp, isMobileManage));
 
             //return employees.Select(PrepareEmployeeViewModel);
         }

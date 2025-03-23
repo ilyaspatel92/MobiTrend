@@ -79,7 +79,7 @@ namespace Mobi.Service.Employees
             {
                 return _employeeRepository
                 .GetAll()
-                .FirstOrDefault(e => e.Email.Equals(searchText, StringComparison.OrdinalIgnoreCase) || e.UserName.Equals(searchText, StringComparison.OrdinalIgnoreCase) && e.CompanyId == companyId);
+                .FirstOrDefault(e => e.Email.Equals(searchText, StringComparison.OrdinalIgnoreCase)||e.FileNumber.Equals(searchText, StringComparison.OrdinalIgnoreCase) || e.UserName.Equals(searchText, StringComparison.OrdinalIgnoreCase) && e.CompanyId == companyId);
             }
         }
         
