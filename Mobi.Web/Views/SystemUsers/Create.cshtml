@@ -36,7 +36,15 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="UserName" class="form-label">User Name</label>
-                        <input id="UserName" class="form-control" placeholder="User Name" readonly />
+                        <input id="UserName" class="form-control" placeholder="User Name" />
+                        <span class="text-danger" id="UserNameError"></span> <!-- Validation Message -->
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="Password" class="form-label">Password</label>
+                        <input id="Password" type="password" class="form-control" placeholder="Enter Password" />
+                        <span class="text-danger" id="PasswordError"></span> <!-- Make sure this is present -->
                     </div>
                 </div>
                 <div class="row">
@@ -142,28 +150,60 @@
         }
 
         document.getElementById("saveAccess").addEventListener("click", function () {
-            if (selectedUserId === 0) {
+           
+            const userNameInput = document.getElementById("UserName");
+            const passwordInput = document.getElementById("Password");
+            const userNameError = document.getElementById("UserNameError");
+            const passwordError = document.getElementById("PasswordError");
+
+             if (selectedUserId === 0) {
                 alert("Please select an employee first.");
+                return;
+            }
+            // Clear previous errors before validation
+            userNameError.textContent = "";
+            passwordError.textContent = "";
+
+            if (!userNameInput.value.trim()) {
+                userNameError.textContent = "User Name is required.";
+                return;
+            }
+
+            if (!passwordInput.value.trim()) {
+                passwordError.textContent = "Password is required.";
                 return;
             }
 
             const selectedAuthorities = Array.from(document.querySelectorAll("input[name='authorities']:checked"))
                 .map(input => input.value);
 
+             const requestData = {
+                userId: selectedUserId,
+                userName: document.getElementById("UserName").value,
+                password: document.getElementById("Password").value,
+                authorities: selectedAuthorities
+            };
+
             fetch(`/SystemUsers/SaveAccess`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ userId: selectedUserId, authorities: selectedAuthorities })
+                body: JSON.stringify(requestData)
             })
                 .then(response => {
-                    if (response.ok) {
-                        alert("Access saved successfully.");
-                         window.location.href = "/systemusers/index";
-                    } else {
-                        alert("Error saving access.");
-                    }
-                })
-                .catch(() => alert("Error saving access."));
+                   if (response.status === 409) {  // Handle username conflict
+                       return response.text().then(errorMessage => {
+                           document.getElementById("UserNameError").textContent = errorMessage;
+                           throw new Error(errorMessage);
+                       });
+                   }
+                   if (response.ok) {
+                       alert("Access saved successfully.");
+                       window.location.href = "/systemusers/index";
+                   } else {
+                       alert("Error saving access.");
+                   }
+                });
+                // .catch(() => alert("Error saving access."));
         });
     });
 </script>

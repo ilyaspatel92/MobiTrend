@@ -240,13 +240,14 @@ namespace Mobi.Web.Controllers
                 return NotFound("The specified user was not found.");
             }
 
-            // Check for duplicate username
-            //var duplicateUser = _systemUserService.GetSystemUserByUserName(model.UserName);
-            //if (duplicateUser != null && duplicateUser.Id != id)
-            //{
-            //    ModelState.AddModelError("UserName", "A user with this username already exists.");
-            //    return View(model);
-            //}
+            //Check for duplicate username
+            var duplicateUser = _systemUserService.GetSystemUserByUserName(model.UserName);
+            if (duplicateUser != null && duplicateUser.Id != id)
+            {
+                ModelState.Clear();
+                ModelState.AddModelError("UserName", "A user with this username already exists.");
+                return View(model);
+            }
 
             //var duplicateEmail = _systemUserService.GetSystemUserByEmail(model.Email);
             //if (duplicateEmail != null && duplicateEmail.Id != id)
@@ -257,14 +258,12 @@ namespace Mobi.Web.Controllers
 
             try
             {
-                // Update the entity
-                //existingUser.EmployeeName = model.EmployeeName;
-                //existingUser.UserName = model.UserName;
-                //existingUser.CompanyID = model.CompanyID;
-                //existingUser.UserStatus = model.UserStatus;
-                //existingUser.Email = model.Email;
-                //// Save changes
-                //_systemUserService.UpdateSystemUser(existingUser);
+                if (existingUser!=null)
+                {
+                    existingUser.UserName = model.UserName;
+                    //existingUser.Password = model.Password;
+                    _systemUserService.UpdateSystemUser(existingUser);
+                }
 
                 // Now handle access control update
                 if (request.Authorities != null && request.Authorities.Any())
@@ -402,7 +401,6 @@ namespace Mobi.Web.Controllers
 
             return Json(accessList);
         }
-
         [HttpPost]
         public IActionResult SaveAccess([FromBody] SaveAccessRequest request)
         {
@@ -414,29 +412,46 @@ namespace Mobi.Web.Controllers
 
             try
             {
-                var systemUser = _systemUserService.GetSystemUserByEmployeeId(request.UserId);
+                // Check if username already exists and does not belong to the current user
+                var existingUser = _systemUserService.GetSystemUserByUserName(request.UserName);
+                var currentUser = _systemUserService.GetSystemUserByEmployeeId(request.UserId);
 
-                if (systemUser == null)
+                if (existingUser != null && (currentUser == null || existingUser.Id != currentUser.Id))
+                {
+                    return Conflict("A user with this username already exists.");
+                }
+
+                if (currentUser == null)
                 {
                     var employee = _employeeService.GetEmployeeById(request.UserId);
 
-                    _systemUserService.InsertSystemUser(new SystemUsers
+                    currentUser = new SystemUsers
                     {
                         EmployeeName = employee.NameEng,
-                        UserName = employee.UserName,
+                        UserName = request.UserName,
                         Email = employee.Email,
-                        Password = employee.Password,
+                        Password = request.Password, // Store securely (hashing recommended)
                         CompanyID = employee.CompanyId,
                         CreatedDate = DateTime.UtcNow,
                         Deleted = false,
                         UserStatus = true,
                         EmployeeId = employee.Id
-                    });
+                    };
 
-                    systemUser = _systemUserService.GetSystemUserByEmployeeId(request.UserId);
+                    _systemUserService.InsertSystemUser(currentUser);
+                }
+                else
+                {
+                    currentUser.UserName = request.UserName;
+                    if (!string.IsNullOrEmpty(request.Password))
+                    {
+                        currentUser.Password = request.Password; // Store securely (hashing recommended)
+                    }
+                    _systemUserService.UpdateSystemUser(currentUser);
                 }
 
-                _systemUserAuthorityService.DeleteByUserId(systemUser.Id);
+                // Update access control
+                _systemUserAuthorityService.DeleteByUserId(currentUser.Id);
 
                 if (request.Authorities != null && request.Authorities.Any())
                 {
@@ -444,13 +459,14 @@ namespace Mobi.Web.Controllers
                     {
                         var mapping = new SystemUserAuthorityMapping
                         {
-                            SystemUserID = systemUser.Id,
+                            SystemUserID = currentUser.Id,
                             ScreenAuthority = authority,
                             ScreenAuthoritySystemName = authority.Replace(" ", "").ToLower()
                         };
                         _systemUserAuthorityService.Insert(mapping);
                     }
                 }
+
                 TempData["SuccessMessage"] = "Access control updated successfully.";
             }
             catch (Exception ex)
@@ -460,6 +476,7 @@ namespace Mobi.Web.Controllers
 
             return RedirectToAction("Index");
         }
+
 
     }
 }
