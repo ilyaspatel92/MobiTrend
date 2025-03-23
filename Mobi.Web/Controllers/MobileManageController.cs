@@ -46,7 +46,8 @@ namespace Mobi.Web.Controllers
                 query = query.Where(e => e.FileNumber == filenumber);
             }
 
-            var employeeViewModels = _employeeFactory.PrepareEmployeeViewModels(query.ToList());
+
+            var employeeViewModels = _employeeFactory.PrepareEmployeeViewModels(query.ToList(),true);
 
             return Json(new
             {

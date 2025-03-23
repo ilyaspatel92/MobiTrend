@@ -766,6 +766,12 @@ progress {
   .container-lg, .container-md, .container-sm, .container {
     max-width: 960px;
   }
+    .login-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        min-height: 100%;
+    }
 }
 @media (min-width: 1200px) {
   .container-xl, .container-lg, .container-md, .container-sm, .container {
