@@ -15212,7 +15212,7 @@ html.maximized-card {
 }
 .login-logo,
 .register-logo {
-  margin-bottom: 0.9rem;
+  margin-bottom: 3.9rem;
   font-size: 2.1rem;
   font-weight: 300;
   text-align: center;
@@ -15225,16 +15225,26 @@ html.maximized-card {
 
 .login-page,
 .register-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+.login-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    min-height: 100%;
 }
 
 .login-box,
 .register-box {
-  width: 360px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100%;
 }
 @media (max-width: 576px) {
   .login-box,
@@ -15300,7 +15310,7 @@ html.maximized-card {
 
 .login-box-msg,
 .register-box-msg {
-  padding: 0 20px 20px;
+  padding: 0 30px 30px;
   margin: 0;
   text-align: center;
 }
