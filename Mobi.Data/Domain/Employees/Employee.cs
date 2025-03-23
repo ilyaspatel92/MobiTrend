@@ -20,6 +20,7 @@
         public bool IsQrVerify { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? MobRegistrationDate { get; set; }
+        public int CreatedBy { get; set; }
 
         
 

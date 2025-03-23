@@ -89,6 +89,11 @@
                     <input asp-for="CID" type="CID" class="form-control" placeholder="Enter CID">
                     <span asp-validation-for="CID" class="text-danger"></span>
                 </div>
+                <div class="col-md-6">
+                    <label asp-for="UserName" class="form-label">UserName</label>
+                    <input asp-for="UserName" type="UserName" class="form-control" placeholder="Enter UserName" disabled>
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
                 <div class="col-md-12 mt-4">
                     <label class="form-label">Password</label>
                     <div class="input-group">
