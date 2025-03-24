@@ -55,7 +55,10 @@ namespace Mobi.Web.Factories.Employees
             if (isMobileManage)
                 emp.CreatedBy = _systemUserService.GetSystemUserById(employee.CreatedBy)?.EmployeeName;
             else
+            {
+                emp.UserName = employee.UserName;
                 emp.CompanyId = _companyService.GetCompanyById(employee.CompanyId)?.CompanyId;
+            }
 
             return emp;
         }

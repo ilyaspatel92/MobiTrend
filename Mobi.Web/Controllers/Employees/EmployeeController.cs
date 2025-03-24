@@ -91,6 +91,8 @@ namespace Mobi.Web.Controllers.Employees
 
             if (ModelState.IsValid)
             {
+                Random random = new Random();
+
                 var employee = new Employee
                 {
                     NameEng = model.NameEng,
@@ -103,7 +105,7 @@ namespace Mobi.Web.Controllers.Employees
                     CompanyId = _companyService.GetCompanies(string.Empty).FirstOrDefault()?.Id ?? 1,
                     CID = model.CID,
                     CreatedDate = DateTime.Now,
-                    UserName = model.NameEng,
+                    UserName = model.NameEng+"_"+ random.Next(10000, 99999),
                     RegistrationType = (int)RegistrationType.Web,
                     CreatedBy = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value)
                 };

@@ -26,6 +26,7 @@
 
             <!-- Form Section -->
             <form id="userForm">
+                <input type="hidden" name="employeeId" >
                 <div class="row mb-3">
                     <div class="col-md-6 position-relative">
                         <label for="EmployeeName" class="form-label">Employee Name</label>
@@ -78,6 +79,8 @@
         const employeeNameInput = document.getElementById("EmployeeName");
         const employeeNameDropdown = document.getElementById("EmployeeNameDropdown");
         const userNameInput = document.getElementById("UserName");
+        const employeeId = document.getElementById("employeeId");
+
 
         // Adjust Dropdown
         function adjustDropdownWidth() {
@@ -117,6 +120,8 @@
                                 userNameInput.value = item.userName || "";
                                 selectedUserId = item.id;
                                 employeeNameDropdown.style.display = "none";
+
+                                employeeId= item.id;
                                 fetchAccess(selectedUserId);
                             });
                             employeeNameDropdown.appendChild(option);
