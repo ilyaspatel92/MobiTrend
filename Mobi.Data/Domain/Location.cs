@@ -11,9 +11,9 @@ namespace Mobi.Data.Domain
         public DateTime CreatedDate { get; set; }
         public string? GPSLocationAddress { get; set; }
 
-        [Column(TypeName = "decimal(18, 15)")]
+        [Column(TypeName = "decimal(18, 9)")]
         public decimal Latitude { get; set; }
-        [Column(TypeName = "decimal(18, 15)")]
+        [Column(TypeName = "decimal(18, 9)")]
         public decimal Longitude { get; set; }
         public decimal SetRadius { get; set; }
         public string SetPolygon { get; set; }

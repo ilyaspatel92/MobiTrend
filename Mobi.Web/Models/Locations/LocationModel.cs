@@ -18,11 +18,11 @@ namespace Mobi.Web.Models.Locations
         public string? ProofTypeName { get; set; }
 
         //[Required(ErrorMessage = "Latitude is required.")]
-        [Column(TypeName = "decimal(18, 15)")]
+        [Column(TypeName = "decimal(18, 9)")]
         public decimal Latitude { get; set; }
 
         //[Required(ErrorMessage = "Longitude is required.")]
-        [Column(TypeName = "decimal(18, 15)")]
+        [Column(TypeName = "decimal(18, 9)")]
         public decimal Longitude { get; set; }
 
         public decimal SetRadius { get; set; }

@@ -116,8 +116,9 @@
     </div>
 </form>
 
+
 @section Scripts {
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkN-Q_IuLUmbFX_QHCzEEecAufZmwpZ7k&libraries=places,drawing" async defer></script>
+
     @* <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkN-Q_IuLUmbFX_QHCzEEecAufZmwpZ7k&libraries=places,drawing&callback=initMap" async defer></script> *@
     <script>
         let map, marker, autocomplete, geocoder, polygon, circle;
@@ -236,7 +237,7 @@
             // Clear existing shapes
             clearShapes();
 
-            const radius = prompt("Enter radius in meters:", "1000");
+            const radius = prompt("Enter radius in meters:", "10");
             if (isNaN(radius) || radius <= 0) {
                 alert("Please enter a valid radius in meters.");
                 return;
@@ -581,3 +582,6 @@
 
     <!-- Include Google Maps API with Drawing Library -->
 }
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkN-Q_IuLUmbFX_QHCzEEecAufZmwpZ7k&libraries=places,drawing&callback=initMap"></script>
+

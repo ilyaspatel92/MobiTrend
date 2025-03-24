@@ -1,4 +1,6 @@
-﻿namespace Mobi.Data.Domain
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Mobi.Data.Domain
 {
     public class EmployeeAttendanceLogs : BaseEntity
     {
@@ -8,9 +10,9 @@
         public bool ActionTypeStatus { get; set; }
         public int ProofTypeId { get; set; }
         public bool IsVerifiedLocation { get; set; }
-        public string CurrentLocation { get; set; }
-
+        [Column(TypeName = "decimal(18, 9)")]
         public decimal Latitude { get; set; }
+        [Column(TypeName = "decimal(18, 9)")]
         public decimal Longtitude { get; set; }
         public string MobileSerialNumber { get; set; }
         public int PictureId { get; set; }
