@@ -100,6 +100,7 @@
                         <input type="password" id="passwordInput" name="NewPassword" class="form-control" placeholder="Enter New Password" aria-describedby="passwordButton" disabled>
                         <button type="button" id="editPasswordButton" class="btn btn-secondary">Change Password</button>
                         <button type="button" id="savePasswordButton" class="btn btn-primary d-none">Save</button>
+                        <button type="button" id="cancelPasswordButton" class="btn btn-danger d-none">Cancel</button>
                     </div>
                     <span id="passwordMessage" class="text-success mt-2 d-none"></span>
                 </div>
@@ -148,6 +149,7 @@
             const employeeIdInput = document.getElementById("employeeId");
             const editButton = document.getElementById("editPasswordButton");
             const saveButton = document.getElementById("savePasswordButton");
+            const cancelButton = document.getElementById("cancelPasswordButton");
             const passwordMessage = document.getElementById("passwordMessage");
 
             // Enable editing mode
@@ -156,7 +158,16 @@
                 passwordInput.value = ""; // Clear the password field
                 saveButton.classList.remove("d-none");
                 editButton.classList.add("d-none");
+                cancelButton.classList.remove("d-none");
                 passwordInput.focus();
+            });
+
+            // Cancel editing mode
+            cancelButton.addEventListener("click", function () {
+                passwordInput.setAttribute("disabled", true);
+                saveButton.classList.add("d-none");
+                cancelButton.classList.add("d-none");
+                editButton.classList.remove("d-none");
             });
 
             // Save the password via AJAX

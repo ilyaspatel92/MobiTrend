@@ -38,20 +38,27 @@
                     <!-- Form -->
                     <form asp-action="Edit" method="post">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="EmployeeName">Employee Name</label>
                                     <input asp-for="EmployeeName" class="form-control" placeholder="Enter employee name" readonly/>
                                     <span asp-validation-for="EmployeeName" class="text-danger"></span>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="UserName">User Name</label>
-                                    <input asp-for="UserName" class="form-control" placeholder="Enter username" readonly />
-                                    <span asp-validation-for="UserName" class="text-danger"></span>
+                                    <input asp-for="UserName" class="form-control" placeholder="Enter username"/>
+                                    @* <span asp-validation-for="UserName" class="text-danger"></span> *@
                                 </div>
                             </div>
+                            @* <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="UserName">Password</label>
+                                    <input asp-for="Password" class="form-control" placeholder="Enter Password" />
+                                    <span asp-validation-for="UserName" class="text-danger"></span>
+                                </div>
+                            </div>  *@
                         </div>
 
                        
