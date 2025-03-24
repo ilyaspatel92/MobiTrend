@@ -430,7 +430,7 @@ namespace Mobi.Web.Controllers
                         EmployeeName = employee.NameEng,
                         UserName = request.UserName,
                         Email = employee.Email,
-                        Password = request.Password, // Store securely (hashing recommended)
+                        Password = PasswordHelper.HashPassword(request.Password),
                         CompanyID = employee.CompanyId,
                         CreatedDate = DateTime.UtcNow,
                         Deleted = false,

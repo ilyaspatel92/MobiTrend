@@ -9,7 +9,7 @@
                         <i class="fas fa-arrow-left"></i> Back to List
                     </a>
                     <button type="submit" class="btn btn-primary" id="saveLocationButton">
-                      <i class="fas fa-plus"></i>  Save Location
+                        <i class="fas fa-plus"></i>  Save Location
                     </button>
                 </div>
             </div>
@@ -137,7 +137,18 @@
                 console.error("Map container not found!");
             }
         });
+
+
+
+
         function initMap() {
+
+            if (typeof google === "undefined" || typeof google.maps === "undefined") {
+                console.error("Google Maps API is not loaded. Retrying...");
+                location.reload()
+                setTimeout(initMap, 1000); // Retry in 1 second
+                return;
+            }
             // Initialize the map
             map = new google.maps.Map(document.getElementById("locationmap"), {
                 center: centerCoordinates, // Default location (New York City)
