@@ -1,22 +1,53 @@
 ﻿@model RegisterMobileViewModel
 
 <div class="container mt-5 text-center" style="font-family: Arial, sans-serif;">
-    <h4 class="mb-4">Mobile Register using QR</h4>
-    <p class="text-muted mb-4">Please scan the QR code using the mobile app</p>
+    <h4 id="pageTitle" class="mb-4">Mobile Register using QR</h4>
+    <p id="pageSubtitle" class="text-muted mb-4">Please scan the QR code using the mobile app</p>
 
-    @if (!string.IsNullOrEmpty(Model.QrCode))
-    {
-        <div style="display: inline-block; padding: 20px; border: 1px solid #e0e0e0; border-radius: 12px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-            <img src="@Model.QrCode" alt="QR Code" style="width: 200px; height: 200px; border-radius: 8px;" />
-        </div>
-    }
-    else
-    {
-        <p class="text-muted">No QR Code available</p>
-    }
-    <div class="container mt-5 text-center" style="font-family: Arial, sans-serif;">
-    <a href="@Url.Action("MobileManage")" class="btn btn-light" style="border: 1px solid #e0e0e0; color: #6c757d; border-radius: 8px; padding: 10px 20px; font-size: 16px;">
-        Back to list
-    </a>
+    <div id="qrSection">
+        @if (!string.IsNullOrEmpty(Model.QrCode))
+        {
+            <div id="qrContainer" style="display: inline-block; padding: 20px; border: 1px solid #e0e0e0; border-radius: 12px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                <img src="@Model.QrCode" alt="QR Code" style="width: 200px; height: 200px; border-radius: 8px;" />
+            </div>
+        }
+        else
+        {
+            <p class="text-muted">No QR Code available</p>
+        }
+    </div>
+
+    <div id="successMessage" class="alert alert-success d-none mt-4">
+        ✅ Your mobile has been successfully registered!
+    </div>
+
+    <div class="mt-4">
+        <a href="@Url.Action("MobileManage")" class="btn btn-light" style="border: 1px solid #e0e0e0; color: #6c757d; border-radius: 8px; padding: 10px 20px; font-size: 16px;">
+            Back to list
+        </a>
     </div>
 </div>
+
+<script>
+    function checkQrStatus() {
+        $.ajax({
+            url: "@Url.Action("CheckQrStatus", "MobileManage")",
+            type: "GET",
+            data: { employeeId: @Model.EmployeeId },
+            success: function (response) {
+                if (response.isVerified) {
+                    // Hide the QR section and title
+                    $("#qrSection").hide();
+                    $("#pageTitle").hide();
+                    $("#pageSubtitle").hide();
+
+                    // Show the success message
+                    $("#successMessage").removeClass("d-none");
+                }
+            }
+        });
+    }
+
+    // Poll the server every 2 seconds
+    setInterval(checkQrStatus, 2000);
+</script>

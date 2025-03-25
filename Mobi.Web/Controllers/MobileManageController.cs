@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Mobi.Data.Domain.Employees;
 using Mobi.Data.Enums;
 using Mobi.Service.AccessControls;
 using Mobi.Service.Employees;
@@ -71,11 +72,24 @@ namespace Mobi.Web.Controllers
 
             var viewModel = new RegisterMobileViewModel
             {
+                EmployeeId = employee.Id,
                 QrCode = qrCode
             };
 
             return View(viewModel);
         }
+
+        [HttpGet]
+        public IActionResult CheckQrStatus(int employeeId)
+        {
+            var employee = _employeeService.GetEmployeeById(employeeId);
+
+            if (employee == null)
+                return NotFound();
+
+            return Json(new { isVerified = employee.IsQrVerify });
+        }
+
 
         [HttpGet]
         public IActionResult EditMobile(int id)
