@@ -105,7 +105,7 @@ namespace Mobi.Web.Controllers.Locations
                     SetRadius = model.SetRadius,
                     GPSLocationAddress = model.GPSLocationAddress,
                     CompanyId = 1,
-                    CreatedDate = DateTime.Now
+                    CreatedDate = DateTime.UtcNow.ToLocalTime()
                 };
 
                 _locationService.AddLocation(location);

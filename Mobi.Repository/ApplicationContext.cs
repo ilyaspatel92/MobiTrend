@@ -47,7 +47,7 @@ public class ApplicationContext : DbContext
                Id=1,
                CompanyName="Mobi",
                CompanyId= "78951",
-               CreatedDate= DateTime.Now
+               CreatedDate= DateTime.UtcNow.ToLocalTime(),
            }
         );
         // Seed data for Language
@@ -99,7 +99,7 @@ public class ApplicationContext : DbContext
                 UserStatus = true,
                 Password = BCrypt.Net.BCrypt.HashPassword("Mobitend@2025"),
                 CompanyID = 1,
-                CreatedDate = DateTime.Now,
+                CreatedDate = DateTime.UtcNow.ToLocalTime(),
                 Deleted = false
             }
         );

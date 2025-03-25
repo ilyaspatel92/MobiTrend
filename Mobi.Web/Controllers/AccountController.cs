@@ -130,7 +130,7 @@ namespace Mobi.Web.Controllers
             var token = Guid.NewGuid().ToString(); // Replace with your token generation logic
             var resetLink = Url.Action("ResetPassword", "Account", new { token = token, email = email }, Request.Scheme);
 
-            _systemUserService.SavePasswordResetToken(email, token,DateTime.Now.AddHours(1));
+            _systemUserService.SavePasswordResetToken(email, token, DateTime.UtcNow.ToLocalTime().AddHours(1));
 
             // Send reset link via email
             var subject = "Password Reset Request";

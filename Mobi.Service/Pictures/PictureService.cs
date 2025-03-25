@@ -91,7 +91,7 @@ namespace Mobi.Service.Pictures
             {
                 Name = fileName,
                 Path = "Uploads/" + fileName,
-                CreatedOn = DateTime.Now
+                CreatedOn = DateTime.UtcNow.ToLocalTime()
             };
             InsertPicture(picture);
 
