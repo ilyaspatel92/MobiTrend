@@ -99,14 +99,26 @@
 					{ data: "fileNumber" },
 					{ data: "employeeName" },
 					{ data: "dateAndTime" },
-					{
-						data: "actionTypeId",
-						render: function (data, type, row) {
-							return `<span class="view-mode">${row.actionTypeName}</span>
+					// {
+					// 	data: "actionTypeId",
+					// 	render: function (data, type, row) {
+					// 		return `<span class="view-mode">${row.actionTypeName}</span>
+					// 				<select class="form-select edit-mode d-none">
+					// 					<option value="1" ${data == 1 ? "selected" : ""}>IN</option>
+					// 					<option value="2" ${data == 2 ? "selected" : ""}>OUT</option>
+					// 				</select>`;
+					// 	}
+					// },
+					data: "actionTypeId",
+					render: function (data, type, row) {
+						if (type === 'display') {
+							return `<span class="view-mode">${data == 1 ? 'IN' : 'OUT'}</span>
 									<select class="form-select edit-mode d-none">
-										<option value="1" ${data == 1 ? "selected" : ""}>IN</option>
-										<option value="2" ${data == 2 ? "selected" : ""}>OUT</option>
+										<option value="1" ${data == 1 ? 'selected' : ''}>IN</option>
+										<option value="2" ${data == 2 ? 'selected' : ''}>OUT</option>
 									</select>`;
+						}
+						return data; // Default return for other operations
 						}
 					},
 					{
@@ -145,33 +157,39 @@
 						extend: 'print',
 						text: '<i class="fas fa-print"></i> Print',
 						className: 'btn btn-secondary',
-						action: function (e, dt, node, config)
-						{
-							let dataCount = dt.rows({ search: 'applied' }).count(); // Get count of filtered rows
-
-							if (dataCount === 0) {
-								alert("No data available to print.");
+						// Check if the table has any visible data
+							if (dt.rows({ search: 'applied' }).count() === 0) {
+								alert('No records found to print.');
 							} else {
-								$.fn.dataTable.ext.buttons.print.action.call(this, e, dt, node, config);
+								$.fn.dataTable.ext.buttons.print.action.call(this, e, dt, button, config);
 							}
-						}
+						},
+
+						exportOptions: {
+							columns: ':not(:last-child)',
+							// columns: ':visible',
+							format: {
+								body: function (data, row, column, node) {
+									var span = $(node).find('span.view-mode').text();
+									return span ? span : data;
+								}
 					}
 				]
 			});
-					$(document).on('click', '.buttons-print', function () {
-			let dataCount = $('#attendanceTable').DataTable().rows({ search: 'applied' }).count();
+		// 			$(document).on('click', '.buttons-print', function () {
+		// 	let dataCount = $('#attendanceTable').DataTable().rows({ search: 'applied' }).count();
 
-			if (dataCount === 0) {
-				alert("No data available to print.");
-			} else {
-				$('.edit-mode, select, .d-none').addClass('hidden-print');
+		// 	if (dataCount === 0) {
+		// 		alert("No data available to print.");
+		// 	} else {
+		// 		$('.edit-mode, select, .d-none').addClass('hidden-print');
 
-				setTimeout(() => {
-					window.print();
-					$('.hidden-print').removeClass('hidden-print'); // Restore elements after printing
-				}, 200);
-			}
-		});
+		// 		setTimeout(() => {
+		// 			window.print();
+		// 			$('.hidden-print').removeClass('hidden-print'); // Restore elements after printing
+		// 		}, 200);
+		// 	}
+		// });
 
 
 			// Search functionality

@@ -466,12 +466,23 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     return BadRequest(response);
                 }
 
+                var actionTypeStatus = false;
+                if (queryModel.LocationId > 0)
+                    actionTypeStatus = true;
+                else
+                {
+                    var isfrelocation = _employeeLocationService.IsFreeLocationSelected(employee.Id);
+                    if (isfrelocation)
+                        actionTypeStatus = true;
+                }
+
+
                 _employeeAttendanceService.AddLog(new EmployeeAttendanceLogs()
                 {
-                    EmployeeId= employee.Id,
-                    AttendanceDateTime =queryModel.AttendanceDateTime,
-                    TransferDateTime=queryModel.TransferDateTime,
-                    MobileSerialNumber=queryModel.MobileSerialNumber,
+                    EmployeeId = employee.Id,
+                    AttendanceDateTime = queryModel.AttendanceDateTime,
+                    TransferDateTime = queryModel.TransferDateTime,
+                    MobileSerialNumber = queryModel.MobileSerialNumber,
                     LocationId = queryModel.LocationId,
                     LocationBeaconMappingId = queryModel.BeaconId,
                     Latitude = queryModel.Latitude,
@@ -480,7 +491,8 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     ActionTypeId = (int)queryModel.ActionType, //In and out enum 
                     ProofTypeId = (int)queryModel.ActionTypeMode, // GPS or BEacon 
                     IsVerifiedLocation = queryModel.IsverifiedLocation,
-                    CreatedDateTime=DateTime.UtcNow
+                    CreatedDateTime = DateTime.UtcNow,
+                    ActionTypeStatus=actionTypeStatus
                 });
 
                 response.Success = true;
