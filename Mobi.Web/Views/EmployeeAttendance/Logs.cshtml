@@ -120,7 +120,14 @@
 						}
 					},
 					{ data: "proofType" },
-					{ data: "location" },
+					{	
+						data: "location",
+						render: function (data, type, row) {
+							return `<a href="${row.googleMapsUrl}" target="_blank" class="btn btn-sm btn-primary">
+										<i class="fas fa-map-marker-alt"></i> ${data}
+									</a>`;
+						}
+					},
 					{
 						data: "id",
 						render: function (data, type, row) {

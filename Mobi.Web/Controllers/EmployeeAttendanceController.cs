@@ -85,7 +85,12 @@ namespace Mobi.Web.Controllers
                 TransStatusName = entry.Log.ActionTypeStatus ? "Approved" : "Rejected",  // Added TransStatusName
                 ActionTypeClass = GetActionTypeClass(entry.Log.ActionTypeId),
                 ProofType = GetProofType(entry.Log.ProofTypeId),
-                Location = _locationService.GetLocationById(Convert.ToInt32(entry.Log.LocationId))?.LocationNameEnglish
+                Location = entry.Log.LocationId > 0
+                            ? _locationService.GetLocationById(Convert.ToInt32(entry.Log.LocationId))?.LocationNameEnglish
+                            : "GPS Location",
+                GoogleMapsUrl = entry.Log.LocationId > 0
+                            ? $"https://www.google.com/maps?q={_locationService.GetLocationById(Convert.ToInt32(entry.Log.LocationId))?.Latitude},{_locationService.GetLocationById(Convert.ToInt32(entry.Log.LocationId))?.Longitude}"
+                            : $"https://www.google.com/maps?q={entry.Log.Latitude},{entry.Log.Longtitude}"
             }).ToList();
 
             return Json(new

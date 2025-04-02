@@ -26,6 +26,7 @@
         public string TransStatusName { get; set; }
         public string ProofType { get; set; }
         public string Location { get; set; }
+        public string GoogleMapsUrl { get; set; }
         public bool ActionTypeStatus { get; set; }
     }
 }
