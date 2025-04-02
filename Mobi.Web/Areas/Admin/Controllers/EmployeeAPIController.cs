@@ -5,6 +5,7 @@ using Mobi.Data.Domain;
 using Mobi.Data.Domain.Employees;
 using Mobi.Data.Enums;
 using Mobi.Service.EmployeeAttendances;
+using Mobi.Service.EmployeeLocationServices;
 using Mobi.Service.Employees;
 using Mobi.Service.Helpers;
 using Mobi.Service.Locations;
@@ -26,13 +27,15 @@ namespace Mobi.Web.Areas.Admin.Controllers
         private readonly IPictureService _pictureService;
         private readonly IEmployeeAttendanceService _employeeAttendanceService;
         private readonly ILocationService _locationService;
+        private readonly IEmployeeLocationService _employeeLocationService;
 
         public EmployeeAPIController(IEmployeeService employeeService,
                                      IEmployeeFactory employeeFactory,
                                      JwtTokenHelper jwtTokenHelper,
                                      IPictureService pictureService,
                                      IEmployeeAttendanceService employeeAttendanceService,
-                                     ILocationService locationService)
+                                     ILocationService locationService,
+                                     IEmployeeLocationService employeeLocationService)
         {
             _employeeService = employeeService;
             _employeeFactory = employeeFactory;
@@ -40,6 +43,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
             _pictureService = pictureService;
             _employeeAttendanceService = employeeAttendanceService;
             _locationService = locationService;
+            _employeeLocationService = employeeLocationService;
         }
 
         [HttpPost]
@@ -126,6 +130,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     empObject.CID = employee.CID;
                     empObject.MobRegistrationDate = employee.MobRegistrationDate;
                     empObject.Token = token;
+                    empObject.IsFreeLocation = _employeeLocationService.IsFreeLocationSelected(employee.Id);
 
                     var picture = _pictureService.GetPictureById(employee?.PictureId ?? 0);
                     if (picture is not null)
@@ -376,7 +381,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetCurrentEmployeeDetails()
         {
-            ResponseModel<Employee> response = new ResponseModel<Employee>();
+            ResponseModel<ExpandoObject> response = new ResponseModel<ExpandoObject>();
             var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             var employee = _employeeService.GetCurrentEmployee(token);
             try
@@ -405,6 +410,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                 empObject.CID = employee.CID;
                 empObject.MobRegistrationDate = employee.MobRegistrationDate;
                 empObject.Token = token;
+                empObject.IsFreeLocation = _employeeLocationService.IsFreeLocationSelected(employee.Id);
 
                 var picture = _pictureService.GetPictureById(employee?.PictureId ?? 0);
                 if (picture is not null)
