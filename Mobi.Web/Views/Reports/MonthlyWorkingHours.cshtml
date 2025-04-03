@@ -13,11 +13,11 @@
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
 <!-- DataTables Buttons -->
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css">
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+
 
 <div class="container-fluid">
     <div class="row">
@@ -85,9 +85,20 @@
                 buttons: [
                     {
                         extend: 'print',
-                        text: 'Print Report',
+                        text: '<i class="fas fa-print"></i> Print',
+                        className: 'btn btn-secondary',
                         title: 'Monthly Working Hours Report',
                         exportOptions: { columns: ':visible' },
+                        action: function (e, dt, node, config)
+                        {
+                            let dataCount = dt.rows({ search: 'applied' }).count(); // Get count of filtered rows
+
+                            if (dataCount === 0) {
+                                alert("No data available to print.");
+                            } else {
+                                $.fn.dataTable.ext.buttons.print.action.call(this, e, dt, node, config);
+                            }
+                        },
                         customize: function (win) {
                             $(win.document.body).prepend('<h3 class="text-center">Company XYZ</h3>');
                             $(win.document.body).prepend('<h4 class="text-center">Monthly Working Hours Report</h4>');

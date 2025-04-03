@@ -130,7 +130,7 @@ namespace Mobi.Web.Controllers.Employees
             var employee = _employeeService.GetEmployeeById(id);
             if (employee == null)
             {
-                return NotFound();
+                return RedirectToAction("List", "Employee");
             }
             // Use the factory to prepare the ViewModel
             var EmployeeModel = _employeeFactory.PrepareEmployeeViewModel(employee);
@@ -157,6 +157,12 @@ namespace Mobi.Web.Controllers.Employees
 
                 ModelState.AddModelError("FileNumber", "The FileNumber is already exsist");
             }
+            var mobi = _employeeService.IsMobileNumberExists(model.MobileNumber, id);
+            if (mobi)
+            {
+
+                ModelState.AddModelError("MobileNumber", "The MobileNumber is already exsist");
+            }
 
             if (ModelState.IsValid)
             {
@@ -164,7 +170,7 @@ namespace Mobi.Web.Controllers.Employees
                 var existingEmployee = _employeeService.GetEmployeeById(id);
                 if (existingEmployee == null)
                 {
-                    return NotFound();
+                    return RedirectToAction("List", "Employee");
                 }
                 // Check for email uniqueness if the email is being updated
                 if (existingEmployee.Email != model.Email)
@@ -217,7 +223,7 @@ namespace Mobi.Web.Controllers.Employees
             var employee = _employeeService.GetEmployeeById(id);
             if (employee == null)
             {
-                return NotFound();
+                return RedirectToAction("List", "Employee");
             }
 
             var EmployeeModel = _employeeFactory.PrepareEmployeeViewModel(employee);

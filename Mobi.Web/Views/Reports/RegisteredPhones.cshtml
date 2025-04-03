@@ -25,9 +25,6 @@
                         <tbody></tbody>
                     </table>
                 </div>
-                <div class="card-footer text-right">
-                    <button class="btn btn-primary" id="printReport"><i class="fas fa-print"></i> Print Report</button>
-                </div>
             </div>
         </div>
     </div>
@@ -51,7 +48,8 @@
                 buttons: [
                     {
                         extend: 'print',
-                        text: 'Print Report',
+                        text: '<i class="fas fa-print"></i> Print',
+                        className: 'btn btn-secondary',
                         title: '',
                         exportOptions: { columns: ':visible' },
                         customize: function (win) {

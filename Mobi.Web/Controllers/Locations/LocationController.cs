@@ -128,7 +128,7 @@ namespace Mobi.Web.Controllers.Locations
             var location = _locationService.GetLocationById(id);
             if (location == null)
             {
-                return NotFound();
+                return RedirectToAction("List", "Location");
             }
 
             var locationModel = _locationFactory.PrepareLocationViewModel(location);
@@ -151,7 +151,7 @@ namespace Mobi.Web.Controllers.Locations
                 var existingLocation = _locationService.GetLocationById(id);
                 if (existingLocation == null)
                 {
-                    return NotFound();
+                    return RedirectToAction("List", "Location");
                 }
 
                 existingLocation.LocationNameEnglish = model.LocationNameEnglish;
@@ -201,7 +201,7 @@ namespace Mobi.Web.Controllers.Locations
             var location = _locationService.GetLocationById(id);
             if (location == null)
             {
-                return NotFound();
+                return RedirectToAction("List", "Location");
             }
 
             var locationModel = _locationFactory.PrepareLocationViewModel(location);

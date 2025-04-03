@@ -16,7 +16,7 @@
             if (!domContentLoadedCallbacks.length) {
                 document.addEventListener('DOMContentLoaded', () => {
                     for (const callback of domContentLoadedCallbacks) {
-                        callback();
+                        //callback();
                     }
                 });
             }
