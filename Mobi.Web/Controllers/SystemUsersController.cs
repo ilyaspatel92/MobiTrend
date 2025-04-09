@@ -171,7 +171,7 @@ namespace Mobi.Web.Controllers
                 TempData["SuccessMessage"] = "System user created successfully!";
                 return RedirectToAction("Index");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Log the error (ex can be logged in a real scenario)
                 ModelState.AddModelError(string.Empty, "An error occurred while creating the system user.");
@@ -288,7 +288,7 @@ namespace Mobi.Web.Controllers
                     TempData["SuccessMessage"] = "System user updated successfully!";
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Log the error (in a real-world scenario)
                 ModelState.AddModelError(string.Empty, "An error occurred while updating the system user.");

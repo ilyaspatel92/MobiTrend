@@ -118,232 +118,189 @@
 
 
 @section Scripts {
-
+    @* <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkN-Q_IuLUmbFX_QHCzEEecAufZmwpZ7k&libraries=places,drawing" async defer></script> *@
     @* <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkN-Q_IuLUmbFX_QHCzEEecAufZmwpZ7k&libraries=places,drawing&callback=initMap" async defer></script> *@
+
     <script>
-        let map, marker, autocomplete, geocoder, polygon, circle;
-                const latitude = parseFloat("@Model.Latitude");
-        const longitude = parseFloat("@Model.Longitude");
+    let map, marker, autocomplete, polygon, circle;
 
-        // Fallback to default coordinates if the model values are null or 0
-        const centerCoordinates = (latitude && longitude)
-            ? { lat: latitude, lng: longitude }
-            : { lat: 40.7128, lng: -74.0060 };
+    function initMap() {
+        //console.log("✅ Google Maps API Loaded!");
 
-         document.addEventListener("DOMContentLoaded", function () {
-            if (document.getElementById("locationmap")) {
-                initMap();
-            } else {
-                console.error("Map container not found!");
-            }
+        if (typeof google === "undefined" || !google.maps) {
+            console.log("❌ Google Maps API failed to load.");
+            return;
+        }
+
+        // Ensure map container exists
+            const mapElement = document.getElementById("locationmap");
+        if (!mapElement) {
+            console.log("❌ ERROR: Map container not found!");
+            return;
+        }
+
+        // Initialize Map
+        map = new google.maps.Map(mapElement, {
+            center: { lat: 40.7128, lng: -74.0060 }, // Default to NYC
+            zoom: 12,
         });
 
+             // Initialize Advanced Marker
+                const markerElement = document.createElement("div");
+                markerElement.innerHTML = "📍"; // Custom marker emoji (optional)
 
+                marker = new google.maps.marker.AdvancedMarkerElement({
+                    position: { lat: 40.7128, lng: -74.0060 },
+                    map: map,
+                    content: markerElement,
+                });
 
+                        // Get the position correctly
+        const markerPosition = marker.position;
+        map.setCenter(markerPosition);
 
-        function initMap() {
+                // Ensure the input exists
+        const autocompleteInput = document.getElementById("autocomplete");
 
-            if (typeof google === "undefined" || typeof google.maps === "undefined") {
-                console.error("Google Maps API is not loaded. Retrying...");
-                location.reload()
-                setTimeout(initMap, 1000); // Retry in 1 second
-                return;
-            }
-            // Initialize the map
-            map = new google.maps.Map(document.getElementById("locationmap"), {
-                center: centerCoordinates, // Default location (New York City)
-                zoom: 15,
+        if (autocompleteInput) {
+            // Use the new PlaceAutocompleteElement
+            placeAutocomplete = new google.maps.places.PlaceAutocompleteElement({
+                inputElement: autocompleteInput,
             });
 
-            // Initialize geocoder
-            geocoder = new google.maps.Geocoder();
-
-            // Initialize marker
-            marker = new google.maps.Marker({
-                map: map,
-                draggable: true,
-                position: centerCoordinates, // Default location
-            });
-
-            // Update coordinates when marker is dragged
-            google.maps.event.addListener(marker, "dragend", function () {
-                const position = marker.getPosition();
-                updateCoordinates(position.lat(), position.lng());
-            });
-
-            // Initialize autocomplete
-            autocomplete = new google.maps.places.Autocomplete(document.getElementById("autocomplete"), {
-                types: ["geocode"],
-            });
-            autocomplete.bindTo("bounds", map);
-
-            // Handle place selection from autocomplete
-            autocomplete.addListener("place_changed", function () {
-                const place = autocomplete.getPlace();
-                if (!place.geometry) {
+            // Event listener for place selection
+            placeAutocomplete.addEventListener("gmp-placeselect", (event) => {
+                const place = event.detail.place;
+                if (!place || !place.location) {
                     alert("No details available for the selected location.");
-                     event.preventDefault();
                     return;
                 }
 
-                // Update map and marker
-                map.setCenter(place.geometry.location);
+                // Update map and marker position
+                map.setCenter(place.location);
                 map.setZoom(15);
-                marker.setPosition(place.geometry.location);
-                updateCoordinates(place.geometry.location.lat(), place.geometry.location.lng());
-            });
-
-            // Handle "Draw Polygon" button
-            document.getElementById("drawPolygonButton").addEventListener("click", drawPolygon);
-
-            // Handle "Set Radius" button
-            document.getElementById("setRadiusButton").addEventListener("click", setRadius);
-
-            // Handle form submission
-            document.getElementById("locationForm").addEventListener("submit", function () {
-                if (polygon) savePolygon();
-                if (circle) saveRadius();
+                marker.setPosition(place.location);
             });
         }
 
-        // Function to update coordinates input fields
-        function updateCoordinates(lat, lng) {
-            document.getElementById("latitude").value = lat.toFixed(6);
-            document.getElementById("longitude").value = lng.toFixed(6);
+        // Load Saved Polygon & Radius (if available)
+        loadSavedShapes();
+
+        // Attach Event Listeners
+        document.getElementById("drawPolygonButton")?.addEventListener("click", drawPolygon);
+        document.getElementById("setRadiusButton")?.addEventListener("click", setRadius);
+        document.getElementById("clearShapesButton")?.addEventListener("click", clearShapes);
+    }
+
+    function loadGoogleMaps() {
+        if (window.google && window.google.maps) {
+            console.warn("⚠️ Google Maps API already loaded.");
+            initMap();
+            return;
         }
 
-        // Draw a polygon on the map
-        function drawPolygon() {
-            // Clear existing shapes
-            clearShapes();
+        const script = document.createElement("script");
+            script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAkN-Q_IuLUmbFX_QHCzEEecAufZmwpZ7k&libraries=places,drawing,marker&callback=initMap";
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+    }
 
-            const drawingManager = new google.maps.drawing.DrawingManager({
-                drawingMode: google.maps.drawing.OverlayType.POLYGON,
-                drawingControl: false,
-                polygonOptions: {
-                    fillColor: "#FF0000",
-                    fillOpacity: 0.35,
-                    strokeWeight: 2,
-                    clickable: true,
-                    editable: true,
-                    zIndex: 1,
-                },
-            });
+    // Ensure Google Maps Loads Before Running initMap
+    document.addEventListener("DOMContentLoaded", loadGoogleMaps);
 
-            drawingManager.setMap(map);
-
-            google.maps.event.addListener(drawingManager, "overlaycomplete", function (event) {
-                if (event.type === google.maps.drawing.OverlayType.POLYGON) {
-                    polygon = event.overlay;
-                    drawingManager.setDrawingMode(null); // Stop drawing mode
-                    drawingManager.setMap(null); // Remove drawing tools
-                    savePolygon();
-                    alert("Polygon drawn!");
-                }
-            });
-        }
-
-        // Set a radius around the marker
-        function setRadius() {
-            // Clear existing shapes
-            clearShapes();
-
-            const radius = prompt("Enter radius in meters:", "10");
-            if (isNaN(radius) || radius <= 0) {
-                alert("Please enter a valid radius in meters.");
-                return;
-            }
-
-            circle = new google.maps.Circle({
-                map: map,
-                radius: parseFloat(radius),
-                center: marker.getPosition(),
-                fillColor: "#00FF00",
-                fillOpacity: 0.35,
-                strokeWeight: 2,
-            });
-
-            map.fitBounds(circle.getBounds()); // Adjust map to fit the circle
-            saveRadius();
-        }
-
-        // Save polygon coordinates to the hidden input
-        function savePolygon() {
-            const polygonPath = polygon
-                .getPath()
-                .getArray()
-                .map(latlng => ({ lat: latlng.lat(), lng: latlng.lng() }));
-            document.getElementById("SetPolygon").value = JSON.stringify(polygonPath);
-        }
-
-        // Save radius value to the hidden input
-        function saveRadius() {
-            document.getElementById("SetRadius").value = circle.getRadius().toFixed(2);
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            // Make sure the button exists before adding event listener
-            const clearButton = document.getElementById("clearShapesButton");
-
-            if (clearButton) {
-                clearButton.addEventListener("click", function () {
-                    clearShapes(); // Clear the polygon and circle from the map
-                    resetHiddenValues(); // Reset the hidden input values
-                });
-            } else {
-                console.error("Clear Shapes button not found!");
-            }
-        });
-
-        // Function to clear polygon and circle from the map
-        function clearShapes() {
-            if (polygon) {
-                polygon.setMap(null); // Remove the polygon from the map
-                polygon = null;
-            }
-            if (circle) {
-                circle.setMap(null); // Remove the circle from the map
-                circle = null;
-            }
-        }
-
-        // Function to reset the hidden input values
-        function resetHiddenValues() {
-            document.getElementById("SetPolygon").value = "";
-            document.getElementById("SetRadius").value = "";
-        }
-    </script>
-
-
-    <!-- JavaScript to control collapsibles and beacon management -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-                    // Retrieve saved polygon and radius from hidden inputs
-        const savedPolygonData = document.getElementById("SetPolygon").value;
-        const savedRadius = parseFloat(document.getElementById("SetRadius").value);
-
-        if (savedPolygonData) {
-            const polygonCoords = JSON.parse(savedPolygonData);
-            polygon = new google.maps.Polygon({
-                paths: polygonCoords,
-                map: map,
+    // Draw a Polygon
+    function drawPolygon() {
+        clearShapes();
+        const drawingManager = new google.maps.drawing.DrawingManager({
+            drawingMode: google.maps.drawing.OverlayType.POLYGON,
+            drawingControl: false,
+            polygonOptions: {
                 fillColor: "#FF0000",
                 fillOpacity: 0.35,
                 strokeWeight: 2,
+                clickable: true,
                 editable: true,
-            });
+                zIndex: 1,
+            },
+        });
 
-            // Fit map to polygon bounds
-            const bounds = new google.maps.LatLngBounds();
-            polygonCoords.forEach(coord => bounds.extend(new google.maps.LatLng(coord.lat, coord.lng)));
-            map.fitBounds(bounds);
+        drawingManager.setMap(map);
+
+        google.maps.event.addListener(drawingManager, "overlaycomplete", function (event) {
+            if (event.type === google.maps.drawing.OverlayType.POLYGON) {
+                polygon = event.overlay;
+                drawingManager.setDrawingMode(null);
+                drawingManager.setMap(null);
+                alert("Polygon drawn!");
+            }
+        });
+    }
+
+    // Set a Radius around the Marker
+    function setRadius() {
+        clearShapes();
+        const radius = prompt("Enter radius in meters:", "1000");
+        if (isNaN(radius) || radius <= 0) {
+            alert("Please enter a valid radius in meters.");
+            return;
+        }
+
+        circle = new google.maps.Circle({
+            map: map,
+            radius: parseFloat(radius),
+            center: marker.position,
+            fillColor: "#00FF00",
+            fillOpacity: 0.35,
+            strokeWeight: 2,
+        });
+
+        map.fitBounds(circle.getBounds());
+    }
+
+    // Clear Polygon & Circle from the Map
+    function clearShapes() {
+        if (polygon) {
+            polygon.setMap(null);
+            polygon = null;
+        }
+        if (circle) {
+            circle.setMap(null);
+            circle = null;
+        }
+    }
+
+    // Load Saved Polygon & Radius from Hidden Inputs
+    function loadSavedShapes() {
+        const savedPolygonData = document.getElementById("SetPolygon")?.value;
+        const savedRadius = parseFloat(document.getElementById("SetRadius")?.value);
+
+        if (savedPolygonData) {
+            try {
+                const polygonCoords = JSON.parse(savedPolygonData);
+                polygon = new google.maps.Polygon({
+                    paths: polygonCoords,
+                    map: map,
+                    fillColor: "#FF0000",
+                    fillOpacity: 0.35,
+                    strokeWeight: 2,
+                    editable: true,
+                });
+
+                // Fit map to polygon bounds
+                const bounds = new google.maps.LatLngBounds();
+                polygonCoords.forEach(coord => bounds.extend(new google.maps.LatLng(coord.lat, coord.lng)));
+                map.fitBounds(bounds);
+            } catch (error) {
+                console.log("❌ Failed to load saved polygon:", error);
+            }
         }
 
         if (!isNaN(savedRadius) && savedRadius > 0) {
             circle = new google.maps.Circle({
                 map: map,
                 radius: savedRadius,
-                center: marker.getPosition(),
+                center: marker.position,
                 fillColor: "#00FF00",
                 fillOpacity: 0.35,
                 strokeWeight: 2,
@@ -352,6 +309,47 @@
             // Fit map to the circle bounds
             map.fitBounds(circle.getBounds());
         }
+    }
+</script>
+
+
+    <!-- JavaScript to control collapsibles and beacon management -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+                    // Retrieve saved polygon and radius from hidden inputs
+        // const savedPolygonData = document.getElementById("SetPolygon").value;
+        // const savedRadius = parseFloat(document.getElementById("SetRadius").value);
+
+        // if (savedPolygonData) {
+        //     const polygonCoords = JSON.parse(savedPolygonData);
+        //     polygon = new google.maps.Polygon({
+        //         paths: polygonCoords,
+        //         map: map,
+        //         fillColor: "#FF0000",
+        //         fillOpacity: 0.35,
+        //         strokeWeight: 2,
+        //         editable: true,
+        //     });
+
+        //     // Fit map to polygon bounds
+        //     const bounds = new google.maps.LatLngBounds();
+        //     polygonCoords.forEach(coord => bounds.extend(new google.maps.LatLng(coord.lat, coord.lng)));
+        //     map.fitBounds(bounds);
+        // }
+
+        // if (!isNaN(savedRadius) && savedRadius > 0) {
+        //     circle = new google.maps.Circle({
+        //         map: map,
+        //         radius: savedRadius,
+        //         center: marker.getPosition(),
+        //         fillColor: "#00FF00",
+        //         fillOpacity: 0.35,
+        //         strokeWeight: 2,
+        //     });
+
+        //     // Fit map to the circle bounds
+        //     map.fitBounds(circle.getBounds());
+        // }
 
 
             const gpsRadio = document.getElementById("gpsProofRadio");
@@ -594,5 +592,4 @@
     <!-- Include Google Maps API with Drawing Library -->
 }
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkN-Q_IuLUmbFX_QHCzEEecAufZmwpZ7k&libraries=places,drawing&callback=initMap"></script>
 

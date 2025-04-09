@@ -129,5 +129,13 @@ namespace Mobi.Service.Employees
             return _employeeRepository.GetAll().Any(e => e.FileNumber is not null && e.FileNumber.Equals(filenumber, StringComparison.OrdinalIgnoreCase));
         }
 
+        public bool IsMobileNumberExists(string mobileNumber, int empId = 0)
+        {
+            if (empId > 0)
+                return _employeeRepository.GetAll().Any(e => e.MobileNumber is not null && e.MobileNumber.Equals(mobileNumber, StringComparison.OrdinalIgnoreCase) && e.Id != empId);
+
+            return _employeeRepository.GetAll().Any(e => e.MobileNumber is not null && e.MobileNumber.Equals(mobileNumber, StringComparison.OrdinalIgnoreCase));
+        }
+        
     }
 }

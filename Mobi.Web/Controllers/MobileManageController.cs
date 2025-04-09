@@ -85,7 +85,7 @@ namespace Mobi.Web.Controllers
             var employee = _employeeService.GetEmployeeById(employeeId);
 
             if (employee == null)
-                return NotFound();
+                return Json(new { isVerified = false });
 
             return Json(new { isVerified = employee.IsQrVerify });
         }

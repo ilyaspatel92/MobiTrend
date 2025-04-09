@@ -83,7 +83,7 @@ namespace Mobi.Web.Controllers.LocationBeacons
                 var existingBeacon = _locationBeaconService.GetLocationBeaconMappingById(model.Id);
                 if (existingBeacon == null)
                 {
-                    return NotFound();
+                    return RedirectToAction("List", "LocationBeacon");
                 }
 
                 existingBeacon.BeaconName = model.BeaconName;
@@ -112,7 +112,7 @@ namespace Mobi.Web.Controllers.LocationBeacons
             var beacon = _locationBeaconService.GetLocationBeaconMappingById(id);
             if (beacon == null)
             {
-                return NotFound();
+                return Ok(new { message = "Beacon deleted Failed not found." });
             }
 
             _locationBeaconService.RemoveLocationBeaconMapping(beacon);

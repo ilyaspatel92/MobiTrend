@@ -5,11 +5,6 @@
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Employee Location Authority Report</h3>
-        <div class="card-tools">
-            <button id="printReport" class="btn btn-primary">
-                <i class="fas fa-print"></i> Print Report
-            </button>
-        </div>
     </div>
     <div class="card-body">
         <table id="employeeReportTable" class="table table-bordered table-striped">
@@ -27,7 +22,9 @@
 </div>
 
 @section Scripts {
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css">
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
 
     <script>
@@ -48,8 +45,18 @@
                 buttons: [
                     {
                         extend: 'print',
-                        text: 'Print',
-                        className: 'btn btn-secondary buttons-print',
+                        text: '<i class="fas fa-print"></i> Print',
+                        className: 'btn btn-secondary',
+                        action: function (e, dt, node, config)
+                        {
+                            let dataCount = dt.rows({ search: 'applied' }).count(); // Get count of filtered rows
+
+                            if (dataCount === 0) {
+                                alert("No data available to print.");
+                            } else {
+                                $.fn.dataTable.ext.buttons.print.action.call(this, e, dt, node, config);
+                            }
+                        },
                         customize: function (win) {
                             win.document.addEventListener('DOMContentLoaded', function () {
                                 let body = win.document.body;
