@@ -285,9 +285,9 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     empObject.Path = url + picture.Path;
                 }
 
+                employee.MobRegistrationDate = DateTime.UtcNow.ToLocalTime();
+
                 _employeeService.UpdateEmployee(employee);
-
-
 
                 empObject.Id = employee.Id;
                 empObject.CompanyId = employee.CompanyId;

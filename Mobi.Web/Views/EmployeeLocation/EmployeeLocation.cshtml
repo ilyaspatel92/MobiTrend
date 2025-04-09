@@ -4,36 +4,49 @@
 <!-- Search Section -->
 <div class="card card-info card-outline mb-4 mx-3 custom-top-spacing">
     <div class="card-header">
-        <h3 class="card-title">Search Employee</h3>
+        <h3 class="card-title mb-0">Search Employee</h3>
     </div>
     <form id="searchForm">
         <div class="card-body">
-            <div class="row mb-4">
+            <div class="row g-3">
                 <div class="col-md-4">
-                    <label for="employeeName" class="form-label"><i class="fas fa-user"></i> Employee Name</label>
-                    <input type="text" name="employeeName" id="employeeName" class="form-control" placeholder="Search by name">
+                    <label for="employeeName" class="form-label fw-semibold">
+                        <i class="fas fa-user me-1"></i>Employee Name
+                    </label>
+                    <input type="text" class="form-control" id="employeeName" name="employeeName" placeholder="Enter employee name">
                 </div>
-                <div class="col-md-3">
-                    <label for="filenumber" class="form-label"><i class="fas fa-file"></i> File Number</label>
-                    <input type="text" name="filenumber" id="filenumber" class="form-control" placeholder="Search by file number">
+                <div class="col-md-4">
+                    <label for="filenumber" class="form-label fw-semibold">
+                        <i class="fas fa-file me-1"></i>File Number
+                    </label>
+                    <input type="text" class="form-control" id="filenumber" name="filenumber" placeholder="Enter file number">
                 </div>
-                <div class="col-md-3">
-                    <label for="siteStatus" class="form-label"><i class="fa-solid fa-square-poll-vertical"></i> Site Status</label>
-                    <select name="siteStatus" id="siteStatus" class="form-select">
+                <div class="col-md-4">
+                    <label for="siteStatus" class="form-label fw-semibold">
+                        <i class="fas fa-chart-bar me-1"></i>Site Status
+                    </label>
+                    <select id="siteStatus" name="siteStatus" class="form-select">
                         <option value="">All</option>
                         <option value="set">Set</option>
                     </select>
                 </div>
-                <div class="col-md-1 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search"></i> Search</button>
-                </div>
-                <div class="col-md-1 d-flex align-items-end">
-                    <button type="button" id="showAll" class="btn btn-secondary w-100"><i class="fas fa-list"></i> Show All</button>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-12 d-flex flex-wrap justify-content-end gap-2">
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="fas fa-search me-1"></i>Search
+                    </button>
+                    <button type="button" id="showAll" class="btn btn-secondary px-4">
+                        <i class="fas fa-list me-1"></i>Show All
+                    </button>
                 </div>
             </div>
         </div>
     </form>
 </div>
+
+
 
 <!-- Employee Locations Table -->
 <div class="app-content">
