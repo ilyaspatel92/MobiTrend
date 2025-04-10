@@ -87,7 +87,7 @@ namespace Mobi.Web.Controllers
                 ActionTypeId = entry.log.ActionTypeId,
                 ActionTypeName = GetActionTypeName(entry.log.ActionTypeId),
                 ProofType = GetProofType(entry.log.ProofTypeId),
-                Location = _locationService.GetLocationById(Convert.ToInt32(entry.log.LocationId))?.LocationNameEnglish,
+                Location = entry.log.LocationId ==0 ? "Free Location" : _locationService.GetLocationById(Convert.ToInt32(entry.log.LocationId))?.LocationNameEnglish,
                 ActionTypeStatus = entry.log.ActionTypeId == 1
             }).ToList();
 

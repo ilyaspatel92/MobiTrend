@@ -40,11 +40,11 @@
                         </div>
                         <div class="col-md-3">
                             <label for="startDate">Start Date:</label>
-                            <input type="date" id="startDate" class="form-control">
+                            <input type="date" id="startDate" class="form-control" required>
                         </div>
                         <div class="col-md-3">
                             <label for="endDate">End Date:</label>
-                            <input type="date" id="endDate" class="form-control">
+                            <input type="date" id="endDate" class="form-control" required>
                         </div>
                         <div class="col-md-3 mt-4">
                             <button id="searchBtn" class="btn btn-primary">Search</button>
@@ -88,6 +88,7 @@
                         extend: 'print',
                         text: '<i class="fas fa-print"></i> Print',
                         className: 'btn btn-secondary',
+                        title:'Daily Attendance Report',
                         action: function (e, dt, node, config)
                         {
                             let dataCount = dt.rows({ search: 'applied' }).count(); // Get count of filtered rows
@@ -99,9 +100,7 @@
                             }
                         },
                         customize: function (win) {
-                            $(win.document.head).find('title').text('');
-                            $(win.document.body).css('font-size', '10pt')                                
-                                .prepend('<h4 class="text-center">Daily Attendance Report</h4>');
+                            $(win.document.head).find('title').text('');                            
 
                             let startDate = $('#startDate').val();
                             let endDate = $('#endDate').val();
@@ -174,6 +173,16 @@
                 let startDate = $('#startDate').val();
                 let endDate = $('#endDate').val();
                 let employeeId = $('#EmployeeId').val();
+
+                if (!startDate) {
+                    alert("Please select a start date.");
+                    return;
+                }
+
+                if (!endDate) {
+                    alert("Please select an end date.");
+                    return;
+                }
 
                 $.ajax({
                     url: '@Url.Action("GetDailyAttendanceData", "Reports")',

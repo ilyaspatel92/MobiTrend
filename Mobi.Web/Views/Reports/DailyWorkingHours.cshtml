@@ -139,6 +139,16 @@
                 let startDate = $('#startDate').val();
                 let endDate = $('#endDate').val();
 
+                if (!startDate) {
+                    toastr.error("Please select a start date.");
+                    return;
+                }
+
+                if (!endDate) {
+                    toastr.error("Please select an end date.");
+                    return;
+                }
+
                 $.ajax({
                     url: '@Url.Action("GetDailyWorkingHours", "Reports")',
                     type: 'GET',
