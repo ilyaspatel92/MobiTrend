@@ -180,6 +180,31 @@
                     return;
                 }
 
+                 let score = "";
+
+                 // Check if password is only numbers
+                 if (/^[0-9]{0,100}$/.test(password)) {
+                     score = "VeryWeak";
+                 }
+                 // Check if password is only letters or length < 6
+                 else if (/^[A-Za-z]{0,100}$/.test(password) || password.length < 6) {
+                     score = "VeryWeak";
+                 }
+                 // Check if password is strong: alphanumeric + at least one special character and at least 6 characters
+                 else if (
+                     password.length >= 6 && /^(?=.*?[0-9a-zA-Z])(?=.*?[#?!@@$%^&*-]).{6,}$/.test(password)
+                 ) {
+                     score = "Strong";
+                 } else {
+                     score = "Medium";
+                 }
+
+                 // Optional: Show alert or block based on score
+                 if (score === "VeryWeak") {
+                     alert("Password is too weak. Please choose a stronger password.\n Note :- Password Should be strong: alphanumeric + at least one special character and at least 6 characters");
+                     return;
+                 }
+
                 // Make the AJAX POST request
                 fetch("/Employee/AjaxChangePassword", {
                     method: "POST",

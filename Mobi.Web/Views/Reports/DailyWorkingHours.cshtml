@@ -2,9 +2,6 @@
     ViewData["Title"] = "Daily Working Hours Report";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Daily Working Hours Report</h1>
-</div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -141,6 +138,16 @@
                 }
                 let startDate = $('#startDate').val();
                 let endDate = $('#endDate').val();
+
+                if (!startDate) {
+                    toastr.error("Please select a start date.");
+                    return;
+                }
+
+                if (!endDate) {
+                    toastr.error("Please select an end date.");
+                    return;
+                }
 
                 $.ajax({
                     url: '@Url.Action("GetDailyWorkingHours", "Reports")',
