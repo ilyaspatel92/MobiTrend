@@ -1,9 +1,11 @@
 ﻿using System.Dynamic;
+using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mobi.Data.Domain;
 using Mobi.Data.Domain.Employees;
 using Mobi.Data.Enums;
+using Mobi.Service.Compnay;
 using Mobi.Service.EmployeeAttendances;
 using Mobi.Service.EmployeeLocationServices;
 using Mobi.Service.Employees;
@@ -15,6 +17,7 @@ using Mobi.Web.Factories.Employees;
 using Mobi.Web.Models;
 using Mobi.Web.Models.APIModels;
 using Mobi.Web.Models.Employees;
+using Newtonsoft.Json.Linq;
 
 namespace Mobi.Web.Areas.Admin.Controllers
 {
@@ -28,6 +31,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
         private readonly IEmployeeAttendanceService _employeeAttendanceService;
         private readonly ILocationService _locationService;
         private readonly IEmployeeLocationService _employeeLocationService;
+        private readonly ICompanyService _companyService;
 
         public EmployeeAPIController(IEmployeeService employeeService,
                                      IEmployeeFactory employeeFactory,
@@ -35,7 +39,8 @@ namespace Mobi.Web.Areas.Admin.Controllers
                                      IPictureService pictureService,
                                      IEmployeeAttendanceService employeeAttendanceService,
                                      ILocationService locationService,
-                                     IEmployeeLocationService employeeLocationService)
+                                     IEmployeeLocationService employeeLocationService,
+                                     ICompanyService companyService)
         {
             _employeeService = employeeService;
             _employeeFactory = employeeFactory;
@@ -44,6 +49,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
             _employeeAttendanceService = employeeAttendanceService;
             _locationService = locationService;
             _employeeLocationService = employeeLocationService;
+            _companyService = companyService;
         }
 
         [HttpPost]
@@ -55,9 +61,9 @@ namespace Mobi.Web.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    if ( string.IsNullOrEmpty(queryModel.Username) || string.IsNullOrEmpty(queryModel.Username))
+                    if (string.IsNullOrEmpty(queryModel.Username) || string.IsNullOrEmpty(queryModel.Username))
                     {
-                        if(string.IsNullOrEmpty(queryModel.Email) || string.IsNullOrEmpty(queryModel.Email))
+                        if (string.IsNullOrEmpty(queryModel.Email) || string.IsNullOrEmpty(queryModel.Email))
                         {
                             response.Success = false;
                             response.Message = "username or password is missing";
@@ -72,7 +78,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                         return BadRequest(response);
                     }
 
-                    var searchText= queryModel.Username.Trim();
+                    var searchText = queryModel.Username.Trim();
 
                     if (!string.IsNullOrEmpty(queryModel.Email))
                         searchText = queryModel.Email.Trim();
@@ -132,6 +138,14 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     empObject.Token = token;
                     empObject.IsFreeLocation = _employeeLocationService.IsFreeLocationSelected(employee.Id);
 
+                    var company = _companyService.GetCompanyById(employee.CompanyId);
+                    if (company is not null)
+                    {
+                        empObject.CompanyId = company.CompanyId;
+                        empObject.CompanyName = company.CompanyName;
+                        empObject.IsAllowedPhoto = company.IsAllowedPhoto;
+                    }
+
                     var picture = _pictureService.GetPictureById(employee?.PictureId ?? 0);
                     if (picture is not null)
                     {
@@ -184,16 +198,20 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     return BadRequest(response);  //OR return response
                 }
 
-               
-
-              
-
                 dynamic empObject = new ExpandoObject();
                 empObject.Id = employee.Id;
                 empObject.CompanyId = employee.CompanyId;
                 empObject.UserName = employee.UserName;
                 empObject.FullName = employee.NameEng;
                 empObject.email = employee.Email;
+
+                var company = _companyService.GetCompanyById(employee.CompanyId);
+                if (company is not null)
+                {
+                    empObject.CompanyId = company.CompanyId;
+                    empObject.CompanyName = company.CompanyName;
+                    empObject.IsAllowedPhoto = company.IsAllowedPhoto;
+                }
 
                 response.Success = true;
                 response.Message = "Item retrieved successfully.";
@@ -352,7 +370,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                 // update the employee 
                 employee.DeviceId = queryModel.DeviceId;
                 employee.MobileType = queryModel.MobileTypeId;
-                employee.MobRegistrationDate = DateTime.UtcNow;
+                employee.MobRegistrationDate = DateTime.UtcNow.ToLocalTime();
                 employee.RegisterStatus = true;
                 employee.RegistrationType = (int)RegistrationType.Mobile;
                 // update the employee for verify the QR code 
@@ -419,6 +437,14 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     empObject.Path = url + picture.Path;
                 }
 
+                var company = _companyService.GetCompanyById(employee.CompanyId);
+                if (company is not null)
+                {
+                    empObject.CompanyId = company.CompanyId;
+                    empObject.CompanyName = company.CompanyName;
+                    empObject.IsAllowedPhoto = company.IsAllowedPhoto;
+                }
+
                 response.Success = true;
                 response.Message = "success";
                 response.Data = empObject;
@@ -459,7 +485,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     return BadRequest(response);  //OR return response
                 }
 
-                if (string.IsNullOrEmpty(employee.DeviceId)==false && !employee.DeviceId.Equals(queryModel.MobileSerialNumber, StringComparison.OrdinalIgnoreCase))
+                if (string.IsNullOrEmpty(employee.DeviceId) == false && !employee.DeviceId.Equals(queryModel.MobileSerialNumber, StringComparison.OrdinalIgnoreCase))
                 {
                     response.Success = false;
                     response.Message = "the given Device Id is not mapped with current employee ";
@@ -470,14 +496,9 @@ namespace Mobi.Web.Areas.Admin.Controllers
                 if (queryModel.LocationId > 0)
                     actionTypeStatus = true;
                 else
-                {
-                    var isfrelocation = _employeeLocationService.IsFreeLocationSelected(employee.Id);
-                    if (isfrelocation)
-                        actionTypeStatus = true;
-                }
+                    actionTypeStatus = _employeeLocationService.IsFreeLocationSelected(employee.Id);
 
-
-                _employeeAttendanceService.AddLog(new EmployeeAttendanceLogs()
+                var empAttendance = new EmployeeAttendanceLogs()
                 {
                     EmployeeId = employee.Id,
                     AttendanceDateTime = queryModel.AttendanceDateTime,
@@ -491,9 +512,14 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     ActionTypeId = (int)queryModel.ActionType, //In and out enum 
                     ProofTypeId = (int)queryModel.ActionTypeMode, // GPS or BEacon 
                     IsVerifiedLocation = queryModel.IsverifiedLocation,
-                    CreatedDateTime = DateTime.UtcNow,
-                    ActionTypeStatus=actionTypeStatus
-                });
+                    CreatedDateTime = DateTime.UtcNow.ToLocalTime(),
+                    ActionTypeStatus = actionTypeStatus
+                };
+
+                if (queryModel.Latitude>decimal.Zero && queryModel.Longitude>decimal.Zero)
+                    empAttendance.CurrentLocation=GetAddressByLatLong(queryModel.Latitude, queryModel.Longitude);
+
+                _employeeAttendanceService.AddLog(empAttendance);
 
                 response.Success = true;
                 response.Message = "Item retrieved successfully.";
@@ -525,18 +551,18 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     return BadRequest(response);  //OR return response
                 }
 
-               var employeeAttendanceList= _employeeAttendanceService.GetLogsByEmployeeId(employee.Id).ToList();
-                if (employeeAttendanceList.Any()==false)
+                var employeeAttendanceList = _employeeAttendanceService.GetLogsByEmployeeId(employee.Id).ToList();
+                if (employeeAttendanceList.Any() == false)
                 {
                     response.Success = false;
                     response.Message = "No record are found";
                     return BadRequest(response);  //OR return response
                 }
 
-                if(queryModel.AttendanceDateTime.HasValue)
+                if (queryModel.AttendanceDateTime.HasValue)
                 {
                     var attendanceDateTime = queryModel.AttendanceDateTime.Value.Date;
-                    employeeAttendanceList= employeeAttendanceList.Where(x => x.AttendanceDateTime.Date == attendanceDateTime).ToList();
+                    employeeAttendanceList = employeeAttendanceList.Where(x => x.AttendanceDateTime.Date == attendanceDateTime).ToList();
                 }
 
                 var employeeAttendanceResponseList = new List<EmployeeAttendanceResponseModel>();
@@ -547,16 +573,16 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     model.EmployeeId = item.EmployeeId;
                     model.Id = item.Id;
                     model.LocationId = item.LocationId;
-                    model.LocationName= _locationService.GetLocationById(item.LocationId)?.LocationNameEnglish??string.Empty;
+                    model.LocationName = _locationService.GetLocationById(item.LocationId)?.LocationNameEnglish ?? string.Empty;
                     model.ActionType = item.ActionTypeId;
                     model.ActionTypeMode = item.ProofTypeId;
-                    model.TransferDateTime=item.TransferDateTime;
+                    model.TransferDateTime = item.TransferDateTime;
                     model.AttendanceDateTime = item.AttendanceDateTime;
 
                     employeeAttendanceResponseList.Add(model);
                 }
 
-               
+
                 response.Success = true;
                 response.Message = "Item retrieved successfully.";
                 response.Data = employeeAttendanceResponseList;
@@ -703,6 +729,37 @@ namespace Mobi.Web.Areas.Admin.Controllers
             }
         }
 
+        #endregion
+
+
+        #region Utilities 
+        private string GetAddressByLatLong(decimal latitude,decimal longitude)
+        {
+            var address = string.Empty;
+            string url = $"https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat={latitude}&lon={longitude}";
+            using (WebClient client = new WebClient())
+            {
+                // Nominatim requires a valid User-Agent
+                client.Headers.Add("User-Agent", "CSharpReverseGeocoderApp");
+
+                try
+                {
+                    string response = client.DownloadString(url);
+                    JObject json = JObject.Parse(response);
+
+                    address = json["display_name"]?.ToString();
+
+                    return address;
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+
+                return address;
+            }
+        }
         #endregion
 
     }

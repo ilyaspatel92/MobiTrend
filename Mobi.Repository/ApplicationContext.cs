@@ -1,5 +1,4 @@
-﻿using BCrypt.Net;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Mobi.Data.Domain;
 using Mobi.Data.Domain.Employees;
 using Mobi.Data.Mapping;
@@ -48,6 +47,7 @@ public class ApplicationContext : DbContext
                CompanyName="Mobi",
                CompanyId= "78951",
                CreatedDate= DateTime.UtcNow.ToLocalTime(),
+               IsAllowedPhoto=true
            }
         );
         // Seed data for Language

@@ -10,7 +10,9 @@ namespace Mobi.Data.Domain
         [Required]
         public string CompanyId { get; set; }
 
-        [Required]
         public DateTime CreatedDate { get; set; }
+
+        public bool IsAllowedPhoto { get; set; }
+        
     }
 }
