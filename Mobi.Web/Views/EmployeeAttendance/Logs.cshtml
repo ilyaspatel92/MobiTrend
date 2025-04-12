@@ -80,10 +80,11 @@
 			let table = $('#attendanceTable').DataTable({
 				 processing: true,
 				serverSide: false,
-				paging: true,
-				searching: false, 
 				order :[[0,"asc"]],
-				ordering: true,
+				paging: true,
+				searching: false, 				
+				lengthChange: true,
+				pageLength: 10,
 				ajax: {
 					url: "/EmployeeAttendance/GetEmptyEmployeeAttendanceData",
 					type: "GET",
