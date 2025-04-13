@@ -133,21 +133,21 @@
             });
 
             $('#searchBtn').click(function () {
-                let employeeId = $('#EmployeeId').val();
-                if (!employeeId) {
-                    toastr.error('Please select an employee first!');
-                    return;
-                }
+                 let employeeId = $('#EmployeeId').val();
+                // if (!employeeId) {
+                //     alert('Please select an employee first!');
+                //     return;
+                // }
                 let startDate = $('#startDate').val();
                 let endDate = $('#endDate').val();
 
                 if (!startDate) {
-                    toastr.error("Please select a start date.");
+                    alert("Please select a start date.");
                     return;
                 }
 
                 if (!endDate) {
-                    toastr.error("Please select an end date.");
+                    alert("Please select an end date.");
                     return;
                 }
 
