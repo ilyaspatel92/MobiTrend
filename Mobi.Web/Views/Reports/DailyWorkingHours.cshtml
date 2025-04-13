@@ -82,13 +82,15 @@
                 paging: true,
                 searching: false,
                 ordering: true,
-                dom: 'Bfrtip',
+                lengthChange: true,
+                pageLength: 10,
+                dom: '<"d-flex justify-content-between align-items-center mb-2"lB>frtip',
                 buttons: [
                     {
                         extend: 'print',
                         text: '<i class="fas fa-print"></i> Print',
                         className: 'btn btn-secondary',
-                        title: '',
+                        title: 'Daily Working Hours Report',
                         exportOptions: { columns: ':visible' },
                         action: function (e, dt, node, config)
                         {
