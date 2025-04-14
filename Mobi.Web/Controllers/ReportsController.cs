@@ -284,12 +284,12 @@ namespace Mobi.Web.Controllers
             var query = _attendanceRepository.GetAll()
                 .Where(log => (!startDate.HasValue || log.AttendanceDateTime.Date >= startDate.Value.Date)
                               && (!endDate.HasValue || log.AttendanceDateTime.Date <= endDate.Value.Date)
-                              && log.EmployeeId == employeeId)
+                              && (employeeId <= 0 || log.EmployeeId == employeeId)) // Apply filter only if employeeId > 0
                 .Join(_employeeRepository.GetAll(),
                       log => log.EmployeeId,
                       emp => emp.Id,
                       (log, emp) => new { log, emp.NameEng, emp.Id })
-                .ToList(); // Force materialization here to avoid EF translation issues
+                .ToList();
 
             var groupedData = query
                 .GroupBy(entry => new { entry.Id, entry.NameEng, entry.log.AttendanceDateTime.Date })
@@ -297,7 +297,7 @@ namespace Mobi.Web.Controllers
                 {
                     var logs = group.OrderBy(x => x.log.AttendanceDateTime).ToList();
                     int totalMinutes = 0;
-                    int totalTransactions = logs.Count;
+                    int totalTransactions = logs.Count();
                     DateTime? inTime = null;
                     bool hasMissingOut = false;
 
@@ -328,16 +328,18 @@ namespace Mobi.Web.Controllers
                         Notes = hasMissingOut ? "Missing OUT" : ""
                     };
                 })
-                .ToList(); // Convert to List
+                .ToList();
 
             return Json(new
             {
                 draw = Request.Query["draw"],
-                recordsTotal = groupedData.Count,
-                recordsFiltered = groupedData.Count,
+                recordsTotal = groupedData.Count(),
+                recordsFiltered = groupedData.Count(),
                 data = groupedData
             });
         }
+
+
 
 
 

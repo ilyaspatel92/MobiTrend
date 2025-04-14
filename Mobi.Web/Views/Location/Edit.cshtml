@@ -232,6 +232,15 @@
                 polygon = event.overlay;
                 drawingManager.setDrawingMode(null);
                 drawingManager.setMap(null);
+
+                // Convert polygon path to JSON and set hidden field
+                const path = polygon.getPath().getArray().map((latLng) => ({
+                    lat: latLng.lat(),
+                    lng: latLng.lng(),
+                }));
+
+                document.getElementById("SetPolygon").value = JSON.stringify(path);
+                document.getElementById("SetRadius").value = ""; // Clear radius
                 alert("Polygon drawn!");
             }
         });
@@ -256,6 +265,9 @@
         });
 
         map.fitBounds(circle.getBounds());
+            // Set radius and clear polygon
+        document.getElementById("SetRadius").value = radius;
+        document.getElementById("SetPolygon").value = "";
     }
 
     // Clear Polygon & Circle from the Map

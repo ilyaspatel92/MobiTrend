@@ -88,7 +88,7 @@ namespace Mobi.Service.SystemUser
 
         public SystemUsers GetSystemUserByEmployeeId(int id)
         {
-            return _systemUserRepository.GetAll().FirstOrDefault(u => u.EmployeeId == id);
+            return _systemUserRepository.GetAll().FirstOrDefault(u => u.EmployeeId == id && !u.Deleted);
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace Mobi.Service.SystemUser
             if (users == null)
                 throw new InvalidOperationException("User repository returned null.");
 
-            return users.FirstOrDefault(x => x.UserName == userName);
+            return users.FirstOrDefault(x => x.UserName == userName && !x.Deleted);
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace Mobi.Service.SystemUser
             if (users == null)
                 throw new InvalidOperationException("User repository returned null.");
 
-            return users.FirstOrDefault(x => x.Email == email);
+            return users.FirstOrDefault(x => x.Email == email && !x.Deleted);
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace Mobi.Service.SystemUser
 
         public SystemUsers Authenticate(string userName, string password)
         {
-            var user = _systemUserRepository.GetAll().FirstOrDefault(u => u.UserName == userName);
+            var user = _systemUserRepository.GetAll().FirstOrDefault(u => u.UserName == userName && !u.Deleted);
             if (user == null || !PasswordHelper.VerifyPassword(password, user.Password))
                 return null; // Invalid credentials
 
@@ -170,7 +170,7 @@ namespace Mobi.Service.SystemUser
 
         public void ResetPassword(string username, string newPassword)
         {
-            var user = _systemUserRepository.GetAll().FirstOrDefault(u => u.UserName == username);
+            var user = _systemUserRepository.GetAll().FirstOrDefault(u => u.UserName == username && !u.Deleted);
             if (user == null) throw new Exception("User not found");
 
             user.Password = PasswordHelper.HashPassword(newPassword);
@@ -190,7 +190,7 @@ namespace Mobi.Service.SystemUser
             if (string.IsNullOrWhiteSpace(token))
                 throw new ArgumentException("Token cannot be null or empty.", nameof(token));
 
-            var user = _systemUserRepository.GetAll().FirstOrDefault(u => u.Email == email);
+            var user = _systemUserRepository.GetAll().FirstOrDefault(u => u.Email == email && !u.Deleted);
             if (user == null)
                 throw new Exception("User not found");
 
@@ -228,7 +228,7 @@ namespace Mobi.Service.SystemUser
             if (string.IsNullOrWhiteSpace(token))
                 throw new ArgumentException("Token cannot be null or empty.", nameof(token));
 
-            var user = _systemUserRepository.GetAll().FirstOrDefault(u => u.Email == email);
+            var user = _systemUserRepository.GetAll().FirstOrDefault(u => u.Email == email && !u.Deleted);
             if (user == null)
                 return false; // User not found
 

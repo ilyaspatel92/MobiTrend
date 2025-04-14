@@ -32,7 +32,9 @@
             var table = $('#employeeReportTable').DataTable({
                 processing: true,
                 serverSide: false,
-                searching: true,
+                searching: false,
+                lengthChange: true,
+                pageLength: 10,
                 ajax: {
                     url: '/Reports/GetEmployeeLocationAuthorityReport',
                     type: 'GET',
@@ -41,7 +43,7 @@
                         return json.data || [];
                     }
                 },
-                dom: 'Bfrtip',
+                dom: '<"d-flex justify-content-between align-items-center mb-2"lB>frtip',
                 buttons: [
                     {
                         extend: 'print',
