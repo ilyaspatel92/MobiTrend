@@ -23,7 +23,7 @@ namespace Mobi.Web.Factories.Employees
         /// </summary>
         /// <param name="employee">The domain Employee object.</param>
         /// <returns>The ViewModel EmployeeModel.</returns>
-        public EmployeeModel PrepareEmployeeViewModel(Employee employee, bool isMobileManage=false )
+        public EmployeeModel PrepareEmployeeViewModel(Employee employee, bool isMobileManage = false)
         {
             var emp = new EmployeeModel
             {
@@ -48,7 +48,7 @@ namespace Mobi.Web.Factories.Employees
                 CID = employee.CID,
                 UserName = employee.UserName,
                 IsQrVerify = employee.IsQrVerify,
-                MobRegistrationDate = employee.MobRegistrationDate?.ToLocalTime().ToString("dd/MM/yyyy"),
+                MobRegistrationDate = employee.MobRegistrationDate == null ? string.Empty : employee.MobRegistrationDate?.ToString("dd/MM/yyyy"),
                 //QrCode = GenerateQrCode(employee.Email)
             };
 

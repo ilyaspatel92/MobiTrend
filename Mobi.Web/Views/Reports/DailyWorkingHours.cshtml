@@ -82,13 +82,15 @@
                 paging: true,
                 searching: false,
                 ordering: true,
-                dom: 'Bfrtip',
+                lengthChange: true,
+                pageLength: 10,
+                dom: '<"d-flex justify-content-between align-items-center mb-2"lB>frtip',
                 buttons: [
                     {
                         extend: 'print',
                         text: '<i class="fas fa-print"></i> Print',
                         className: 'btn btn-secondary',
-                        title: '',
+                        title: 'Daily Working Hours Report',
                         exportOptions: { columns: ':visible' },
                         action: function (e, dt, node, config)
                         {
@@ -131,21 +133,21 @@
             });
 
             $('#searchBtn').click(function () {
-                let employeeId = $('#EmployeeId').val();
-                if (!employeeId) {
-                    toastr.error('Please select an employee first!');
-                    return;
-                }
+                 let employeeId = $('#EmployeeId').val();
+                // if (!employeeId) {
+                //     alert('Please select an employee first!');
+                //     return;
+                // }
                 let startDate = $('#startDate').val();
                 let endDate = $('#endDate').val();
 
                 if (!startDate) {
-                    toastr.error("Please select a start date.");
+                    alert("Please select a start date.");
                     return;
                 }
 
                 if (!endDate) {
-                    toastr.error("Please select an end date.");
+                    alert("Please select an end date.");
                     return;
                 }
 
