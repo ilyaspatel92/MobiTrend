@@ -27,6 +27,7 @@
         public string ProofType { get; set; }
         public string Location { get; set; }
         public string GoogleMapsUrl { get; set; }
+        public string ToolTip { get; set; }
         public bool ActionTypeStatus { get; set; }
     }
 }
