@@ -100,7 +100,10 @@
                             }
                         },
                         customize: function (win) {
-                            $(win.document.head).find('title').text('');                            
+                            $(win.document.head).find('title').text('');
+
+                               $(win.document.body).find('thead').css('display', 'none');
+                               $(win.document.body).find('tfoot').css('display', 'none');
 
                             let startDate = $('#startDate').val();
                             let endDate = $('#endDate').val();

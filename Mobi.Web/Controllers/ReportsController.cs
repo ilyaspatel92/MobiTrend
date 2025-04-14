@@ -82,8 +82,8 @@ namespace Mobi.Web.Controllers
             {
                 Id = entry.log.Id,
                 EmployeeName = entry.NameEng,
-                Date = entry.log.AttendanceDateTime.ToString("dd/MM/yyyy"),
-                Time = entry.log.AttendanceDateTime.ToString("hh:mm tt"),
+                Date = entry.log.AttendanceDateTime.ToLocalTime().ToString("dd/MM/yyyy"),
+                Time = entry.log.AttendanceDateTime.ToLocalTime().ToString("hh:mm tt"),
                 ActionTypeId = entry.log.ActionTypeId,
                 ActionTypeName = GetActionTypeName(entry.log.ActionTypeId),
                 ProofType = GetProofType(entry.log.ProofTypeId),
@@ -183,7 +183,7 @@ namespace Mobi.Web.Controllers
                     Email = emp.Email,
                     MobileType = emp.MobileType,
                     MobileTypeName = Enum.GetName(typeof(MobileType), emp.MobileType),
-                    MobRegistrationDate = emp.MobRegistrationDate?.ToString("dd/MM/yyyy")
+                    MobRegistrationDate = emp.MobRegistrationDate?.ToLocalTime().ToString("dd/MM/yyyy")
                 };
 
                 // Fetch last transaction date from attendance records

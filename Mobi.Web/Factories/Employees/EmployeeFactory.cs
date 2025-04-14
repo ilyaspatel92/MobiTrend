@@ -44,11 +44,11 @@ namespace Mobi.Web.Factories.Employees
                 RegistrationVia = employee.RegistrationType,
                 RegistrationTypeName = Enum.GetName(typeof(RegistrationType), employee.RegistrationType),
                 RegisterStatus = employee.RegisterStatus,
-                CreatedDate = employee.CreatedDate.ToString("dd/MM/yyyy @ hh:mm tt"),
+                CreatedDate = employee.CreatedDate.ToLocalTime().ToString("dd/MM/yyyy @ hh:mm tt"),
                 CID = employee.CID,
                 UserName = employee.UserName,
                 IsQrVerify = employee.IsQrVerify,
-                MobRegistrationDate = employee.MobRegistrationDate?.ToString("dd/MM/yyyy"),
+                MobRegistrationDate = employee.MobRegistrationDate?.ToLocalTime().ToString("dd/MM/yyyy"),
                 //QrCode = GenerateQrCode(employee.Email)
             };
 

@@ -141,7 +141,6 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     var company = _companyService.GetCompanyById(employee.CompanyId);
                     if (company is not null)
                     {
-                        empObject.CompanyId = company.CompanyId;
                         empObject.CompanyName = company.CompanyName;
                         empObject.IsAllowedPhoto = company.IsAllowedPhoto;
                     }
@@ -208,7 +207,6 @@ namespace Mobi.Web.Areas.Admin.Controllers
                 var company = _companyService.GetCompanyById(employee.CompanyId);
                 if (company is not null)
                 {
-                    empObject.CompanyId = company.CompanyId;
                     empObject.CompanyName = company.CompanyName;
                     empObject.IsAllowedPhoto = company.IsAllowedPhoto;
                 }
@@ -303,7 +301,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     empObject.Path = url + picture.Path;
                 }
 
-                employee.MobRegistrationDate = DateTime.UtcNow.ToLocalTime();
+                employee.MobRegistrationDate = DateTime.UtcNow;
 
                 _employeeService.UpdateEmployee(employee);
 
@@ -370,7 +368,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                 // update the employee 
                 employee.DeviceId = queryModel.DeviceId;
                 employee.MobileType = queryModel.MobileTypeId;
-                employee.MobRegistrationDate = DateTime.UtcNow.ToLocalTime();
+                employee.MobRegistrationDate = DateTime.UtcNow;
                 employee.RegisterStatus = true;
                 employee.RegistrationType = (int)RegistrationType.Mobile;
                 // update the employee for verify the QR code 
@@ -440,7 +438,6 @@ namespace Mobi.Web.Areas.Admin.Controllers
                 var company = _companyService.GetCompanyById(employee.CompanyId);
                 if (company is not null)
                 {
-                    empObject.CompanyId = company.CompanyId;
                     empObject.CompanyName = company.CompanyName;
                     empObject.IsAllowedPhoto = company.IsAllowedPhoto;
                 }
@@ -512,11 +509,16 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     ActionTypeId = (int)queryModel.ActionType, //In and out enum 
                     ProofTypeId = (int)queryModel.ActionTypeMode, // GPS or BEacon 
                     IsVerifiedLocation = queryModel.IsverifiedLocation,
-                    CreatedDateTime = DateTime.UtcNow.ToLocalTime(),
+                    CreatedDateTime = DateTime.UtcNow,
                     ActionTypeStatus = actionTypeStatus
                 };
 
-                if (queryModel.Latitude>decimal.Zero && queryModel.Longitude>decimal.Zero)
+                var location = _locationService.GetLocationById(queryModel.LocationId);
+                if (queryModel.LocationId > 0 && location is not null)
+                {
+                    empAttendance.CurrentLocation = location.GPSLocationAddress;
+                }
+                else if (queryModel.Latitude>decimal.Zero && queryModel.Longitude>decimal.Zero)
                     empAttendance.CurrentLocation=GetAddressByLatLong(queryModel.Latitude, queryModel.Longitude);
 
                 _employeeAttendanceService.AddLog(empAttendance);
@@ -578,6 +580,12 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     model.ActionTypeMode = item.ProofTypeId;
                     model.TransferDateTime = item.TransferDateTime;
                     model.AttendanceDateTime = item.AttendanceDateTime;
+
+                    if (item.LocationId == 0)
+                    {
+                        model.LocationName = string.IsNullOrEmpty(item.CurrentLocation)==false? item.CurrentLocation: GetAddressByLatLong(item.Latitude,item.Longtitude);
+                        model.IsFreeLocation = _employeeLocationService.IsFreeLocationSelected(employee.Id);
+                    }
 
                     employeeAttendanceResponseList.Add(model);
                 }
@@ -666,7 +674,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                 }
 
                 var passwordRecoveryToken = Guid.NewGuid();
-                DateTime? generatedDateTime = DateTime.UtcNow;
+                DateTime? generatedDateTime = DateTime.Now.ToLocalTime();
 
                 var passwordResetLink = Url.Action("ResetPassword", "Account",
                                                     new { Email = email, Token = passwordRecoveryToken }, protocol: HttpContext.Request.Scheme);

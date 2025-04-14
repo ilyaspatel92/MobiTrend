@@ -11,5 +11,8 @@ namespace Mobi.Web.Models.APIModels
         public int ActionType { get; set; }
         public int ActionTypeMode { get; set; }
         public DateTime TransferDateTime { get; set; }
+
+        public bool IsFreeLocation { get; set; }
+
     }
 }
