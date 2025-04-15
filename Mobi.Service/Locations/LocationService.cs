@@ -1,4 +1,5 @@
-﻿using Mobi.Data.Domain;
+﻿using System.Text.Json;
+using Mobi.Data.Domain;
 using Mobi.Repository;
 
 namespace Mobi.Service.Locations
@@ -56,6 +57,27 @@ namespace Mobi.Service.Locations
         {
             return _locationRepository.GetAll()
                 .Any(loc => loc.LocationNameEnglish.Equals(locationNameEnglish, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private readonly string _apiKey = "AIzaSyAkN-Q_IuLUmbFX_QHCzEEecAufZmwpZ7k";
+
+        public string GetAddressFromCoordinates(decimal latitude, decimal longitude)
+        {
+            string url = $"https://maps.googleapis.com/maps/api/geocode/json?latlng={latitude},{longitude}&key={_apiKey}";
+
+            using (var httpClient = new HttpClient())
+            {
+                var response = httpClient.GetAsync(url).Result; // <== Synchronous call
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = response.Content.ReadAsStringAsync().Result;
+                    var obj = JsonDocument.Parse(json);
+                    var address = obj.RootElement.GetProperty("results").EnumerateArray().FirstOrDefault().GetProperty("formatted_address").GetString();
+                    return address;
+                }
+            }
+
+            return null;
         }
     }
 }

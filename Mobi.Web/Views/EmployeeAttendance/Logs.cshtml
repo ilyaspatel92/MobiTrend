@@ -137,7 +137,7 @@
 					{	
 						data: "location",
 						render: function (data, type, row) {
-							return `<a href="${row.googleMapsUrl}" target="_blank" class="btn btn-sm btn-primary">
+							return `<a href="${row.googleMapsUrl}" target="_blank" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="${row.toolTip}">
 										<i class="fas fa-map-marker-alt"></i> ${data}
 									</a>`;
 						}
@@ -282,6 +282,10 @@
 		// 		table.buttons('.buttons-print').trigger();
 		// 	}
 		// });
+				$(document).on('draw.dt', function () {
+			$('[data-toggle="tooltip"]').tooltip();
+		});
+
 
 	</script>
 }

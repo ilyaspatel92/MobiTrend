@@ -11,6 +11,7 @@ namespace Mobi.Service.Locations
         void RemoveLocation(Location location);
         bool IsLocationNameExists(string locationNameEnglish);
 
-        IList<Location> GetAllEmployeeLocations(int employeeId); 
+        IList<Location> GetAllEmployeeLocations(int employeeId);
+        string GetAddressFromCoordinates(decimal latitude, decimal longitude);
     }
 }
