@@ -238,7 +238,7 @@ namespace Mobi.Service.SystemUser
             if (user.PasswordResetToken != token)
                 return false; // Token does not match
 
-            if (DateTime.UtcNow.ToLocalTime() > user.PasswordResetTokenExpiry)
+            if (DateTime.UtcNow > user.PasswordResetTokenExpiry)
                 return false; // Token has expired
 
             return true; // Token is valid
