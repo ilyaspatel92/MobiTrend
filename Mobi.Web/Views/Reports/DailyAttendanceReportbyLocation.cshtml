@@ -130,8 +130,7 @@
                                         exportOptions: { columns: ':visible' },
                                         customize: function (win) {
                                             $(win.document.body)
-                                                .css('font-size', '10pt')
-                                                .prepend(`<h3 class="text-center">Company XYZ</h3>`)
+                                                .css('font-size', '10pt')                                                
                                                 .prepend(`<h4 class="text-center">Daily Attendance Report</h4>`)
                                                 .prepend(`<h5>Employee: ${$('#EmployeeName').val()}</h5>`)
                                                 .prepend(`<h5>Date Range: ${startDate} to ${endDate}</h5>`);
