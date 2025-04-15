@@ -42,7 +42,7 @@ namespace Mobi.Web.Areas.Admin.Factories
                 {
                     BeaconProof = (ProofType)location.ProofType == ProofType.Beacon,
                     CompanyId = location.CompanyId,
-                    CreatedDate = location.CreatedDate,
+                    CreatedDate = location.CreatedDate.ToLocalTime(),
                     GPSLocationAddress = location.GPSLocationAddress,
                     GPSProof = (ProofType)location.ProofType == ProofType.GPS,
                     Id = location.Id,

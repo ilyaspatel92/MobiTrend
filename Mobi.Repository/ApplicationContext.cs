@@ -46,7 +46,7 @@ public class ApplicationContext : DbContext
                Id=1,
                CompanyName="Mobi",
                CompanyId= "78951",
-               CreatedDate= DateTime.UtcNow.ToLocalTime(),
+               CreatedDate= DateTime.UtcNow,
                IsAllowedPhoto=true
            }
         );
@@ -99,7 +99,7 @@ public class ApplicationContext : DbContext
                 UserStatus = true,
                 Password = BCrypt.Net.BCrypt.HashPassword("Mobitend@2025"),
                 CompanyID = 1,
-                CreatedDate = DateTime.UtcNow.ToLocalTime(),
+                CreatedDate = DateTime.UtcNow,
                 Deleted = false
             }
         );

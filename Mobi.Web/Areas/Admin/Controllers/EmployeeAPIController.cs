@@ -674,7 +674,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                 }
 
                 var passwordRecoveryToken = Guid.NewGuid();
-                DateTime? generatedDateTime = DateTime.Now.ToLocalTime();
+                //DateTime? generatedDateTime = DateTime.Now;
 
                 var passwordResetLink = Url.Action("ResetPassword", "Account",
                                                     new { Email = email, Token = passwordRecoveryToken }, protocol: HttpContext.Request.Scheme);
