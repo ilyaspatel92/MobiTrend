@@ -148,25 +148,35 @@ namespace Mobi.Web.Controllers.Locations
 
             if (ModelState.IsValid)
             {
-                var existingLocation = _locationService.GetLocationById(id);
-                if (existingLocation == null)
+                try
                 {
-                    return RedirectToAction("List", "Location");
+                    var existingLocation = _locationService.GetLocationById(id);
+                    if (existingLocation == null)
+                    {
+                        return RedirectToAction("List", "Location");
+                    }
+
+                    existingLocation.LocationNameEnglish = model.LocationNameEnglish;
+                    existingLocation.LocationNameArabic = model.LocationNameArabic;
+                    existingLocation.Status = model.Status;
+                    existingLocation.ProofType = model.ProofType;
+                    existingLocation.Latitude = Math.Round(model.Latitude, 2);
+                    existingLocation.Longitude = Math.Round(model.Longitude, 2);
+                    existingLocation.SetRadius = Math.Round(model.SetRadius, 2);
+                    existingLocation.SetPolygon = model.SetPolygon;
+                    existingLocation.GPSLocationAddress = model.GPSLocationAddress;
+
+                    _locationService.UpdateLocation(existingLocation);
+                    TempData["SuccessMessage"] = "Location updated successfully.";
+                    return RedirectToAction(nameof(List));
+
                 }
-
-                existingLocation.LocationNameEnglish = model.LocationNameEnglish;
-                existingLocation.LocationNameArabic = model.LocationNameArabic;
-                existingLocation.Status = model.Status;
-                existingLocation.ProofType = model.ProofType;
-                existingLocation.Latitude = model.Latitude;
-                existingLocation.Longitude = model.Longitude;
-                existingLocation.SetRadius = model.SetRadius;
-                existingLocation.SetPolygon = model.SetPolygon;
-                existingLocation.GPSLocationAddress = model.GPSLocationAddress;
-
-                _locationService.UpdateLocation(existingLocation);
-                TempData["SuccessMessage"] = "Location updated successfully.";
-                return RedirectToAction(nameof(List));
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] = $"An error occurred: {ex.Message}";
+                    return RedirectToAction(nameof(List));
+                }
+               
             }
 
             return View(model);
