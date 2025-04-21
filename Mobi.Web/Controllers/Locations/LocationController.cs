@@ -160,8 +160,8 @@ namespace Mobi.Web.Controllers.Locations
                     existingLocation.LocationNameArabic = model.LocationNameArabic;
                     existingLocation.Status = model.Status;
                     existingLocation.ProofType = model.ProofType;
-                    existingLocation.Latitude = Math.Round(model.Latitude, 2);
-                    existingLocation.Longitude = Math.Round(model.Longitude, 2);
+                    existingLocation.Latitude = model.Latitude;
+                    existingLocation.Longitude = model.Longitude;
                     existingLocation.SetRadius = Math.Round(model.SetRadius, 2);
                     existingLocation.SetPolygon = model.SetPolygon;
                     existingLocation.GPSLocationAddress = model.GPSLocationAddress;
