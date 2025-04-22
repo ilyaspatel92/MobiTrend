@@ -116,6 +116,13 @@
     </div>
 </form>
 
+<style>
+    #locationmap {
+        height: 500px;
+        width: 100%;
+    }
+
+</style>
 
 @section Scripts {
     @* <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkN-Q_IuLUmbFX_QHCzEEecAufZmwpZ7k&libraries=places,drawing" async defer></script> *@
@@ -143,20 +150,19 @@
             map = new google.maps.Map(mapElement, {
                 center: { lat: 40.7128, lng: -74.0060 }, // Default to NYC
                 zoom: 12,
-                    mapId: "abc123xyz456mapIdHere",
             });
 
                  // Initialize Advanced Marker
                     const markerElement = document.createElement("div");
                     markerElement.innerHTML = "📍"; // Custom marker emoji (optional)
 
-                    marker = new google.maps.marker.AdvancedMarkerElement({
-                        position: { lat: 40.7128, lng: -74.0060 },
-                        map: map,
-                        
-                            title: "Selected Location"
+                           marker = new google.maps.Marker({
+            position: { lat: 40.7128, lng: -74.0060 },
+            map: map,
+            title: "Selected Location",
+            draggable: true
+        });
 
-                    });
 
                             // Get the position correctly
             const markerPosition = marker.position;
@@ -168,23 +174,25 @@
             if (autocompleteInput) {
                    autocomplete = new google.maps.places.Autocomplete(autocompleteInput);
 
-            autocomplete.addListener("place_changed", () => {
-                const place = autocomplete.getPlace();
-                if (!place.geometry || !place.geometry.location) {
-                    alert("No details available for the selected location.");
-                    return;
-                }
+                  autocomplete.addListener("place_changed", () => {
+            const place = autocomplete.getPlace();
+            if (!place.geometry || !place.geometry.location) {
+                alert("No details available for the selected location.");
+                return;
+            }
 
-                const location = place.geometry.location;
+            const location = place.geometry.location;
 
-                map.setCenter(location);
-                map.setZoom(15);
-                marker.position = location;
+            map.setCenter(location);
+            map.setZoom(15);
+            marker.setPosition(location);
 
-                // Set lat/lng to form fields if needed
-                document.getElementById("latitude").value = location.lat().toFixed(6);
-                document.getElementById("longitude").value = location.lng().toFixed(6);
-            });
+
+            // Optional: update hidden fields
+            document.getElementById("latitude").value = location.lat().toFixed(6);
+            document.getElementById("longitude").value = location.lng().toFixed(6);
+        });
+
             }
 
             // Load Saved Polygon & Radius (if available)
@@ -194,6 +202,23 @@
             document.getElementById("drawPolygonButton")?.addEventListener("click", drawPolygon);
             document.getElementById("setRadiusButton")?.addEventListener("click", setRadius);
             document.getElementById("clearShapesButton")?.addEventListener("click", clearShapes);
+
+                    const lat = parseFloat(document.getElementById("latitude").value);
+        const lng = parseFloat(document.getElementById("longitude").value);
+
+        if (!isNaN(lat) && !isNaN(lng)) {
+            const savedPosition = { lat, lng };
+            marker.setPosition(savedPosition);
+            map.setCenter(savedPosition);
+        }
+
+                google.maps.event.addListener(marker, 'dragend', function () {
+            const pos = marker.getPosition();
+            document.getElementById("latitude").value = pos.lat().toFixed(6);
+            document.getElementById("longitude").value = pos.lng().toFixed(6);
+        });
+
+
         }
 
         function loadGoogleMaps() {
@@ -204,7 +229,7 @@
             }
 
             const script = document.createElement("script");
-                script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAkN-Q_IuLUmbFX_QHCzEEecAufZmwpZ7k&libraries=places,drawing,marker&callback=initMap";
+                script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAkN-Q_IuLUmbFX_QHCzEEecAufZmwpZ7k&libraries=places,drawing,marker&callback=initMap&loading=async";
             script.async = true;
             script.defer = true;
             document.head.appendChild(script);
@@ -312,19 +337,27 @@
                 }
             }
 
-            if (!isNaN(savedRadius) && savedRadius > 0) {
+                    if (!isNaN(savedRadius) && savedRadius > 0) {
+            const lat = parseFloat(document.getElementById("latitude").value);
+            const lng = parseFloat(document.getElementById("longitude").value);
+
+            if (!isNaN(lat) && !isNaN(lng)) {
+                const center = new google.maps.LatLng(lat, lng);
+
                 circle = new google.maps.Circle({
                     map: map,
                     radius: savedRadius,
-                    center: marker.position,
+                    center: center,
                     fillColor: "#00FF00",
                     fillOpacity: 0.35,
                     strokeWeight: 2,
                 });
 
-                // Fit map to the circle bounds
+                marker.setPosition(center); // Move marker here
                 map.fitBounds(circle.getBounds());
             }
+        }
+
         }
     </script>
 
