@@ -127,6 +127,33 @@
 @section Scripts {
     @* <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkN-Q_IuLUmbFX_QHCzEEecAufZmwpZ7k&libraries=places,drawing" async defer></script> *@
     @* <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkN-Q_IuLUmbFX_QHCzEEecAufZmwpZ7k&libraries=places,drawing&callback=initMap" async defer></script> *@
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("locationForm");
+            const saveBtn = document.getElementById("saveLocationButton");
+
+            if (saveBtn) {
+                saveBtn.addEventListener("click", function (e) {
+                    const polygon = document.getElementById("SetPolygon").value.trim();
+                    const radius = parseFloat(document.getElementById("SetRadius").value);
+
+                    // Only validate this if GPS proof section is visible
+                    const isGPSProof = document.getElementById("gpsProofRadio").checked;
+                    const gpsProofSectionVisible = document.getElementById("gpsProofSection").classList.contains("show");
+
+                    if (isGPSProof && gpsProofSectionVisible) {
+                        if (!polygon && (isNaN(radius) || radius <= 0)) {
+                            alert("⚠️ Please select either a polygon or set a radius before saving the location.");
+                            e.preventDefault(); // Stop form from submitting
+                            return false;
+                        }
+                    }
+
+                    // Let form submit if all good
+                });
+            }
+        });
+    </script>
 
     <script>
         let map, marker, autocomplete, polygon, circle;
@@ -213,9 +240,29 @@
         }
 
                 google.maps.event.addListener(marker, 'dragend', function () {
-            const pos = marker.getPosition();
-            document.getElementById("latitude").value = pos.lat().toFixed(6);
-            document.getElementById("longitude").value = pos.lng().toFixed(6);
+               const pos = marker.getPosition();
+
+        // 1. Update hidden lat/lng inputs
+        document.getElementById("latitude").value = pos.lat().toFixed(6);
+        document.getElementById("longitude").value = pos.lng().toFixed(6);
+
+        // 2. Clear existing polygon and radius
+        clearShapes();
+        document.getElementById("SetPolygon").value = "";
+        document.getElementById("SetRadius").value = "0";
+
+        // 3. Try reverse geocoding (optional)
+        if (google.maps.Geocoder) {
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ location: pos }, (results, status) => {
+                if (status === "OK" && results[0]) {
+                    const autocompleteInput = document.getElementById("autocomplete");
+                    if (autocompleteInput) {
+                        autocompleteInput.value = results[0].formatted_address;
+                    }
+                }
+            });
+        }
         });
 
 
