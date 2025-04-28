@@ -419,7 +419,7 @@ namespace Mobi.Web.Controllers
                             EmployeeId = e.Id,
                             EmployeeName = e.NameEng,
                             LocationName = loc.LocationNameEnglish ?? "N/A",
-                            ProofType = loc.ProofType == 1 ? "Beacon" : "GPS"
+                            ProofType = loc.ProofType == 1 ? "GPS" : "Beacon"
                         }))
                 .ToList();
 
