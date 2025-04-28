@@ -78,18 +78,41 @@ namespace Mobi.Web.Controllers
             if (EmployeeId > 0)
                 query = query.Where(entry => entry.Id == EmployeeId);
 
-            var attendanceLogs = query.Select(entry => new EmployeeAttendanceLogModel
+            var kuwaitTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Arab Standard Time");
+
+            var attendanceLogs = query.Select(entry =>
             {
-                Id = entry.log.Id,
-                EmployeeName = entry.NameEng,
-                Date = entry.log.AttendanceDateTime.ToLocalTime().ToString("dd/MM/yyyy"),
-                Time = entry.log.AttendanceDateTime.ToLocalTime().ToString("hh:mm tt"),
-                ActionTypeId = entry.log.ActionTypeId,
-                ActionTypeName = GetActionTypeName(entry.log.ActionTypeId),
-                ProofType = GetProofType(entry.log.ProofTypeId),
-                Location = entry.log.LocationId ==0 ? "Free Location" : _locationService.GetLocationById(Convert.ToInt32(entry.log.LocationId))?.LocationNameEnglish,
-                ActionTypeStatus = entry.log.ActionTypeId == 1
+                var kuwaitTime = TimeZoneInfo.ConvertTimeFromUtc(entry.log.AttendanceDateTime, kuwaitTimeZone);
+
+                return new EmployeeAttendanceLogModel
+                {
+                    Id = entry.log.Id,
+                    EmployeeName = entry.NameEng,
+                    Date = kuwaitTime.ToString("dd/MM/yyyy"),
+                    Time = kuwaitTime.ToString("hh:mm tt"),
+                    ActionTypeId = entry.log.ActionTypeId,
+                    ActionTypeName = GetActionTypeName(entry.log.ActionTypeId),
+                    ProofType = GetProofType(entry.log.ProofTypeId),
+                    Location = entry.log.LocationId == 0
+                        ? "Free Location"
+                        : _locationService.GetLocationById(Convert.ToInt32(entry.log.LocationId))?.LocationNameEnglish,
+                    ActionTypeStatus = entry.log.ActionTypeId == 1
+                };
             }).ToList();
+
+
+            //var attendanceLogs = query.Select(entry => new EmployeeAttendanceLogModel
+            //{
+            //    Id = entry.log.Id,
+            //    EmployeeName = entry.NameEng,
+            //    Date = entry.log.AttendanceDateTime.ToLocalTime().ToString("dd/MM/yyyy"),
+            //    Time = entry.log.AttendanceDateTime.ToLocalTime().ToString("hh:mm tt"),
+            //    ActionTypeId = entry.log.ActionTypeId,
+            //    ActionTypeName = GetActionTypeName(entry.log.ActionTypeId),
+            //    ProofType = GetProofType(entry.log.ProofTypeId),
+            //    Location = entry.log.LocationId ==0 ? "Free Location" : _locationService.GetLocationById(Convert.ToInt32(entry.log.LocationId))?.LocationNameEnglish,
+            //    ActionTypeStatus = entry.log.ActionTypeId == 1
+            //}).ToList();
 
 
             return Json(new
