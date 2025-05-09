@@ -1,20 +1,24 @@
 ﻿@model Mobi.Web.Models.Employees.EmployeeModel
 
 @{
-    ViewData["Title"] = "Employee Details";
+    ViewData["Title"] = @T("Mobi.Employee.Details.Title");
 }
 
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <!-- Title Section -->
-        <h2 class="mb-0">Employee Details</h2>
+        <h2 class="mb-0">@T("Mobi.Employee.Details.Title")</h2>
         <div class="btn-group">
             <div class="d-flex justify-content-end mt-4">
                 <a asp-action="List" class="btn btn-secondary btn-sm me-2">
-                    <i class="fas fa-arrow-left"></i> Back to List
+                    <i class="fas fa-arrow-left"></i> @T("Mobi.Employee.Details.BackToList")
                 </a>
-                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm me-2"><i class="fas fa-edit"></i> Edit</a>
-                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a>
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm me-2">
+                    <i class="fas fa-edit"></i> @T("Mobi.Employee.Details.Edit")
+                </a>
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-sm">
+                    <i class="fas fa-trash"></i> @T("Mobi.Employee.Details.Delete")
+                </a>
             </div>
         </div>
     </div>
@@ -24,28 +28,25 @@
         <div class="card-body">
             <!-- Employee Information -->
             <dl class="row">
-                @* <dt class="col-sm-3">ID:</dt>
-                <dd class="col-sm-9">@Model.Id</dd> *@
-
-                <dt class="col-sm-3">Name (English):</dt>
+                <dt class="col-sm-3">@T("Mobi.Employee.Details.NameEnglish")</dt>
                 <dd class="col-sm-9">@Model.NameEng</dd>
 
-                <dt class="col-sm-3">Name (Arabic):</dt>
+                <dt class="col-sm-3">@T("Mobi.Employee.Details.NameArabic")</dt>
                 <dd class="col-sm-9">@Model.NameArabic</dd>
 
-                <dt class="col-sm-3">Status:</dt>
-                <dd class="col-sm-9">@(Model.Status ? "Active" : "Inactive")</dd>
+                <dt class="col-sm-3">@T("Mobi.Employee.Details.Status")</dt>
+                <dd class="col-sm-9">@(Model.Status ? @T("Mobi.Employee.Status.Active") : @T("Mobi.Employee.Status.Inactive"))</dd>
 
-                <dt class="col-sm-3">File Number:</dt>
+                <dt class="col-sm-3">@T("Mobi.Employee.Details.FileNumber")</dt>
                 <dd class="col-sm-9">@Model.FileNumber</dd>
 
-                <dt class="col-sm-3">Mobile Number:</dt>
+                <dt class="col-sm-3">@T("Mobi.Employee.Details.MobileNumber")</dt>
                 <dd class="col-sm-9">@Model.MobileNumber</dd>
 
-                <dt class="col-sm-3">Email:</dt>
+                <dt class="col-sm-3">@T("Mobi.Employee.Details.Email")</dt>
                 <dd class="col-sm-9">@Model.Email</dd>
 
-                <dt class="col-sm-3">Company ID:</dt>
+                <dt class="col-sm-3">@T("Mobi.Employee.Details.CompanyId")</dt>
                 <dd class="col-sm-9">@Model.CompanyId</dd>
             </dl>
         </div>

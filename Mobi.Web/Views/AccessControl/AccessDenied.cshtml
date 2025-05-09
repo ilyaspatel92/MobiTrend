@@ -1,27 +1,27 @@
 ﻿@{
-    ViewData["Title"] = "Access Denied";
+    ViewData["Title"] = @T("Mobi.AccessDenied.Title");
 }
 
 <div class="container mt-5">
     <div class="card">
         <div class="card-header bg-danger text-white">
-            <h3 class="card-title mb-0">Access Denied</h3>
+            <h3 class="card-title mb-0">@T("Mobi.AccessDenied.CardTitle")</h3>
         </div>
         <div class="card-body">
             <!-- Access Denied Message -->
             <div class="alert alert-danger" role="alert">
-                <h4 class="alert-heading">You do not have the necessary permissions to view this page.</h4>
-                <p>Your account does not have the required access rights to view the content of this page.</p>
+                <h4 class="alert-heading">@T("Mobi.AccessDenied.AlertHeading")</h4>
+                <p>@T("Mobi.AccessDenied.AlertMessage1")</p>
                 <hr>
                 <p class="mb-0">
-                    Please contact the system administrator.
+                    @T("Mobi.AccessDenied.AlertMessage2")
                 </p>
             </div>
 
             <!-- Button to navigate back -->
             <div class="d-flex justify-content-between">
-                <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Go to Home</a>
-                <a href="javascript:history.back()" class="btn btn-secondary">Go Back</a>
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary">@T("Mobi.AccessDenied.GoHomeButton")</a>
+                <a href="javascript:history.back()" class="btn btn-secondary">@T("Mobi.AccessDenied.GoBackButton")</a>
             </div>
         </div>
     </div>

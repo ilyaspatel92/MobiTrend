@@ -1,31 +1,31 @@
 ﻿@model Mobi.Web.Models.Employees.EmployeeModel
 
 @{
-    ViewData["Title"] = "Delete Employee";
+    ViewData["Title"] = @T("Mobi.Employee.Delete.Title");
 }
 
-<h2>Delete Employee</h2>
+<h2>@T("Mobi.Employee.Delete.Title")</h2>
 
 <div class="alert alert-danger">
-    <strong>Warning:</strong> You are about to delete this employee. This action cannot be undone.
+    <strong>@T("Mobi.Employee.Delete.WarningTitle")</strong> @T("Mobi.Employee.Delete.WarningMessage")
 </div>
 
 <div class="card">
     <div class="card-body">
         <dl class="row">
-            <dt class="col-sm-3">ID:</dt>
+            <dt class="col-sm-3">@T("Mobi.Employee.Delete.Label.Id")</dt>
             <dd class="col-sm-9">@Model.Id</dd>
 
-            <dt class="col-sm-3">Name (English):</dt>
+            <dt class="col-sm-3">@T("Mobi.Employee.Delete.Label.NameEnglish")</dt>
             <dd class="col-sm-9">@Model.NameEng</dd>
 
-            <dt class="col-sm-3">Name (Arabic):</dt>
+            <dt class="col-sm-3">@T("Mobi.Employee.Delete.Label.NameArabic")</dt>
             <dd class="col-sm-9">@Model.NameArabic</dd>
 
-            <dt class="col-sm-3">Mobile Number:</dt>
+            <dt class="col-sm-3">@T("Mobi.Employee.Delete.Label.MobileNumber")</dt>
             <dd class="col-sm-9">@Model.MobileNumber</dd>
 
-            <dt class="col-sm-3">Email:</dt>
+            <dt class="col-sm-3">@T("Mobi.Employee.Delete.Label.Email")</dt>
             <dd class="col-sm-9">@Model.Email</dd>
         </dl>
     </div>
@@ -33,6 +33,6 @@
 
 <form asp-action="DeleteConfirmed" method="post">
     <input type="hidden" asp-for="Id" />
-    <button type="submit" class="btn btn-danger mt-3">Confirm Delete</button>
-    <a asp-action="List" class="btn btn-secondary mt-3">Cancel</a>
+    <button type="submit" class="btn btn-danger mt-3">@T("Mobi.Employee.Delete.ConfirmButton")</button>
+    <a asp-action="List" class="btn btn-secondary mt-3">@T("Mobi.Employee.Delete.CancelButton")</a>
 </form>
