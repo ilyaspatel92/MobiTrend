@@ -1,7 +1,4 @@
-﻿Insert query for resourcestring
-
-
-
+﻿
 INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
 VALUES 
     ('Mobi.HomePage.WelcomeMessage', 'Welcome to Mobi Tend', 1),
@@ -693,7 +690,7 @@ VALUES
 ('Mobi.EmployeeLocation.Action.SetLocation', 'Set Location', 1),
 ('Mobi.EmployeeLocation.Action.SetLocation', 'تعيين الموقع', 2),
 
-('Mobi.EmployeeLocation.Message.Empty', 'Please use the search form or click \'Show All\' to load data.', 1),
+('Mobi.EmployeeLocation.Message.Empty', 'Please use the search form or click Show All to load data.', 1),
 ('Mobi.EmployeeLocation.Message.Empty', 'يرجى استخدام نموذج البحث أو النقر على "عرض الكل" لتحميل البيانات.', 2),
 
 -- Common strings
@@ -1569,85 +1566,6 @@ INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId) VALUE
 ('Mobi.Reports.DailyAttendance.ErrorFetchingData', N'حدث خطأ أثناء جلب البيانات.', 2);
 
 
-
--- English (LanguageId = 1)
-INSERT INTO LocalizedProperty (LanguageId, LocaleKeyGroup, LocaleKey, LocaleValue) VALUES
-(1, 'Reports', 'DailyAttendanceReportByLocation.Title', 'Daily Attendance Report by Location'),
-(1, 'Reports', 'DailyAttendanceReportByLocation.Header', 'Daily Attendance Report by Location'),
-(1, 'Reports', 'DailyAttendanceReportByLocation.EmployeeName', 'Employee Name'),
-(1, 'Reports', 'DailyAttendanceReportByLocation.EmployeeName.Placeholder', 'Enter 3 characters to search'),
-(1, 'Reports', 'DailyAttendanceReportByLocation.StartDate', 'Start Date'),
-(1, 'Reports', 'DailyAttendanceReportByLocation.EndDate', 'End Date'),
-(1, 'Reports', 'DailyAttendanceReportByLocation.Error.SelectEmployee', 'Please select an employee first!'),
-(1, 'Reports', 'DailyAttendanceReportByLocation.Print.Title', 'Daily Attendance Report'),
-(1, 'Reports', 'DailyAttendanceReportByLocation.Print.Employee', 'Employee'),
-(1, 'Reports', 'DailyAttendanceReportByLocation.Print.DateRange', 'Date Range'),
-(1, 'Reports', 'DailyAttendanceReportByLocation.Column.Location', 'Location'),
-(1, 'Reports', 'DailyAttendanceReportByLocation.Column.Date', 'Date'),
-(1, 'Reports', 'DailyAttendanceReportByLocation.Column.Time', 'Time'),
-(1, 'Reports', 'DailyAttendanceReportByLocation.Column.EventType', 'Event Type'),
-(1, 'Reports', 'DailyAttendanceReportByLocation.Column.ProofType', 'Proof Type'),
-(1, 'Common', 'Search', 'Search'),
-(1, 'Common', 'PrintFullReport', 'Print Full Report'),
-(1, 'Common', 'Loading', 'Loading...'),
-(1, 'Common', 'NoRecordsFound', 'No record found');
-
--- Arabic (LanguageId = 2)
-INSERT INTO LocalizedProperty (LanguageId, LocaleKeyGroup, LocaleKey, LocaleValue) VALUES
-(2, 'Reports', 'DailyAttendanceReportByLocation.Title', 'تقرير الحضور اليومي حسب الموقع'),
-(2, 'Reports', 'DailyAttendanceReportByLocation.Header', 'تقرير الحضور اليومي حسب الموقع'),
-(2, 'Reports', 'DailyAttendanceReportByLocation.EmployeeName', 'اسم الموظف'),
-(2, 'Reports', 'DailyAttendanceReportByLocation.EmployeeName.Placeholder', 'أدخل 3 أحرف للبحث'),
-(2, 'Reports', 'DailyAttendanceReportByLocation.StartDate', 'تاريخ البدء'),
-(2, 'Reports', 'DailyAttendanceReportByLocation.EndDate', 'تاريخ الانتهاء'),
-(2, 'Reports', 'DailyAttendanceReportByLocation.Error.SelectEmployee', 'يرجى اختيار موظف أولاً!'),
-(2, 'Reports', 'DailyAttendanceReportByLocation.Print.Title', 'تقرير الحضور اليومي'),
-(2, 'Reports', 'DailyAttendanceReportByLocation.Print.Employee', 'الموظف'),
-(2, 'Reports', 'DailyAttendanceReportByLocation.Print.DateRange', 'الفترة الزمنية'),
-(2, 'Reports', 'DailyAttendanceReportByLocation.Column.Location', 'الموقع'),
-(2, 'Reports', 'DailyAttendanceReportByLocation.Column.Date', 'التاريخ'),
-(2, 'Reports', 'DailyAttendanceReportByLocation.Column.Time', 'الوقت'),
-(2, 'Reports', 'DailyAttendanceReportByLocation.Column.EventType', 'نوع الحدث'),
-(2, 'Reports', 'DailyAttendanceReportByLocation.Column.ProofType', 'نوع الإثبات'),
-(2, 'Common', 'Search', 'بحث'),
-(2, 'Common', 'PrintFullReport', 'طباعة التقرير الكامل'),
-(2, 'Common', 'Loading', 'جارٍ التحميل...'),
-(2, 'Common', 'NoRecordsFound', 'لم يتم العثور على سجلات');
-
-
-
-INSERT INTO LocalizedProperty (LanguageId, LocaleKeyGroup, LocaleKey, LocaleValue) VALUES
-(1, 'Mobi.Reports', 'DailyWorkingHoursReport', 'Daily Working Hours Report'),
-(1, 'Mobi.Reports', 'EmployeeName', 'Employee Name'),
-(1, 'Mobi.Placeholder', 'EnterName', 'Enter 3 characters to search'),
-(1, 'Mobi.Reports', 'StartDate', 'Start Date'),
-(1, 'Mobi.Reports', 'EndDate', 'End Date'),
-(1, 'Mobi.Common', 'Search', 'Search'),
-(1, 'Mobi.Reports', 'Date', 'Date'),
-(1, 'Mobi.Reports', 'Day', 'Day'),
-(1, 'Mobi.Reports', 'TotalHours', 'Total Hours'),
-(1, 'Mobi.Reports', 'TotalMinutes', 'Total Minutes'),
-(1, 'Mobi.Reports', 'TotalTransactions', 'Total Transactions'),
-(1, 'Mobi.Reports', 'Notes', 'Notes');
-
-
-INSERT INTO LocalizedProperty (LanguageId, LocaleKeyGroup, LocaleKey, LocaleValue) VALUES
-(2, 'Mobi.Reports', 'DailyWorkingHoursReport', 'تقرير ساعات العمل اليومية'),
-(2, 'Mobi.Reports', 'EmployeeName', 'اسم الموظف'),
-(2, 'Mobi.Placeholder', 'EnterName', 'أدخل 3 أحرف للبحث'),
-(2, 'Mobi.Reports', 'StartDate', 'تاريخ البدء'),
-(2, 'Mobi.Reports', 'EndDate', 'تاريخ الانتهاء'),
-(2, 'Mobi.Common', 'Search', 'بحث'),
-(2, 'Mobi.Reports', 'Date', 'التاريخ'),
-(2, 'Mobi.Reports', 'Day', 'اليوم'),
-(2, 'Mobi.Reports', 'TotalHours', 'إجمالي الساعات'),
-(2, 'Mobi.Reports', 'TotalMinutes', 'إجمالي الدقائق'),
-(2, 'Mobi.Reports', 'TotalTransactions', 'إجمالي الحركات'),
-(2, 'Mobi.Reports', 'Notes', 'ملاحظات');
-
-
-
-
 INSERT INTO LocaleStringResource (LanguageId, ResourceName, ResourceValue) VALUES
 (1, 'Mobi.Reports.EmployeeDataReport', 'Employee Data Report'),
 (1, 'Mobi.Reports.FileNumber', 'File Number'),
@@ -1670,26 +1588,6 @@ INSERT INTO LocaleStringResource (LanguageId, ResourceName, ResourceValue) VALUE
 (2, 'Mobi.Reports.ListOfEmployees', 'قائمة الموظفين'),
 (2, 'Mobi.Reports.TotalRecords', 'إجمالي السجلات');
 
-
--- English (LanguageId = 1)
-INSERT INTO LocalizedProperty (LanguageId, LocaleKeyGroup, LocaleKey, LocaleValue) VALUES
-(1, 'Mobi.Reports', 'EmployeeLocationAuthorityReport', 'Employee Location Authority Report'),
-(1, 'Mobi.Reports', 'EmployeeId', 'ID'),
-(1, 'Mobi.Reports', 'EmployeeName', 'Employee Name'),
-(1, 'Mobi.Reports', 'LocationName', 'Location Name'),
-(1, 'Mobi.Reports', 'ProofType', 'Proof Type'),
-(1, 'Mobi.Common', 'Print', 'Print'),
-(1, 'Mobi.Common', 'NoDataToPrint', 'No data available to print.');
-
--- Arabic (LanguageId = 2)
-INSERT INTO LocalizedProperty (LanguageId, LocaleKeyGroup, LocaleKey, LocaleValue) VALUES
-(2, 'Mobi.Reports', 'EmployeeLocationAuthorityReport', N'تقرير صلاحية مواقع الموظفين'),
-(2, 'Mobi.Reports', 'EmployeeId', N'المعرف'),
-(2, 'Mobi.Reports', 'EmployeeName', N'اسم الموظف'),
-(2, 'Mobi.Reports', 'LocationName', N'اسم الموقع'),
-(2, 'Mobi.Reports', 'ProofType', N'نوع الإثبات'),
-(2, 'Mobi.Common', 'Print', N'طباعة'),
-(2, 'Mobi.Common', 'NoDataToPrint', N'لا توجد بيانات للطباعة.');
 
 
 -- English (LanguageId = 1)
@@ -1747,4 +1645,93 @@ VALUES
 (2, 'Mobi.Mobile.LastTransactionDate', 'تاريخ آخر معاملة'),
 (2, 'Mobi.Common.Print', 'طباعة');
 
+-- English (LanguageId = 1)
+INSERT INTO LocaleStringResource (LanguageId, ResourceName, ResourceValue) VALUES
+(1, 'Reports.DailyAttendanceReportByLocation.Title', 'Daily Attendance Report by Location'),
+(1, 'Reports.DailyAttendanceReportByLocation.Header', 'Daily Attendance Report by Location'),
+(1, 'Reports.DailyAttendanceReportByLocation.EmployeeName', 'Employee Name'),
+(1, 'Reports.DailyAttendanceReportByLocation.EmployeeName.Placeholder', 'Enter 3 characters to search'),
+(1, 'Reports.DailyAttendanceReportByLocation.StartDate', 'Start Date'),
+(1, 'Reports.DailyAttendanceReportByLocation.EndDate', 'End Date'),
+(1, 'Reports.DailyAttendanceReportByLocation.Error.SelectEmployee', 'Please select an employee first!'),
+(1, 'Reports.DailyAttendanceReportByLocation.Print.Title', 'Daily Attendance Report'),
+(1, 'Reports.DailyAttendanceReportByLocation.Print.Employee', 'Employee'),
+(1, 'Reports.DailyAttendanceReportByLocation.Print.DateRange', 'Date Range'),
+(1, 'Reports.DailyAttendanceReportByLocation.Column.Location', 'Location'),
+(1, 'Reports.DailyAttendanceReportByLocation.Column.Date', 'Date'),
+(1, 'Reports.DailyAttendanceReportByLocation.Column.Time', 'Time'),
+(1, 'Reports.DailyAttendanceReportByLocation.Column.EventType', 'Event Type'),
+(1, 'Reports.DailyAttendanceReportByLocation.Column.ProofType', 'Proof Type'),
+(1, 'Common.Search', 'Search'),
+(1, 'Common.PrintFullReport', 'Print Full Report'),
+(1, 'Common.Loading', 'Loading...'),
+(1, 'Common.NoRecordsFound', 'No record found'),
 
+-- Daily Working Hours Report
+(1, 'Mobi.Reports.DailyWorkingHoursReport', 'Daily Working Hours Report'),
+(1, 'Mobi.Reports.EmployeeName', 'Employee Name'),
+(1, 'Mobi.Placeholder.EnterName', 'Enter 3 characters to search'),
+(1, 'Mobi.Reports.StartDate', 'Start Date'),
+(1, 'Mobi.Reports.EndDate', 'End Date'),
+(1, 'Mobi.Common.Search', 'Search'),
+(1, 'Mobi.Reports.Date', 'Date'),
+(1, 'Mobi.Reports.Day', 'Day'),
+(1, 'Mobi.Reports.TotalHours', 'Total Hours'),
+(1, 'Mobi.Reports.TotalMinutes', 'Total Minutes'),
+(1, 'Mobi.Reports.TotalTransactions', 'Total Transactions'),
+(1, 'Mobi.Reports.Notes', 'Notes'),
+
+-- Employee Location Authority Report
+(1, 'Mobi.Reports.EmployeeLocationAuthorityReport', 'Employee Location Authority Report'),
+(1, 'Mobi.Reports.EmployeeId', 'ID'),
+(1, 'Mobi.Reports.LocationName', 'Location Name'),
+(1, 'Mobi.Reports.ProofType', 'Proof Type'),
+(1, 'Mobi.Common.Print', 'Print'),
+(1, 'Mobi.Common.NoDataToPrint', 'No data available to print.');
+
+
+
+-- Arabic (LanguageId = 2)
+INSERT INTO LocaleStringResource (LanguageId, ResourceName, ResourceValue) VALUES
+(2, 'Reports.DailyAttendanceReportByLocation.Title', N'تقرير الحضور اليومي حسب الموقع'),
+(2, 'Reports.DailyAttendanceReportByLocation.Header', N'تقرير الحضور اليومي حسب الموقع'),
+(2, 'Reports.DailyAttendanceReportByLocation.EmployeeName', N'اسم الموظف'),
+(2, 'Reports.DailyAttendanceReportByLocation.EmployeeName.Placeholder', N'أدخل 3 أحرف للبحث'),
+(2, 'Reports.DailyAttendanceReportByLocation.StartDate', N'تاريخ البدء'),
+(2, 'Reports.DailyAttendanceReportByLocation.EndDate', N'تاريخ الانتهاء'),
+(2, 'Reports.DailyAttendanceReportByLocation.Error.SelectEmployee', N'يرجى اختيار موظف أولاً!'),
+(2, 'Reports.DailyAttendanceReportByLocation.Print.Title', N'تقرير الحضور اليومي'),
+(2, 'Reports.DailyAttendanceReportByLocation.Print.Employee', N'الموظف'),
+(2, 'Reports.DailyAttendanceReportByLocation.Print.DateRange', N'الفترة الزمنية'),
+(2, 'Reports.DailyAttendanceReportByLocation.Column.Location', N'الموقع'),
+(2, 'Reports.DailyAttendanceReportByLocation.Column.Date', N'التاريخ'),
+(2, 'Reports.DailyAttendanceReportByLocation.Column.Time', N'الوقت'),
+(2, 'Reports.DailyAttendanceReportByLocation.Column.EventType', N'نوع الحدث'),
+(2, 'Reports.DailyAttendanceReportByLocation.Column.ProofType', N'نوع الإثبات'),
+(2, 'Common.Search', N'بحث'),
+(2, 'Common.PrintFullReport', N'طباعة التقرير الكامل'),
+(2, 'Common.Loading', N'جارٍ التحميل...'),
+(2, 'Common.NoRecordsFound', N'لم يتم العثور على سجلات'),
+
+-- Daily Working Hours Report
+(2, 'Mobi.Reports.DailyWorkingHoursReport', N'تقرير ساعات العمل اليومية'),
+(2, 'Mobi.Reports.EmployeeName', N'اسم الموظف'),
+(2, 'Mobi.Placeholder.EnterName', N'أدخل 3 أحرف للبحث'),
+(2, 'Mobi.Reports.StartDate', N'تاريخ البدء'),
+(2, 'Mobi.Reports.EndDate', N'تاريخ الانتهاء'),
+(2, 'Mobi.Common.Search', N'بحث'),
+(2, 'Mobi.Reports.Date', N'التاريخ'),
+(2, 'Mobi.Reports.Day', N'اليوم'),
+(2, 'Mobi.Reports.TotalHours', N'إجمالي الساعات'),
+(2, 'Mobi.Reports.TotalMinutes', N'إجمالي الدقائق'),
+(2, 'Mobi.Reports.TotalTransactions', N'إجمالي الحركات'),
+(2, 'Mobi.Reports.Notes', N'ملاحظات'),
+
+-- Employee Location Authority Report
+(2, 'Mobi.Reports.EmployeeLocationAuthorityReport', N'تقرير صلاحية مواقع الموظفين'),
+(2, 'Mobi.Reports.EmployeeId', N'المعرف'),
+(2, 'Mobi.Reports.EmployeeName', N'اسم الموظف'),
+(2, 'Mobi.Reports.LocationName', N'اسم الموقع'),
+(2, 'Mobi.Reports.ProofType', N'نوع الإثبات'),
+(2, 'Mobi.Common.Print', N'طباعة'),
+(2, 'Mobi.Common.NoDataToPrint', N'لا توجد بيانات للطباعة.');
