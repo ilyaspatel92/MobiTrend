@@ -1,28 +1,23 @@
 ﻿@model RegisterModel
 
 <div class="content-wrapper">
-    <!-- Page Header -->
     <section class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2">
-            </div>
+            <div class="row mb-2"></div>
         </div>
     </section>
 
-    <!-- Main Content -->
     <section class="content">
         <div class="container-fluid">
             <div class="card card-warning">
-                <div class="card-header">
-                    <h3 class="card-title">Edit System User</h3>
-                    <div class="card-tools">
-                        <a asp-action="Index" class="btn btn-secondary btn-sm">
-                            <i class="fas fa-arrow-left"></i> Back to List
-                        </a>
-                    </div>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="card-title">@T("Mobi.SystemUser.EditTitle")</h3>
+                    <a asp-action="Index" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> @T("Mobi.SystemUser.BackToList")
+                    </a>
                 </div>
+
                 <div class="card-body">
-                    <!-- Display Validation Errors -->
                     @if (ViewData.ModelState != null && !ViewData.ModelState.IsValid)
                     {
                         <div class="alert alert-danger">
@@ -35,40 +30,26 @@
                         </div>
                     }
 
-                    <!-- Form -->
                     <form asp-action="Edit" method="post">
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="EmployeeName">Employee Name</label>
-                                    <input asp-for="EmployeeName" class="form-control" placeholder="Enter employee name" readonly/>
+                                    <label for="EmployeeName">@T("Mobi.SystemUser.EmployeeName")</label>
+                                    <input asp-for="EmployeeName" class="form-control" placeholder="@T("Mobi.SystemUser.EmployeeName.Placeholder")" readonly />
                                     <span asp-validation-for="EmployeeName" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="UserName">User Name</label>
-                                    <input asp-for="UserName" class="form-control" placeholder="Enter username"/>
-                                    @* <span asp-validation-for="UserName" class="text-danger"></span> *@
+                                    <label for="UserName">@T("Mobi.SystemUser.UserName")</label>
+                                    <input asp-for="UserName" class="form-control" placeholder="@T("Mobi.SystemUser.UserName.Placeholder")" />
                                 </div>
                             </div>
-                            @* <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="UserName">Password</label>
-                                    <input asp-for="Password" class="form-control" placeholder="Enter Password" />
-                                    <span asp-validation-for="UserName" class="text-danger"></span>
-                                </div>
-                            </div>  *@
                         </div>
 
-                       
-
-                      
-
-                        <!-- Access Control Section -->
                         <div class="row mt-3">
                             <div class="col-md-12">
-                                <h5>Screen Authority</h5>
+                                <h5>@T("Mobi.SystemUser.ScreenAuthority")</h5>
                                 <div id="authority-list">
                                     @foreach (var authority in Enum.GetValues(typeof(ScreenAuthorityEnum)))
                                     {
@@ -81,14 +62,13 @@
                             </div>
                         </div>
 
-                        <!-- Action Buttons -->
-                        <div class="row">
+                        <div class="row mt-4">
                             <div class="col-12 d-flex justify-content-end">
                                 <button type="submit" class="btn btn-warning me-2">
-                                    <i class="fas fa-edit"></i> Update
+                                    <i class="fas fa-edit"></i> @T("Mobi.SystemUser.Update")
                                 </button>
                                 <a asp-action="Index" class="btn btn-secondary">
-                                    <i class="fas fa-times"></i> Cancel
+                                    <i class="fas fa-times"></i> @T("Mobi.SystemUser.Cancel")
                                 </a>
                             </div>
                         </div>
@@ -101,63 +81,57 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        let selectedUserId = @Model.Id; // Current user ID from the model
+        let selectedUserId = @Model.Id;
 
-        // Fetch access control for the user when the page loads
         fetchAccess(selectedUserId);
 
-        // Fetch access for selected employee
         function fetchAccess(userId) {
             fetch(`/AccessControl/GetAccessForEmployee?userId=${userId}`)
                 .then((response) => response.json())
                 .then((data) => {
-                    // Clear all checkboxes first
                     document.querySelectorAll("input[name='authorities']").forEach((input) => {
                         input.checked = false;
                     });
-
-                    // Select the checkboxes for the authorities returned by the server
                     data.forEach((item) => {
-                        const authorityInput = document.querySelector(
-                            `#authority-list input[value='${item.screenAuthority}']`
-                        );
+                        const authorityInput = document.querySelector(`#authority-list input[value='${item.screenAuthority}']`);
                         if (authorityInput) {
                             authorityInput.checked = true;
                         }
                     });
                 })
                 .catch(() => {
-                    alert("Error fetching access for the selected employee.");
+                    alert("@T("Mobi.SystemUser.ErrorFetchingAccess")");
                 });
         }
 
-        // Handle save access
-        document.getElementById("saveAccess").addEventListener("click", function () {
-            if (selectedUserId === 0) {
-                alert("Please select an employee first.");
-                return;
-            }
+        // SaveAccess button not defined in markup but kept JS logic if added later
+        const saveBtn = document.getElementById("saveAccess");
+        if (saveBtn) {
+            saveBtn.addEventListener("click", function () {
+                if (selectedUserId === 0) {
+                    alert("@T("Mobi.SystemUser.SelectEmployeeFirst")");
+                    return;
+                }
 
-            const selectedAuthorities = Array.from(document.querySelectorAll("input[name='authorities']:checked")).map(input => input.value);
+                const selectedAuthorities = Array.from(document.querySelectorAll("input[name='authorities']:checked")).map(input => input.value);
 
-            fetch(`/AccessControl/SaveAccess`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ userId: selectedUserId, authorities: selectedAuthorities })
-            })
-                .then(response => {
-                    if (response.ok) {
-                        alert("Access saved successfully.");
-                        location.reload(); // Reload to show TempData message if required
-                    } else {
-                        alert("Error saving access control.");
-                    }
+                fetch(`/AccessControl/SaveAccess`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ userId: selectedUserId, authorities: selectedAuthorities })
                 })
-                .catch(() => {
-                    alert("Error saving access control.");
-                });
-        });
+                    .then(response => {
+                        if (response.ok) {
+                            alert("@T("Mobi.SystemUser.SaveSuccess")");
+                            location.reload();
+                        } else {
+                            alert("@T("Mobi.SystemUser.SaveError")");
+                        }
+                    })
+                    .catch(() => {
+                        alert("@T("Mobi.SystemUser.SaveError")");
+                    });
+            });
+        }
     });
 </script>

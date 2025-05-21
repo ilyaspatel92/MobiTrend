@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Monthly Working Hours Report";
+    ViewData["Title"] = @T("Mobi.Reports.MonthlyWorkingHoursReport");
 }
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -14,19 +14,17 @@
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
 
-
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
             <div class="card mb-3">
                 <div class="card-header">
-                    <h3 class="card-title">Monthly Working Hours Report</h3>
+                    <h3 class="card-title">@T("Mobi.Reports.MonthlyWorkingHoursReport")</h3>
                 </div>
                 <div class="card-body">
-                    <!-- Search Filters -->
                     <div class="row mb-3">
                         <div class="col-md-3">
-                            <label for="year">Year:</label>
+                            <label for="year">@T("Mobi.Reports.Year")</label>
                             <select id="year" class="form-control">
                                 @for (int i = DateTime.Now.Year; i >= DateTime.Now.Year - 5; i--)
                                 {
@@ -35,7 +33,7 @@
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label for="month">Month:</label>
+                            <label for="month">@T("Mobi.Reports.Month")</label>
                             <select id="month" class="form-control">
                                 @for (int i = 1; i <= 12; i++)
                                 {
@@ -44,20 +42,19 @@
                             </select>
                         </div>
                         <div class="col-md-3 mt-4">
-                            <button id="searchBtn" class="btn btn-primary">Search</button>
+                            <button id="searchBtn" class="btn btn-primary">@T("Mobi.Common.Search")</button>
                         </div>
                     </div>
 
-                    <!-- Data Table -->
                     <table id="workingHoursTable" class="table table-bordered">
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>ID</th>
-                                <th>Employee Name</th>
-                                <th>Total Hours</th>
-                                <th>Total Minutes</th>
-                                <th>Notes</th>
+                                <th>@T("Mobi.Reports.EmployeeId")</th>
+                                <th>@T("Mobi.Reports.EmployeeName")</th>
+                                <th>@T("Mobi.Reports.TotalHours")</th>
+                                <th>@T("Mobi.Reports.TotalMinutes")</th>
+                                <th>@T("Mobi.Reports.Notes")</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -81,26 +78,24 @@
                 buttons: [
                     {
                         extend: 'print',
-                        text: '<i class="fas fa-print"></i> Print',
+                        text: '<i class="fas fa-print"></i> @T("Mobi.Common.Print")',
                         className: 'btn btn-secondary',
-                        title: 'Monthly Working Hours Report',
+                        title: '@T("Mobi.Reports.MonthlyWorkingHoursReport")',
                         exportOptions: { columns: ':visible' },
-                        action: function (e, dt, node, config)
-                        {
-                            let dataCount = dt.rows({ search: 'applied' }).count(); // Get count of filtered rows
-
+                        action: function (e, dt, node, config) {
+                            let dataCount = dt.rows({ search: 'applied' }).count();
                             if (dataCount === 0) {
-                                alert("No data available to print.");
+                                alert("@T("Mobi.Reports.NoDataToPrint")");
                             } else {
                                 $.fn.dataTable.ext.buttons.print.action.call(this, e, dt, node, config);
                             }
                         },
                         customize: function (win) {
-                            $(win.document.body).prepend('<h4 class="text-center">Monthly Working Hours Report</h4>');
+                            $(win.document.body).prepend('<h4 class="text-center">@T("Mobi.Reports.MonthlyWorkingHoursReport")</h4>');
 
                             let year = $('#year').val();
                             let month = $('#month').find(':selected').text();
-                            $(win.document.body).prepend('<h5 class="text-center">Year: ' + year + ' | Month: ' + month + '</h5>');
+                            $(win.document.body).prepend('<h5 class="text-center">@T("Mobi.Reports.Year") : ' + year + ' | @T("Mobi.Reports.Month") : ' + month + '</h5>');
                             $(win.document.body).find('table').addClass('display').css('font-size', 'inherit');
                         }
                     }
@@ -115,7 +110,6 @@
                 ]
             });
 
-            // Search Button Click
             $('#searchBtn').click(function () {
                 let year = $('#year').val();
                 let month = $('#month').val();

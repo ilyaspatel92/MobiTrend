@@ -1,33 +1,34 @@
 ﻿@{
-    ViewData["Title"] = "Employee Locations";
+    ViewData["Title"] = @T("Mobi.EmployeeLocation.PageTitle");
 }
+
 <!-- Search Section -->
 <div class="card card-info card-outline mb-4 mx-3 custom-top-spacing">
     <div class="card-header">
-        <h3 class="card-title mb-0">Search Employee</h3>
+        <h3 class="card-title mb-0">@T("Mobi.EmployeeLocation.SearchEmployee")</h3>
     </div>
     <form id="searchForm">
         <div class="card-body">
             <div class="row g-3">
                 <div class="col-md-4">
                     <label for="employeeName" class="form-label fw-semibold">
-                        <i class="fas fa-user me-1"></i>Employee Name
+                        <i class="fas fa-user me-1"></i>@T("Mobi.EmployeeLocation.Filter.EmployeeName")
                     </label>
-                    <input type="text" class="form-control" id="employeeName" name="employeeName" placeholder="Enter employee name">
+                    <input type="text" class="form-control" id="employeeName" name="employeeName" placeholder="@T("Mobi.EmployeeLocation.Placeholder.EmployeeName")">
                 </div>
                 <div class="col-md-4">
                     <label for="filenumber" class="form-label fw-semibold">
-                        <i class="fas fa-file me-1"></i>File Number
+                        <i class="fas fa-file me-1"></i>@T("Mobi.EmployeeLocation.Filter.FileNumber")
                     </label>
-                    <input type="text" class="form-control" id="filenumber" name="filenumber" placeholder="Enter file number">
+                    <input type="text" class="form-control" id="filenumber" name="filenumber" placeholder="@T("Mobi.EmployeeLocation.Placeholder.FileNumber")">
                 </div>
                 <div class="col-md-4">
                     <label for="siteStatus" class="form-label fw-semibold">
-                        <i class="fas fa-chart-bar me-1"></i>Site Status
+                        <i class="fas fa-chart-bar me-1"></i>@T("Mobi.EmployeeLocation.Filter.SiteStatus")
                     </label>
                     <select id="siteStatus" name="siteStatus" class="form-select">
-                        <option value="">All</option>
-                        <option value="set">Set</option>
+                        <option value="">@T("Mobi.Common.All")</option>
+                        <option value="set">@T("Mobi.EmployeeLocation.SiteStatus.Set")</option>
                     </select>
                 </div>
             </div>
@@ -35,18 +36,16 @@
             <div class="row mt-4">
                 <div class="col-12 d-flex flex-wrap justify-content-end gap-2">
                     <button type="submit" class="btn btn-primary px-4">
-                        <i class="fas fa-search me-1"></i>Search
+                        <i class="fas fa-search me-1"></i>@T("Mobi.EmployeeLocation.Button.Search")
                     </button>
                     <button type="button" id="showAll" class="btn btn-secondary px-4">
-                        <i class="fas fa-list me-1"></i>Show All
+                        <i class="fas fa-list me-1"></i>@T("Mobi.EmployeeLocation.Button.ShowAll")
                     </button>
                 </div>
             </div>
         </div>
     </form>
 </div>
-
-
 
 <!-- Employee Locations Table -->
 <div class="app-content">
@@ -55,21 +54,22 @@
             <div class="col-md-12">
                 <div class="card mb-12">
                     <div class="card-header">
-                        <h3 class="card-title">Employee Location Details</h3>
+                        <h3 class="card-title">@T("Mobi.EmployeeLocation.Table.Title")</h3>
                     </div>
                     <div class="card-body table-responsive">
                         <table id="employeeLocationTable" class="table table-bordered">
                             <thead class="table-light">
                                 <tr>
-                                    <th>File Number</th>
-                                    <th>Employee Name</th>
-                                    <th>Location Name</th>
-                                    <th>Action</th>
+                                    <th>@T("Mobi.EmployeeLocation.Table.FileNumber")</th>
+                                    <th>@T("Mobi.EmployeeLocation.Table.EmployeeName")</th>
+                                    <th>@T("Mobi.EmployeeLocation.Table.LocationName")</th>
+                                    <th>@T("Mobi.EmployeeLocation.Table.Action")</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
                         </table>
                         <div id="initialMessage" class="text-center mt-4" style="display: none;">
+                            @T("Mobi.EmployeeLocation.Message.Empty")
                         </div>
                     </div>
                 </div>
@@ -78,24 +78,24 @@
     </div>
 </div>
 
-@section Scripts {    
+@section Scripts {
     <script>
         $(document).ready(function () {
             var table = $('#employeeLocationTable').DataTable({
                 processing: true,
                 serverSide: false,
-                order :[[0,"asc"]],
+                order: [[0, "asc"]],
                 paging: true,
                 searching: false,
                 lengthChange: true,
                 pageLength: 10,
                 language: {
-                    emptyTable: "Please use the search form or click 'Show All' to load data.",
+                    emptyTable: "@T("Mobi.EmployeeLocation.Message.Empty")",
                     paginate: {
-                        previous: "Previous",
-                        next: "Next"
+                        previous: "@T("Mobi.Common.Previous")",
+                        next: "@T("Mobi.Common.Next")"
                     },
-                    info: "Showing _START_ to _END_ of _TOTAL_ entries"
+                    info: "@T("Mobi.Common.PaginationInfo")"
                 },
                 columns: [
                     { data: 'fileNumber' },
@@ -105,23 +105,21 @@
                         data: 'employeeId',
                         render: function (data, type, row) {
                             if (!row.locationNames) {
-                                return `<a href="@Url.Action("SetLocation", "EmployeeLocation")?EmployeeId=${data}" class="btn btn-link p-0">Set Location</a>`;
+                                return `<a href="@Url.Action("SetLocation", "EmployeeLocation")?EmployeeId=${data}" class="btn btn-link p-0">@T("Mobi.EmployeeLocation.Action.SetLocation")</a>`;
                             } else {
                                 return `<a href="@Url.Action("SetLocation", "EmployeeLocation")?EmployeeId=${data}" class="btn btn-link p-0"><i class="fas fa-edit"></i></a>`;
                             }
                         }
                     }
                 ],
-                ajax: null // No initial ajax call
+                ajax: null
             });
 
-            // Show the initial message
             $('#initialMessage').show();
 
-            // Function to load data and reload table
             function loadData(name = "", filenumber = "", sitestatus = "") {
-                $('#initialMessage').hide(); // Hide the initial message
-                 $(".dataTables_processing").show();
+                $('#initialMessage').hide();
+                $(".dataTables_processing").show();
                 $.ajax({
                     url: `/EmployeeLocation/GetEmployeeLocationData`,
                     type: 'GET',
@@ -129,12 +127,11 @@
                         employeeName: name,
                         filenumber: filenumber,
                         siteStatus: sitestatus,
-                        draw: table.settings()[0].iDraw + 1 // pass the draw parameter
+                        draw: table.settings()[0].iDraw + 1
                     },
                     success: function (result) {
-                         $(".dataTables_processing").hide();
-                        // Clear and add the formatted data to the DataTable
-                        table.clear().rows.add(result.data.map((employee, index) => ({
+                        $(".dataTables_processing").hide();
+                        table.clear().rows.add(result.data.map((employee) => ({
                             fileNumber: employee.fileNumber,
                             employeeName: employee.employeeName,
                             locationNames: employee.locationNames,
@@ -148,7 +145,6 @@
                 });
             }
 
-            // Trigger the AJAX request on form submit
             $('#searchForm').on('submit', function (e) {
                 e.preventDefault();
                 const name = $('#employeeName').val();
@@ -157,7 +153,6 @@
                 loadData(name, filenumber, sitestatus);
             });
 
-            // Handle show all button click
             $('#showAll').on('click', function () {
                 $('#employeeName').val('');
                 $('#filenumber').val('');

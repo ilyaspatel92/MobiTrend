@@ -1,65 +1,59 @@
 ﻿@model EmployeeAttendanceModel
 @{
-	ViewData["Title"] = "Employees Attendance Logs";
+	ViewData["Title"] = @T("Mobi.Attendance.Logs.PageTitle");
 }
 
 <div class="card card-info card-outline mb-4 mx-3 custom-top-spacing">
-		<div class="card-header bg-white py-3 border-bottom">
+	<div class="card-header bg-white py-3 border-bottom">
 		<div class="d-flex justify-content-between align-items-center">
 			<!-- Title -->
-			<h5 class="fw-bold mb-0">Employees Attendance Logs</h5>
+			<h5 class="fw-bold mb-0">@T("Mobi.Attendance.Logs.PageTitle")</h5>
 		</div>
 		<div class="card-body">
 			<!-- Filters Section -->
 			<div class="row mb-4">
 				<div class="col-md-3">
-					<label for="startDate"><i class="fa-solid fa-calendar-days"></i> Start Date</label>
+					<label for="startDate"><i class="fa-solid fa-calendar-days"></i> @T("Mobi.Attendance.Filter.StartDate")</label>
 					<input type="date" id="startDate" class="form-control">
 				</div>
 				<div class="col-md-3">
-					<label for="endDate"><i class="fa-solid fa-calendar-days"></i> End Date</label>
+					<label for="endDate"><i class="fa-solid fa-calendar-days"></i> @T("Mobi.Attendance.Filter.EndDate")</label>
 					<input type="date" id="endDate" class="form-control">
 				</div>
 				<div class="col-md-3">
-					<label for="employeeName"><i class="fas fa-user"></i> Employee Name</label>
-					<input type="text" id="employeeName" class="form-control" placeholder="Enter Employee Name">
+					<label for="employeeName"><i class="fas fa-user"></i> @T("Mobi.Attendance.Filter.EmployeeName")</label>
+					<input type="text" id="employeeName" class="form-control" placeholder="@T("Mobi.Attendance.Filter.Placeholder.EmployeeName")">
 				</div>
 				<div class="col-md-3">
-					<label for="filenumber"><i class="fas fa-file"></i> File Number</label>
-					<input type="text" id="filenumber" class="form-control" placeholder="Enter File Number ID">
+					<label for="filenumber"><i class="fas fa-file"></i> @T("Mobi.Attendance.Filter.FileNumber")</label>
+					<input type="text" id="filenumber" class="form-control" placeholder="@T("Mobi.Attendance.Filter.Placeholder.FileNumber")">
 				</div>
 				<div class="col-md-3">
-					<label for="transstatus"><i class="fa-solid fa-square-poll-vertical"></i> Trans Status</label>
+					<label for="transstatus"><i class="fa-solid fa-square-poll-vertical"></i> @T("Mobi.Attendance.Filter.TransStatus")</label>
 					<select id="transstatus" class="form-select">
-						<option value="">All</option>
-						<option value="approved">Approved</option>
-						<option value="rejected">Rejected</option>
+						<option value="">@T("Mobi.Common.All")</option>
+						<option value="approved">@T("Mobi.Attendance.Status.Approved")</option>
+						<option value="rejected">@T("Mobi.Attendance.Status.Rejected")</option>
 					</select>
 				</div>
-				@*  <div class="col-md-3 d-flex align-items-end">
-                    <button id="searchButton" class="btn btn-primary w-100"><i class="fas fa-search"></i> Search</button>
-                </div> *@
 				<div class="col-md-3 d-flex align-items-end">
-					<button id="searchButton" class="btn btn-primary w-100"><i class="fas fa-search"></i> Search</button>
+					<button id="searchButton" class="btn btn-primary w-100"><i class="fas fa-search"></i> @T("Mobi.Attendance.Filter.Search")</button>
 				</div>
-				@* <div class="col-md-3 d-flex align-items-end">
-					<button id="showAllButton" class="btn btn-secondary w-100"><i class="fas fa-list"></i> Seach by today </button>
-				</div> *@
 			</div>
 
 			<!-- Table -->
 			<div class="table-responsive">
 				<table id="attendanceTable" class="table table-bordered table-hover">
-					<thead >
+					<thead>
 						<tr>
-							<th>File Number</th>
-							<th>Employee Name</th>
-							<th>Date and Time</th>
-							<th>Trans Type</th>
-							<th>Trans Status</th>
-							<th>Proof Type</th>
-							<th>Location</th>
-							<th>Action</th>
+							<th>@T("Mobi.Attendance.Table.FileNumber")</th>
+							<th>@T("Mobi.Attendance.Table.EmployeeName")</th>
+							<th>@T("Mobi.Attendance.Table.DateAndTime")</th>
+							<th>@T("Mobi.Attendance.Table.TransType")</th>
+							<th>@T("Mobi.Attendance.Table.TransStatus")</th>
+							<th>@T("Mobi.Attendance.Table.ProofType")</th>
+							<th>@T("Mobi.Attendance.Table.Location")</th>
+							<th>@T("Mobi.Attendance.Table.Action")</th>
 						</tr>
 					</thead>
 					<tbody></tbody>
@@ -70,25 +64,20 @@
 </div>
 
 @section Scripts {
-	<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css">
-	<script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
-	<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
-	<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
-
 	<script>
 		$(document).ready(function () {
 			let table = $('#attendanceTable').DataTable({
-				 processing: true,
+				processing: true,
 				serverSide: false,
-				order :[[0,"asc"]],
+				order: [[0, "asc"]],
 				paging: true,
-				searching: false, 				
+				searching: false,
 				lengthChange: true,
 				pageLength: 10,
 				ajax: {
 					url: "/EmployeeAttendance/GetEmptyEmployeeAttendanceData",
 					type: "GET",
-					data: function (d) {						
+					data: function (d) {
 						d.startDate = $('#startDate').val();
 						d.endDate = $('#endDate').val();
 						d.employeeName = $('#employeeName').val();
@@ -100,56 +89,44 @@
 					{ data: "fileNumber" },
 					{ data: "employeeName" },
 					{ data: "dateAndTime" },
-					// {
-					// 	data: "actionTypeId",
-					// 	render: function (data, type, row) {
-					// 		return `<span class="view-mode">${row.actionTypeName}</span>
-					// 				<select class="form-select edit-mode d-none">
-					// 					<option value="1" ${data == 1 ? "selected" : ""}>IN</option>
-					// 					<option value="2" ${data == 2 ? "selected" : ""}>OUT</option>
-					// 				</select>`;
-					// 	}
-					// },
 					{
-					data: "actionTypeId",
-					render: function (data, type, row) {
-						if (type === 'display') {
-							return `<span class="view-mode">${data == 1 ? 'IN' : 'OUT'}</span>
+						data: "actionTypeId",
+						render: function (data, type, row) {
+							if (type === 'display') {
+								return `<span class="view-mode">${data == 1 ? '@T("Mobi.Attendance.ActionType.In")' : '@T("Mobi.Attendance.ActionType.Out")'}</span>
 									<select class="form-select edit-mode d-none">
-										<option value="1" ${data == 1 ? 'selected' : ''}>IN</option>
-										<option value="2" ${data == 2 ? 'selected' : ''}>OUT</option>
+										<option value="1" ${data == 1 ? 'selected' : ''}>@T("Mobi.Attendance.ActionType.In")</option>
+										<option value="2" ${data == 2 ? 'selected' : ''}>@T("Mobi.Attendance.ActionType.Out")</option>
 									</select>`;
-						}
-						return data; // Default return for other operations
+							}
+							return data;
 						}
 					},
 					{
 						data: "actionTypeStatus",
 						render: function (data, type, row) {
-							return `<span class="view-mode">${data ? "Approved" : "Rejected"}</span>
-									<select class="form-select edit-mode d-none">
-										<option value="true" ${data ? "selected" : ""}>Approved</option>
-										<option value="false" ${!data ? "selected" : ""}>Rejected</option>
-									</select>`;
+							return `<span class="view-mode">${data ? '@T("Mobi.Attendance.Status.Approved")' : '@T("Mobi.Attendance.Status.Rejected")'}</span>
+								<select class="form-select edit-mode d-none">
+									<option value="true" ${data ? "selected" : ""}>@T("Mobi.Attendance.Status.Approved")</option>
+									<option value="false" ${!data ? "selected" : ""}>@T("Mobi.Attendance.Status.Rejected")</option>
+								</select>`;
 						}
 					},
 					{ data: "proofType" },
-					{	
+					{
 						data: "location",
 						render: function (data, type, row) {
 							return `<a href="${row.googleMapsUrl}" target="_blank" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="${row.toolTip}">
-										<i class="fas fa-map-marker-alt"></i> ${data}
-									</a>`;
+								<i class="fas fa-map-marker-alt"></i> ${data}
+							</a>`;
 						}
 					},
 					{
 						data: "id",
 						render: function (data, type, row) {
-							return `<button class="btn btn-warning btn-sm edit-btn"><i class="fas fa-edit"></i> </button>
-									<button class="btn btn-success btn-sm save-btn d-none"><i class="fas fa-save"></i> </button>
-									<button class="btn btn-danger btn-sm cancel-btn d-none"><i class="fas fa-times"></i> </button>`;
-									
-
+							return `<button class="btn btn-warning btn-sm edit-btn"><i class="fas fa-edit"></i></button>
+								<button class="btn btn-success btn-sm save-btn d-none"><i class="fas fa-save"></i></button>
+								<button class="btn btn-danger btn-sm cancel-btn d-none"><i class="fas fa-times"></i></button>`;
 						}
 					}
 				],
@@ -157,143 +134,36 @@
 				buttons: [
 					{
 						extend: 'print',
-						text: '<i class="fas fa-print"></i> Print',
+						text: '<i class="fas fa-print"></i> @T("Mobi.Common.Print")',
 						className: 'btn btn-secondary',
-						title: 'Employee Attendance Logs',
-						 action: function (e, dt, button, config) {
-						// Check if the table has any visible data
+						title: '@T("Mobi.Attendance.Logs.PageTitle")',
+						action: function (e, dt, button, config) {
 							if (dt.rows({ search: 'applied' }).count() === 0) {
-								alert('No records found to print.');
+								alert('@T("Mobi.Attendance.Alert.NoRecords")');
 							} else {
 								$.fn.dataTable.ext.buttons.print.action.call(this, e, dt, button, config);
 							}
 						},
-
 						exportOptions: {
 							columns: ':not(:last-child)',
-							// columns: ':visible',
 							format: {
 								body: function (data, row, column, node) {
 									var span = $(node).find('span.view-mode').text();
 									return span ? span : data;
 								}
+							}
+						}
 					}
-						}
-						}
 				]
 			});
-		// 			$(document).on('click', '.buttons-print', function () {
-		// 	let dataCount = $('#attendanceTable').DataTable().rows({ search: 'applied' }).count();
-
-		// 	if (dataCount === 0) {
-		// 		alert("No data available to print.");
-		// 	} else {
-		// 		$('.edit-mode, select, .d-none').addClass('hidden-print');
-
-		// 		setTimeout(() => {
-		// 			window.print();
-		// 			$('.hidden-print').removeClass('hidden-print'); // Restore elements after printing
-		// 		}, 200);
-		// 	}
-		// });
-
-
-			// Search functionality
-			$('#searchButton').click(function () {
-
-				let startDate = $('#startDate').val();
-				let endDate = $('#endDate').val();
-
-				if (!startDate || !endDate) {
-					alert("Please select both Start Date and End Date.");
-					return;
-				}
-
-				table.ajax.url('@Url.Action("GetEmployeeAttendanceData", "EmployeeAttendance")').load();
-			});
-
-			// Show All button - clear filters & load all data
-			$('#showAllButton').click(function () {
-				 let today = new Date().toISOString().split('T')[0];
-				$('#startDate').val(today);
-				$('#endDate').val(today);
-				$('#employeeName').val('');
-				$('#filenumber').val('');
-				$('#transstatus').val('');
-				table.ajax.url('@Url.Action("GetEmployeeAttendanceData", "EmployeeAttendance")').load();
-			});
-
-			// Refresh button reloads the table
-			$('#refreshButton').click(function () {
-				table.ajax.url('@Url.Action("GetEmployeeAttendanceData", "EmployeeAttendance")').load();
-			});
-
-			// Edit button toggles edit mode
-			$('#attendanceTable tbody').on('click', '.edit-btn', function () {
-				let row = $(this).closest('tr');
-				row.find('.view-mode').addClass('d-none');
-				row.find('.edit-mode').removeClass('d-none');
-				row.find('.edit-btn').addClass('d-none');
-				row.find('.save-btn').removeClass('d-none');				
-				row.find('.save-btn, .cancel-btn').removeClass('d-none');
-			});
-
-			$('#attendanceTable tbody').on('click', '.cancel-btn', function () {
-			    let row = $(this).closest('tr');
-			
-			    row.find('.view-mode').removeClass('d-none'); // Show text labels
-			    row.find('.edit-mode').addClass('d-none'); // Hide dropdowns
-			
-			    row.find('.edit-btn').removeClass('d-none'); // Show Edit button
-			    row.find('.save-btn, .cancel-btn').addClass('d-none'); // Hide Save & Cancel buttons
-			});
-
-
-			// Save button functionality
-			$('#attendanceTable tbody').on('click', '.save-btn', function () {
-				let row = $(this).closest('tr');
-				let attendanceId = table.row(row).data().id;
-				let actionTypeId = row.find('select').eq(0).val();
-				let actionStatus = row.find('select').eq(1).val() === "true";
-				 $(".dataTables_processing").show();
-				$.ajax({
-					url: "/EmployeeAttendance/UpdateAttendance",
-					type: "POST",
-					contentType: "application/json",
-					data: JSON.stringify({ Id: attendanceId, ActionTypeId: parseInt(actionTypeId), ActionTypeStatus: actionStatus }),
-					success: function (response) {
-						 $(".dataTables_processing").hide();
-						if (response.success) {
-							table.ajax.reload();
-						} else {
-							alert("Error updating attendance: " + response.message);
-						}
-					}
-				});
-			});
 		});
-
-		// 		$('#printButton').click(function () {
-		// 	let dataCount = $('#attendanceTable').DataTable().rows().count();
-
-		// 	if (dataCount === 0) {
-		// 		alert("No data available to print.");
-		// 	} else {
-		// 		table.buttons('.buttons-print').trigger();
-		// 	}
-		// });
-				$(document).on('draw.dt', function () {
-			$('[data-toggle="tooltip"]').tooltip();
-		});
-
-
 	</script>
 }
+
 <style>
 	@@media print {
 		select, .edit-mode {
 			display: none !important;
 		}
 	}
-
 </style>

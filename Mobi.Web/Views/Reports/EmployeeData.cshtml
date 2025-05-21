@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Employee Data";
+    ViewData["Title"] = @T("Mobi.Reports.EmployeeDataReport");
 }
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -14,37 +14,34 @@
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
 
-
-
 <div class="app-content">
-    <!--begin::Container-->
     <div class="container-fluid">
-        <!--begin::Row-->
         <div class="row">
             <div class="col-md-12">
                 <div class="card mb-12">
                     <div class="card-header">
-                        <h3 class="card-title">Employees Data Report</h3>
-                    </div> <!-- /.card-header -->
+                        <h3 class="card-title">@T("Mobi.Reports.EmployeeDataReport")</h3>
+                    </div>
                     <div class="card-body">
                         <table class="table table-bordered" id="employeeTable">
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>File Number</th>
-                                    <th>Name (English)</th>
-                                    <th>Email</th>
-                                    <th>Reg Date</th>
+                                    <th>@T("Mobi.Reports.FileNumber")</th>
+                                    <th>@T("Mobi.Reports.NameEnglish")</th>
+                                    <th>@T("Mobi.Reports.Email")</th>
+                                    <th>@T("Mobi.Reports.RegDate")</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
                         </table>
-                    </div> <!-- /.card-body -->
-                </div> <!-- /.card -->
-            </div> <!-- /.col -->
-        </div> <!--end::Row-->
-    </div> <!--end::Container-->
-</div> <!--end::App Content-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
         $(document).ready(function () {
@@ -78,56 +75,51 @@
                 createdRow: function (row, data, dataIndex) {
                     $('td:eq(0)', row).html(dataIndex + 1);
                 },
-                dom: '<"d-flex justify-content-between align-items-center mb-2"lB>frtip', // This enables the buttons
+                dom: '<"d-flex justify-content-between align-items-center mb-2"lB>frtip',
                 buttons: [
-            {
-                extend: 'print',
-                text: '<i class="fas fa-print"></i> Print',
-                className: 'btn btn-secondary',
-                title: 'Employee Data Report',
-                messageTop: '',
-                footer: true,
-                exportOptions: {
-                    columns: ':visible'
-                },
+                    {
+                        extend: 'print',
+                        text: '<i class="fas fa-print"></i> ' + '@T("Mobi.Common.Print")',
+                        className: 'btn btn-secondary',
+                        title: '@T("Mobi.Reports.EmployeeDataReport")',
+                        messageTop: '',
+                        footer: true,
+                        exportOptions: {
+                            columns: ':visible'
+                        },
                         customize: function (win) {
-            // Remove the default title and adjust the body style
-            $(win.document.head).find('title').text('');
-            $(win.document.body).css('font-size', '10pt')
-                .prepend('<h3 class="text-center">Employee Data Report</h3>')
-                .prepend('<h4 class="text-center">List of Employees</h4>');
+                            $(win.document.head).find('title').text('');
+                            $(win.document.body).css('font-size', '10pt')
+                                .prepend('<h3 class="text-center">@T("Mobi.Reports.EmployeeDataReport")</h3>')
+                                .prepend('<h4 class="text-center">@T("Mobi.Reports.ListOfEmployees")</h4>');
 
-            // Style the table for print view
-            $(win.document.body).find('table')
-                .addClass('display')
-                .css('font-size', 'inherit');
+                            $(win.document.body).find('table')
+                                .addClass('display')
+                                .css('font-size', 'inherit');
 
-            // Remove the duplicate header
-            $(win.document.body).find('h1').remove();
+                            $(win.document.body).find('h1').remove();
 
-            $(win.document.body).find('table tbody tr').each(function (index) {
-                $(this).find('td:first').text(index + 1);
-            });
+                            $(win.document.body).find('table tbody tr').each(function (index) {
+                                $(this).find('td:first').text(index + 1);
+                            });
 
-            // Add Total Records row in print view
-            var totalRecords = table.data().count();
-            $(win.document.body).find('table tbody').append(
-                '<tr>' +
-                '<td colspan="3" style="text-align:right; font-weight:bold;">Total Records</td>' +
-                '<td style="font-weight:bold; text-align:center;">' + totalRecords + '</td>' +
-                '</tr>'
-            );
-        }
-
-            }
-        ],
+                            var totalRecords = table.data().count();
+                            $(win.document.body).find('table tbody').append(
+                                '<tr>' +
+                                '<td colspan="3" style="text-align:right; font-weight:bold;">@T("Mobi.Reports.TotalRecords")</td>' +
+                                '<td style="font-weight:bold; text-align:center;">' + totalRecords + '</td>' +
+                                '</tr>'
+                            );
+                        }
+                    }
+                ],
                 drawCallback: function (settings) {
                     var api = this.api();
                     $('#totalRecordsRow').remove();
                     var totalRecords = api.data().count();
                     $(api.table().body()).append(
                         '<tr id="totalRecordsRow" class="total-records-row">' +
-                        '<td colspan="3" class="text-right font-weight-bold">Total Records</td>' +
+                        '<td colspan="3" class="text-right font-weight-bold">@T("Mobi.Reports.TotalRecords")</td>' +
                         '<td class="font-weight-bold text-center">' + totalRecords + '</td>' +
                         '</tr>'
                     );

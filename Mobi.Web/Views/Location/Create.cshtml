@@ -4,17 +4,13 @@
     <div class="card card-info card-outline mb-4">
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
-                <!-- Add Location Title on the Left -->
-                <h4 class="card-title mb-0">Add Location</h4>
-
-                <!-- Buttons (Back to List & Save Location) on the Right -->
+                <h4 class="card-title mb-0">@T("Mobi.Location.AddTitle")</h4>
                 <div class="d-flex">
-                    <!-- Back to List Button -->
                     <a href="@Url.Action("List", "Location")" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i> Back to List
+                        <i class="fas fa-arrow-left"></i> @T("Mobi.Location.BackToList")
                     </a>
                     <button type="submit" class="btn btn-primary" id="saveLocationButton">
-                        Save Location
+                        @T("Mobi.Location.SaveButton")
                     </button>
                 </div>
             </div>
@@ -23,62 +19,57 @@
             <div class="row g-3">
                 <!-- Location Name (English) -->
                 <div class="col-md-6">
-                    <label asp-for="LocationNameEnglish" class="form-label">Location Name (English)</label>
-                    <input asp-for="LocationNameEnglish" class="form-control" placeholder="Enter Location Name (English)" required>
+                    <label asp-for="LocationNameEnglish" class="form-label">@T("Mobi.Location.NameEnglish")</label>
+                    <input asp-for="LocationNameEnglish" class="form-control" placeholder="@T("Mobi.Location.NameEnglishPlaceholder")" required>
                     <span asp-validation-for="LocationNameEnglish" class="text-danger"></span>
                 </div>
 
                 <!-- Location Name (Arabic) -->
                 <div class="col-md-6">
-                    <label asp-for="LocationNameArabic" class="form-label">Location Name (Arabic)</label>
-                    <input asp-for="LocationNameArabic" class="form-control" placeholder="Enter Location Name (Arabic)">
+                    <label asp-for="LocationNameArabic" class="form-label">@T("Mobi.Location.NameArabic")</label>
+                    <input asp-for="LocationNameArabic" class="form-control" placeholder="@T("Mobi.Location.NameArabicPlaceholder")">
                     <span asp-validation-for="LocationNameArabic" class="text-danger"></span>
                 </div>
 
                 <!-- Status -->
                 <div class="col-md-6">
-                    <label asp-for="Status" class="form-label">Status</label>
+                    <label asp-for="Status" class="form-label">@T("Mobi.Location.Status")</label>
                     <select asp-for="Status" class="form-select" required>
-                        <option value="true" selected>Active</option>
-                        <option value="false">Inactive</option>
+                        <option value="true" selected>@T("Mobi.Location.StatusActive")</option>
+                        <option value="false">@T("Mobi.Location.StatusInactive")</option>
                     </select>
                     <span asp-validation-for="Status" class="text-danger"></span>
                 </div>
             </div>
 
-            <!-- Proof Type (Radio Buttons) -->
+            <!-- Proof Type -->
             <div class="form-group mb-4">
-                <label>Proof Type</label>
+                <label>@T("Mobi.Location.ProofType")</label>
                 <div>
-                    <!-- GPS Proof Radio Button (default selected) -->
                     <input id="gpsProofRadio" name="proofType" type="radio" class="form-check-input" value="1" checked />
-                    <label for="gpsProofRadio" class="form-check-label">GPS Proof</label>
+                    <label for="gpsProofRadio" class="form-check-label">@T("Mobi.Location.ProofType.GPS")</label>
 
-                    <!-- Beacon Proof Radio Button -->
                     <input id="beaconProofRadio" name="proofType" type="radio" class="form-check-input ms-3" value="2" />
-                    <label for="beaconProofRadio" class="form-check-label">Beacon Proof</label>
+                    <label for="beaconProofRadio" class="form-check-label">@T("Mobi.Location.ProofType.Beacon")</label>
                 </div>
             </div>
 
-            <!-- Collapsible Section for GPS Proof -->
+            <!-- GPS Section -->
             <div id="gpsProofSection" class="collapse mt-3 show">
-                <h4>Map Coordination</h4>
-                <p>
-                    You need to save the location before you can add beacon for this location.
-                </p>
+                <h4>@T("Mobi.Location.GPSHeader")</h4>
+                <p>@T("Mobi.Location.SaveFirstNote")</p>
             </div>
 
-            <!-- Collapsible Section for Beacon Proof -->
+            <!-- Beacon Section -->
             <div id="beaconProofSection" class="collapse mt-3">
-                <h4>Beacon List</h4>
-                <p>You need to save the location before you can add beacon for this location.</p>
+                <h4>@T("Mobi.Location.BeaconHeader")</h4>
+                <p>@T("Mobi.Location.SaveFirstNote")</p>
             </div>
         </div>
     </div>
 </form>
 
 @section Scripts {
-    <!-- JavaScript to control the visibility of collapsibles based on radio button -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const gpsRadio = document.getElementById("gpsProofRadio");
@@ -86,27 +77,23 @@
             const gpsSection = document.getElementById("gpsProofSection");
             const beaconSection = document.getElementById("beaconProofSection");
 
-            // Initialize Bootstrap Collapse for each section
             const gpsCollapse = new bootstrap.Collapse(gpsSection, { toggle: false });
             const beaconCollapse = new bootstrap.Collapse(beaconSection, { toggle: false });
 
-            // Toggle GPS Proof Section
             gpsRadio.addEventListener("change", function () {
                 if (gpsRadio.checked) {
-                    gpsCollapse.show(); // Show GPS section
-                    beaconCollapse.hide(); // Hide Beacon section
+                    gpsCollapse.show();
+                    beaconCollapse.hide();
                 }
             });
 
-            // Toggle Beacon Proof Section
             beaconRadio.addEventListener("change", function () {
                 if (beaconRadio.checked) {
-                    beaconCollapse.show(); // Show Beacon section
-                    gpsCollapse.hide(); // Hide GPS section
+                    beaconCollapse.show();
+                    gpsCollapse.hide();
                 }
             });
 
-            // Set the default radio button selection if none are selected
             if (gpsRadio.checked) {
                 gpsCollapse.show();
             } else if (beaconRadio.checked) {

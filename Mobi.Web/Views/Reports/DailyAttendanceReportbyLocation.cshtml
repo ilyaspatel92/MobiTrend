@@ -1,10 +1,9 @@
 ﻿@{
-    ViewData["Title"] = "Daily Attendance Report by Location";
+    ViewData["Title"] = @T("Reports.DailyAttendanceReportByLocation.Title");
 }
 
+<!-- jQuery and DataTables -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- DataTables -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
@@ -15,7 +14,7 @@
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
 
-<!-- Toastr for notifications -->
+<!-- Toastr -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
@@ -24,27 +23,27 @@
         <div class="col-md-12">
             <div class="card mb-12">
                 <div class="card-header">
-                    <h3 class="card-title">Daily Attendance Report by Location</h3>
+                    <h3 class="card-title">@T("Reports.DailyAttendanceReportByLocation.Header")</h3>
                 </div>
                 <div class="card-body">
-                    <!-- Search Filters -->
+                    <!-- Filters -->
                     <div class="row mb-3">
                         <div class="col-md-3">
-                            <label for="EmployeeName">Employee Name:</label>
-                            <input id="EmployeeName" class="form-control" placeholder="Enter 3 characters to search" autocomplete="on" />
+                            <label for="EmployeeName">@T("Reports.DailyAttendanceReportByLocation.EmployeeName")</label>
+                            <input id="EmployeeName" class="form-control" placeholder="@T("Reports.DailyAttendanceReportByLocation.EmployeeName.Placeholder")" autocomplete="on" />
                             <input type="hidden" id="EmployeeId" />
                             <ul id="EmployeeNameDropdown" class="list-group position-absolute mt-1" style="display: none; z-index: 1000;"></ul>
                         </div>
                         <div class="col-md-3">
-                            <label for="startDate">Start Date:</label>
+                            <label for="startDate">@T("Reports.DailyAttendanceReportByLocation.StartDate")</label>
                             <input type="date" id="startDate" class="form-control">
                         </div>
                         <div class="col-md-3">
-                            <label for="endDate">End Date:</label>
+                            <label for="endDate">@T("Reports.DailyAttendanceReportByLocation.EndDate")</label>
                             <input type="date" id="endDate" class="form-control">
                         </div>
                         <div class="col-md-3 mt-4">
-                            <button id="searchBtn" class="btn btn-primary">Search</button>
+                            <button id="searchBtn" class="btn btn-primary">@T("Common.Search")</button>
                         </div>
                     </div>
                     <div id="attendanceTables"></div>
@@ -65,40 +64,36 @@
                 let endDate = $('#endDate').val();
 
                 if (!employeeId) {
-                    toastr.error('Please select an employee first!');
+                    toastr.error('@T("Reports.DailyAttendanceReportByLocation.Error.SelectEmployee")');
                     return;
                 }
 
                 $.ajax({
                     url: '@Url.Action("GetDailyAttendanceReportbyLocation", "Reports")',
                     type: 'GET',
-                    data: { startDate: startDate, endDate: endDate, employeeId: employeeId },
+                    data: { startDate, endDate, employeeId },
                     success: function (response) {
                         $('#attendanceTables').empty();
-
-                        if (response.data && response.data.length > 0) {
+                        if (response.data?.length > 0) {
                             let groupedData = {};
                             response.data.forEach(item => {
-                                if (!groupedData[item.location]) {
-                                    groupedData[item.location] = [];
-                                }
+                                groupedData[item.location] = groupedData[item.location] || [];
                                 groupedData[item.location].push(item);
                             });
 
-                            let combinedTableId = 'attendanceTableCombined';
                             let tableHtml = `
-                                <h3 class="text-center">Daily Attendance Report</h3>
-                                <h5>Employee: ${$('#EmployeeName').val()}</h5>
-                                <h5>Date Range: ${startDate} to ${endDate}</h5>
-                                <table id="${combinedTableId}" class="table table-bordered">
+                                <h3 class="text-center">@T("Reports.DailyAttendanceReportByLocation.Print.Title")</h3>
+                                <h5>@T("Reports.DailyAttendanceReportByLocation.Print.Employee"): ${$('#EmployeeName').val()}</h5>
+                                <h5>@T("Reports.DailyAttendanceReportByLocation.Print.DateRange"): ${startDate} to ${endDate}</h5>
+                                <table id="attendanceTableCombined" class="table table-bordered">
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Location</th>
-                                            <th>Date</th>
-                                            <th>Time</th>
-                                            <th>Event Type</th>
-                                            <th>Proof Type</th>
+                                            <th>@T("Reports.DailyAttendanceReportByLocation.Column.Location")</th>
+                                            <th>@T("Reports.DailyAttendanceReportByLocation.Column.Date")</th>
+                                            <th>@T("Reports.DailyAttendanceReportByLocation.Column.Time")</th>
+                                            <th>@T("Reports.DailyAttendanceReportByLocation.Column.EventType")</th>
+                                            <th>@T("Reports.DailyAttendanceReportByLocation.Column.ProofType")</th>
                                         </tr>
                                     </thead>
                                     <tbody></tbody>
@@ -120,20 +115,19 @@
                                 });
                             }
 
-                            let combinedTable = $('#' + combinedTableId).DataTable({
+                            $('#attendanceTableCombined').DataTable({
                                 dom: '<"d-flex justify-content-between align-items-center mb-2"lB>frtip',
                                 buttons: [
                                     {
                                         extend: 'print',
-                                        text: 'Print Full Report',
+                                        text: '@T("Common.PrintFullReport")',
                                         title: '',
-                                        exportOptions: { columns: ':visible' },
                                         customize: function (win) {
                                             $(win.document.body)
-                                                .css('font-size', '10pt')                                                
-                                                .prepend(`<h4 class="text-center">Daily Attendance Report</h4>`)
-                                                .prepend(`<h5>Employee: ${$('#EmployeeName').val()}</h5>`)
-                                                .prepend(`<h5>Date Range: ${startDate} to ${endDate}</h5>`);
+                                                .css('font-size', '10pt')
+                                                .prepend(`<h4 class="text-center">@T("Reports.DailyAttendanceReportByLocation.Print.Title")</h4>`)
+                                                .prepend(`<h5>@T("Reports.DailyAttendanceReportByLocation.Print.Employee"): ${$('#EmployeeName').val()}</h5>`)
+                                                .prepend(`<h5>@T("Reports.DailyAttendanceReportByLocation.Print.DateRange"): ${startDate} to ${endDate}</h5>`);
                                         }
                                     }
                                 ],
@@ -147,19 +141,11 @@
                                     { data: 'proofType' }
                                 ]
                             });
-
-                            $('#printAllBtn').show().off('click').on('click', function () {
-                                combinedTable.button('.buttons-print').trigger();
-                            });
                         }
-                    },
-                    error: function (xhr) {
-                        console.error("Error fetching data:", xhr);
                     }
                 });
             });
 
-            // Employee Autocomplete
             $('#EmployeeName').on('input', function () {
                 let term = $(this).val();
                 if (term.length < 3) {
@@ -167,14 +153,14 @@
                     return;
                 }
 
-                $('#EmployeeNameDropdown').html('<li class="list-group-item">Loading...</li>').show();
+                $('#EmployeeNameDropdown').html('<li class="list-group-item">@T("Common.Loading")</li>').show();
 
-                $.getJSON('/SystemUsers/GetEmployeeNames', { term: term }, function (data) {
+                $.getJSON('/SystemUsers/GetEmployeeNames', { term }, function (data) {
                     $('#EmployeeNameDropdown').empty();
                     if (data.length === 0) {
-                        $('#EmployeeNameDropdown').html('<li class="list-group-item text-muted">No record found</li>');
+                        $('#EmployeeNameDropdown').html('<li class="list-group-item text-muted">@T("Common.NoRecordsFound")</li>');
                     } else {
-                        data.forEach(function (item) {
+                        data.forEach(item => {
                             let listItem = $('<li class="list-group-item"></li>').text(item.nameEng);
                             listItem.attr("data-id", item.id);
                             listItem.css("cursor", "pointer");
@@ -191,5 +177,4 @@
             });
         });
     </script>
-
 }

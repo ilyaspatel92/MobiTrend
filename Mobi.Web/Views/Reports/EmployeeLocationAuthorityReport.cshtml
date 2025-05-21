@@ -1,19 +1,19 @@
 ﻿@{
-    ViewData["Title"] = "Employee Location Authority Report";
+    ViewData["Title"] = @T("Mobi.Reports.EmployeeLocationAuthorityReport");
 }
 
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Employee Location Authority Report</h3>
+        <h3 class="card-title">@T("Mobi.Reports.EmployeeLocationAuthorityReport")</h3>
     </div>
     <div class="card-body">
         <table id="employeeReportTable" class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Employee Name</th>
-                    <th>Location Name</th>
-                    <th>Proof Type</th>
+                    <th>@T("Mobi.Reports.EmployeeId")</th>
+                    <th>@T("Mobi.Reports.EmployeeName")</th>
+                    <th>@T("Mobi.Reports.LocationName")</th>
+                    <th>@T("Mobi.Reports.ProofType")</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -47,15 +47,13 @@
                 buttons: [
                     {
                         extend: 'print',
-                        text: '<i class="fas fa-print"></i> Print',
+                        text: '<i class="fas fa-print"></i> ' + '@T("Mobi.Common.Print")',
                         className: 'btn btn-secondary',
-                        title : 'Employee Location Authority Report',
-                        action: function (e, dt, node, config)
-                        {
-                            let dataCount = dt.rows({ search: 'applied' }).count(); // Get count of filtered rows
-
+                        title : '@T("Mobi.Reports.EmployeeLocationAuthorityReport")',
+                        action: function (e, dt, node, config) {
+                            let dataCount = dt.rows({ search: 'applied' }).count();
                             if (dataCount === 0) {
-                                alert("No data available to print.");
+                                alert("@T("Mobi.Common.NoDataToPrint")");
                             } else {
                                 $.fn.dataTable.ext.buttons.print.action.call(this, e, dt, node, config);
                             }
@@ -84,14 +82,13 @@
                     }
                 ],
                 columns: [
-                    { data: 'employeeId', title: 'ID', className: 'text-center' },
-                    { data: 'employeeName', title: 'Employee Name', className: 'text-left' },
-                    { data: 'locationName', title: 'Location Name', className: 'text-left' },
-                    { data: 'proofType', title: 'Proof Type', className: 'text-center' }
+                    { data: 'employeeId', title: '@T("Mobi.Reports.EmployeeId")', className: 'text-center' },
+                    { data: 'employeeName', title: '@T("Mobi.Reports.EmployeeName")', className: 'text-left' },
+                    { data: 'locationName', title: '@T("Mobi.Reports.LocationName")', className: 'text-left' },
+                    { data: 'proofType', title: '@T("Mobi.Reports.ProofType")', className: 'text-center' }
                 ]
             });
 
-            // Print button trigger
             $('#printReport').on('click', function () {
                 table.button('.buttons-print').trigger();
             });
