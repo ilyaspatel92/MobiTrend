@@ -174,7 +174,7 @@
                 score = "VeryWeak";
             } else if (/^[A-Za-z]{0,100}$/.test(pwd) || pwd.length < 6) {
                 score = "VeryWeak";
-            } else if (pwd.length >= 6 && /^(?=.*?[0-9a-zA-Z])(?=.*?[#?!@$%^&*-]).{6,}$/.test(pwd)) {
+            } else if (pwd.length >= 6 && /^(?=.*?[0-9a-zA-Z])(?=.*?[#?!@@$%^&*-]).{6,}$/.test(pwd)) {
                 score = "Strong";
             } else {
                 score = "Medium";
