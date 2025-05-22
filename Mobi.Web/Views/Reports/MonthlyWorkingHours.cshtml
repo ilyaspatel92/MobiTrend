@@ -80,7 +80,8 @@
                         extend: 'print',
                         text: '<i class="fas fa-print"></i> @T("Mobi.Common.Print")',
                         className: 'btn btn-secondary',
-                        title: '@T("Mobi.Reports.MonthlyWorkingHoursReport")',
+                        // title: '@T("Mobi.Reports.MonthlyWorkingHoursReport")',
+                        title: '',
                         exportOptions: { columns: ':visible' },
                         action: function (e, dt, node, config) {
                             let dataCount = dt.rows({ search: 'applied' }).count();
