@@ -1735,3 +1735,27 @@ INSERT INTO LocaleStringResource (LanguageId, ResourceName, ResourceValue) VALUE
 (2, 'Mobi.Reports.ProofType', N'نوع الإثبات'),
 (2, 'Mobi.Common.Print', N'طباعة'),
 (2, 'Mobi.Common.NoDataToPrint', N'لا توجد بيانات للطباعة.');
+
+	-- English
+INSERT INTO LocaleStringResource (LanguageId, ResourceName, ResourceValue)
+VALUES
+(1, 'mobi.employeelocation.pageheader', 'Set Employee Locations'),
+(1, 'mobi.employeelocation.employeename', 'Employee Name'),
+(1, 'mobi.employeelocation.filenumber', 'File Number'),
+(1, 'mobi.employeelocation.selectlocations', 'Select Locations'),
+(1, 'mobi.employeelocation.selectall', 'Select All'),
+(1, 'mobi.employeelocation.freelocation', 'Free Location'),
+(1, 'mobi.employeelocation.backtolist', 'Back to List'),
+(1, 'mobi.employeelocation.savebutton', 'Save');
+
+-- Arabic
+INSERT INTO LocaleStringResource (LanguageId, ResourceName, ResourceValue)
+VALUES
+(2, 'mobi.employeelocation.pageheader', 'تعيين مواقع الموظف'),
+(2, 'mobi.employeelocation.employeename', 'اسم الموظف'),
+(2, 'mobi.employeelocation.filenumber', 'رقم الملف'),
+(2, 'mobi.employeelocation.selectlocations', 'اختر المواقع'),
+(2, 'mobi.employeelocation.selectall', 'اختر الكل'),
+(2, 'mobi.employeelocation.freelocation', 'موقع حر'),
+(2, 'mobi.employeelocation.backtolist', 'العودة إلى القائمة'),
+(2, 'mobi.employeelocation.savebutton', 'حفظ');
