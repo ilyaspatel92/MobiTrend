@@ -64,6 +64,11 @@
 </div>
 
 @section Scripts {
+	<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css">
+	<script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+
 	<script>
 		$(document).ready(function () {
 			let table = $('#attendanceTable').DataTable({
@@ -145,7 +150,7 @@
 							}
 						},
 						exportOptions: {
-							columns: ':not(:last-child)',
+							columns: [0, 1, 2, 3, 4, 5],
 							format: {
 								body: function (data, row, column, node) {
 									var span = $(node).find('span.view-mode').text();
@@ -156,6 +161,84 @@
 					}
 				]
 			});
+		$('#searchButton').click(function () {
+
+				let startDate = $('#startDate').val();
+				let endDate = $('#endDate').val();
+
+				if (!startDate || !endDate) {
+					alert("Please select both Start Date and End Date.");
+					return;
+				}
+
+				table.ajax.url('@Url.Action("GetEmployeeAttendanceData", "EmployeeAttendance")').load();
+			});
+
+			// Show All button - clear filters & load all data
+			$('#showAllButton').click(function () {
+				 let today = new Date().toISOString().split('T')[0];
+				$('#startDate').val(today);
+				$('#endDate').val(today);
+				$('#employeeName').val('');
+				$('#filenumber').val('');
+				$('#transstatus').val('');
+				table.ajax.url('@Url.Action("GetEmployeeAttendanceData", "EmployeeAttendance")').load();
+			});
+
+			// Refresh button reloads the table
+			$('#refreshButton').click(function () {
+				table.ajax.url('@Url.Action("GetEmployeeAttendanceData", "EmployeeAttendance")').load();
+			});
+
+			// Edit button toggles edit mode
+			$('#attendanceTable tbody').on('click', '.edit-btn', function () {
+				let row = $(this).closest('tr');
+				row.find('.view-mode').addClass('d-none');
+				row.find('.edit-mode').removeClass('d-none');
+				row.find('.edit-btn').addClass('d-none');
+				row.find('.save-btn').removeClass('d-none');
+				row.find('.save-btn, .cancel-btn').removeClass('d-none');
+			});
+
+			$('#attendanceTable tbody').on('click', '.cancel-btn', function () {
+				let row = $(this).closest('tr');
+
+				row.find('.view-mode').removeClass('d-none'); // Show text labels
+				row.find('.edit-mode').addClass('d-none'); // Hide dropdowns
+
+				row.find('.edit-btn').removeClass('d-none'); // Show Edit button
+				row.find('.save-btn, .cancel-btn').addClass('d-none'); // Hide Save & Cancel buttons
+			});
+
+
+			// Save button functionality
+			$('#attendanceTable tbody').on('click', '.save-btn', function () {
+				let row = $(this).closest('tr');
+				let attendanceId = table.row(row).data().id;
+				let actionTypeId = row.find('select').eq(0).val();
+				let actionStatus = row.find('select').eq(1).val() === "true";
+				 $(".dataTables_processing").show();
+				$.ajax({
+					url: "/EmployeeAttendance/UpdateAttendance",
+					type: "POST",
+					contentType: "application/json",
+					data: JSON.stringify({ Id: attendanceId, ActionTypeId: parseInt(actionTypeId), ActionTypeStatus: actionStatus }),
+					success: function (response) {
+						 $(".dataTables_processing").hide();
+						if (response.success) {
+							table.ajax.reload();
+						} else {
+							alert("Error updating attendance: " + response.message);
+						}
+					}
+				});
+			});
+		});
+
+		
+
+			$(document).on('draw.dt', function () {
+			$('[data-toggle="tooltip"]').tooltip();
 		});
 	</script>
 }
@@ -164,6 +247,10 @@
 	@@media print {
 		select, .edit-mode {
 			display: none !important;
+		}
+
+		#attendanceTable thead th {
+			font-size: 10px !important;
 		}
 	}
 </style>
