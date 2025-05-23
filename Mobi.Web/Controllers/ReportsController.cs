@@ -249,29 +249,32 @@ namespace Mobi.Web.Controllers
                 .OrderBy(entry => entry.Id)
                 .ThenBy(entry => entry.log.AttendanceDateTime);
 
-            //if (employeeId.HasValue && employeeId > 0)
-            //    query = query.Where(entry => entry.Id == employeeId);
+            // Optional employee filter
+            // if (employeeId.HasValue && employeeId > 0)
+            //     query = query.Where(entry => entry.Id == employeeId);
 
             var groupedData = query.AsEnumerable()
                 .GroupBy(entry => new { entry.Id, entry.NameEng })
                 .Select(group =>
                 {
-                    var totalMinutes = 0;
+                    int totalMinutes = 0;
                     var logs = group.OrderBy(x => x.log.AttendanceDateTime).ToList();
-                    DateTime? inTime = null;
+                    var inQueue = new Queue<DateTime>();
 
                     foreach (var entry in logs)
                     {
                         if (entry.log.ActionTypeId == 1) // IN
                         {
-                            inTime = entry.log.AttendanceDateTime;
+                            inQueue.Enqueue(entry.log.AttendanceDateTime);
                         }
-                        else if (entry.log.ActionTypeId == 2 && inTime.HasValue) // OUT
+                        else if (entry.log.ActionTypeId == 2 && inQueue.Count > 0) // OUT
                         {
-                            totalMinutes += (int)(entry.log.AttendanceDateTime - inTime.Value).TotalMinutes;
-                            inTime = null;
+                            var inTimeVal = inQueue.Dequeue();
+                            totalMinutes += (int)Math.Round((entry.log.AttendanceDateTime - inTimeVal).TotalMinutes);
                         }
                     }
+
+                    bool hasMissingOut = inQueue.Count > 0;
 
                     return new
                     {
@@ -279,7 +282,7 @@ namespace Mobi.Web.Controllers
                         EmployeeName = group.Key.NameEng,
                         TotalHours = totalMinutes / 60,
                         TotalMinutes = totalMinutes % 60,
-                        Notes = ""
+                        Notes = hasMissingOut ? "Missing OUT" : ""
                     };
                 }).ToList();
 
@@ -291,6 +294,8 @@ namespace Mobi.Web.Controllers
                 data = groupedData
             });
         }
+
+
 
         #endregion
 
@@ -321,23 +326,22 @@ namespace Mobi.Web.Controllers
                     var logs = group.OrderBy(x => x.log.AttendanceDateTime).ToList();
                     int totalMinutes = 0;
                     int totalTransactions = logs.Count();
-                    DateTime? inTime = null;
-                    bool hasMissingOut = false;
+                    var inQueue = new Queue<DateTime>();
 
                     foreach (var entry in logs)
                     {
                         if (entry.log.ActionTypeId == 1) // IN
                         {
-                            inTime = entry.log.AttendanceDateTime;
+                            inQueue.Enqueue(entry.log.AttendanceDateTime);
                         }
-                        else if (entry.log.ActionTypeId == 2 && inTime.HasValue) // OUT
+                        else if (entry.log.ActionTypeId == 2 && inQueue.Count > 0) // OUT
                         {
-                            totalMinutes += (int)(entry.log.AttendanceDateTime - inTime.Value).TotalMinutes;
-                            inTime = null;
+                            var inTime = inQueue.Dequeue();
+                            totalMinutes += (int)Math.Round((entry.log.AttendanceDateTime - inTime).TotalMinutes);
                         }
                     }
 
-                    hasMissingOut = inTime.HasValue;
+                    bool hasMissingOut = inQueue.Count > 0;
 
                     return new DailyWorkingHoursDto
                     {
@@ -361,6 +365,7 @@ namespace Mobi.Web.Controllers
                 data = groupedData
             });
         }
+
 
 
 

@@ -1,11 +1,11 @@
 ﻿@{
-    ViewData["Title"] = "Manage Access Control";
+    ViewData["Title"] = @T("Mobi.AccessControl.Title");
 }
 
 <div class="container mt-4">
     <div class="card">
         <div class="card-header bg-info text-white">
-            <h3 class="card-title mb-0">Manage Access Control</h3>
+            <h3 class="card-title mb-0">@T("Mobi.AccessControl.CardTitle")</h3>
         </div>
         <div class="card-body">
             <!-- Notification Section -->
@@ -13,28 +13,28 @@
             {
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     @TempData["SuccessMessage"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="@T("Mobi.Common.Close")"></button>
                 </div>
             }
             @if (TempData["ErrorMessage"] != null)
             {
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     @TempData["ErrorMessage"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="@T("Mobi.Common.Close")"></button>
                 </div>
             }
 
             <!-- Form Section -->
             <div class="row mb-3">
                 <div class="col-md-6 position-relative">
-                    <label for="EmployeeName" class="form-label">Employee Name</label>
-                    <input id="EmployeeName" class="form-control" placeholder="Enter 3 characters of system user for search" />
+                    <label for="EmployeeName" class="form-label">@T("Mobi.AccessControl.EmployeeNameLabel")</label>
+                    <input id="EmployeeName" class="form-control" placeholder="@T("Mobi.AccessControl.EmployeeNamePlaceholder")" />
                     <ul id="EmployeeNameDropdown" class="list-group position-absolute mt-1" style="display: none; z-index: 1000;"></ul>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <h5>Screen Authority</h5>
+                    <h5>@T("Mobi.AccessControl.ScreenAuthorityTitle")</h5>
                     <div id="authority-list">
                         @foreach (var authority in Enum.GetValues(typeof(ScreenAuthorityEnum)))
                         {
@@ -47,14 +47,14 @@
                 </div>
             </div>
             <div class="d-flex justify-content-end mt-3">
-                <button id="saveAccess" class="btn btn-success">Save</button>
+                <button id="saveAccess" class="btn btn-success">@T("Mobi.AccessControl.SaveButton")</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-     document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
         let selectedUserId = 0; // Holds the currently selected user ID
 
         const employeeNameInput = document.getElementById("EmployeeName");
@@ -90,7 +90,7 @@
 
                     if (data.length === 0) {
                         const noRecordOption = document.createElement("li");
-                        noRecordOption.textContent = "No record found";
+                        noRecordOption.textContent = "@T("Mobi.AccessControl.NoRecordFound")";
                         noRecordOption.setAttribute("style", "padding: 5px; color: #888;");
                         employeeNameDropdown.appendChild(noRecordOption);
                     } else {
@@ -114,7 +114,7 @@
                 .catch(() => {
                     employeeNameDropdown.innerHTML = "";
                     const errorOption = document.createElement("li");
-                    errorOption.textContent = "Error fetching data";
+                    errorOption.textContent = "@T("Mobi.AccessControl.ErrorFetchingData")";
                     errorOption.setAttribute("style", "padding: 5px; color: red;");
                     employeeNameDropdown.appendChild(errorOption);
                     employeeNameDropdown.style.display = "block";
@@ -148,14 +148,14 @@
                     });
                 })
                 .catch(() => {
-                    alert("Error fetching access for the selected employee.");
+                    alert("@T("Mobi.AccessControl.FetchAccessError")");
                 });
         }
 
         // Handle save access
         document.getElementById("saveAccess").addEventListener("click", function () {
             if (selectedUserId === 0) {
-                alert("Please select an employee first.");
+                alert("@T("Mobi.AccessControl.SelectEmployeeAlert")");
                 return;
             }
 
@@ -170,16 +170,15 @@
             })
                 .then(response => {
                     if (response.ok) {
-                        alert("Access saved successfully.");
+                        alert("@T("Mobi.AccessControl.AccessSavedSuccess")");
                         location.reload(); // Reload to show TempData message if required
                     } else {
-                        alert("Error saving access control.");
+                        alert("@T("Mobi.AccessControl.AccessSaveError")");
                     }
                 })
                 .catch(() => {
-                    alert("Error saving access control.");
+                    alert("@T("Mobi.AccessControl.AccessSaveError")");
                 });
         });
     });
-
 </script>

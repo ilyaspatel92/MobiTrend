@@ -1,167 +1,162 @@
 ﻿@{
-	ViewData["Title"] = "Locations";
+    ViewData["Title"] = @T("Mobi.LocationList.PageTitle");
 }
 
 @model IEnumerable<LocationModel>
+
 <div class="card card-info card-outline mb-4 mx-3 custom-top-spacing">
-	<!-- Header Section -->
-	<div class="card-header bg-white py-3 border-bottom">
-		<div class="d-flex justify-content-between align-items-center">
-			<!-- Title -->
-			<h5 class="fw-bold mb-0">Locations</h5>
-			<!-- Buttons -->
-			<div class="d-flex gap-2">
-				<a href="@Url.Action("Create", "Location")" class="btn btn-success btn-sm"><i class="fa-solid fa-user-plus"></i>  Add Location</a>
-			</div>
-		</div>
-		<form id="searchForm" method="get" action="@Url.Action("List", "Location")">
-			<!-- begin::Card Body -->
-			<div class="card-body">
-				<div class="row g-4">
-					<!-- Search by Name -->
-					<div class="col-md-4">
-						<label for="searchByName" class="form-label"><i class="fas fa-user"></i> Search by Name</label>
-						<input type="text" id="searchByName" name="name" class="form-control" placeholder="Enter Name" />
-					</div>
-					<!-- Search by Status -->
-					<div class="col-md-4">
-						<label for="searchByStatus" class="form-label"><i class="fas fa-list"></i> Search by Status</label>
-						<select id="searchByStatus" name="searchByStatus" class="form-control">
-							<option value="">All</option>
-							<option value="True">Active</option>
-							<option value="False">Inactive</option>
-						</select>
-					</div>
-				</div> <!-- end::Row -->
-			</div> <!-- end::Card Body -->
-			<!-- begin::Card Footer -->
-			<div class="card-footer d-flex justify-content-end gap-2">
-				<button type="submit" class="btn btn-primary px-4"><i class="fas fa-search"></i> Search</button>
-				<button type="button" id="showAllBtn" class="btn btn-warning px-4"><i class="fas fa-list"></i> Show All</button>
-			</div> <!-- end::Card Footer -->
-		</form>
-	</div>
+    <div class="card-header bg-white py-3 border-bottom">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="fw-bold mb-0">@T("Mobi.LocationList.HeaderTitle")</h5>
+            <div class="d-flex gap-2">
+                <a href="@Url.Action("Create", "Location")" class="btn btn-success btn-sm">
+                    <i class="fa-solid fa-user-plus"></i> @T("Mobi.LocationList.AddLocationButton")
+                </a>
+            </div>
+        </div>
+
+        <form id="searchForm" method="get" action="@Url.Action("List", "Location")">
+            <div class="card-body">
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <label for="searchByName" class="form-label"><i class="fas fa-user"></i> @T("Mobi.LocationList.SearchByName")</label>
+                        <input type="text" id="searchByName" name="name" class="form-control" placeholder="@T("Mobi.LocationList.EnterNamePlaceholder")" />
+                    </div>
+                    <div class="col-md-4">
+                        <label for="searchByStatus" class="form-label"><i class="fas fa-list"></i> @T("Mobi.LocationList.SearchByStatus")</label>
+                        <select id="searchByStatus" name="searchByStatus" class="form-control">
+                            <option value="">@T("Mobi.LocationList.All")</option>
+                            <option value="True">@T("Mobi.LocationList.Active")</option>
+                            <option value="False">@T("Mobi.LocationList.Inactive")</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer d-flex justify-content-end gap-2">
+                <button type="submit" class="btn btn-primary px-4"><i class="fas fa-search"></i> @T("Mobi.LocationList.SearchButton")</button>
+                <button type="button" id="showAllBtn" class="btn btn-warning px-4"><i class="fas fa-list"></i> @T("Mobi.LocationList.ShowAllButton")</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <div class="app-content">
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="card mb-12">
-					<div class="card-header">
-						<h3 class="card-title">Location Table</h3>
-					</div>
-					<div class="card-body">
-						<table class="table table-bordered" id="locationTable">
-							<thead>
-								<tr>
-									<th>ID</th>
-									<th>Location Name (English)</th>
-									<th>Location Name (Arabic)</th>
-									<th>Proof type</th>
-									<th>Actions</th>
-								</tr>
-							</thead>
-							<tbody></tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-12">
+                    <div class="card-header">
+                        <h3 class="card-title">@T("Mobi.LocationList.TableTitle")</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered" id="locationTable">
+                            <thead>
+                                <tr>
+                                    <th>@T("Mobi.LocationList.Column.Id")</th>
+                                    <th>@T("Mobi.LocationList.Column.NameEnglish")</th>
+                                    <th>@T("Mobi.LocationList.Column.NameArabic")</th>
+                                    <th>@T("Mobi.LocationList.Column.ProofType")</th>
+                                    <th>@T("Mobi.LocationList.Column.Actions")</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
-	<script>
-		
-		$(document).ready(function () {
-			var table = $('#locationTable').DataTable({
-				ajax: null, // Do not load data initially
-				columns: [
-					{ data: 'id' },
-					{ data: 'locationNameEnglish' },
-					{ data: 'locationNameArabic' },
-					{ data: 'proofTypeName' },
-					{
-						data: null,
-						render: function (data) {
-							return `
-								<a href="/Location/Edit/${data.id}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
-								 <button class="btn btn-danger btn-sm delete-btn" data-id="${data.id}"><i class="fas fa-trash"></i></button>
-							`;
-						}
-					}
-				],
-				processing: true,
-				serverSide: false,
-				order :[[0,"asc"]],
-				paging: true,
-				searching: false,
-				lengthChange: true,
-				pageLength: 10,
-				buttons: [
-					{
-						extend: 'print',
-						text: 'Print',
-						className: 'btn btn-secondary btn-sm'
-					}
-				],
-				language: {
-					paginate: {
-						previous: "Previous",
-						next: "Next"
-					},
-					info: "Showing _START_ to _END_ of _TOTAL_ entries (filtered from _MAX_ total entries)"
-				}
-			});
-				 function loadData() {
-			var searchParams = {
-				name: $('#searchByName').val(),
-				status: $('#searchByStatus').val()
-			};
+    <script>
+        $(document).ready(function () {
+            var table = $('#locationTable').DataTable({
+                ajax: null,
+                columns: [
+                    { data: 'id' },
+                    { data: 'locationNameEnglish' },
+                    { data: 'locationNameArabic' },
+                    { data: 'proofTypeName' },
+                    {
+                        data: null,
+                        render: function (data) {
+                            return `
+                                <a href="/Location/Edit/${data.id}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
+                                <button class="btn btn-danger btn-sm delete-btn" data-id="${data.id}"><i class="fas fa-trash"></i></button>
+                            `;
+                        }
+                    }
+                ],
+                processing: true,
+                serverSide: false,
+                order: [[0, "asc"]],
+                paging: true,
+                searching: false,
+                lengthChange: true,
+                pageLength: 10,
+                buttons: [
+                    {
+                        extend: 'print',
+                        text: '@T("Mobi.LocationList.PrintButton")',
+                        className: 'btn btn-secondary btn-sm'
+                    }
+                ],
+                language: {
+                    paginate: {
+                        previous: "@T("Mobi.LocationList.Previous")",
+                        next: "@T("Mobi.LocationList.Next")"
+                    },
+                    info: "@T("Mobi.LocationList.InfoText")"
+                }
+            });
 
-			table.ajax.url('@Url.Action("GetLocations", "Location")' + '?' + $.param(searchParams)).load();
-		}
-			$('#searchForm').on('submit', function (e) {
-				e.preventDefault();
-				loadData();
-				// e.preventDefault();
-				// table.ajax.url('@Url.Action("GetLocations", "Location")').load();
-			});
+            function loadData() {
+                var searchParams = {
+                    name: $('#searchByName').val(),
+                    status: $('#searchByStatus').val()
+                };
+                table.ajax.url('@Url.Action("GetLocations", "Location")' + '?' + $.param(searchParams)).load();
+            }
 
-			$('#showAllBtn').on('click', function () {
-				$('#searchByName').val('');
-				$('#searchByStatus').val('');
-				table.ajax.url('@Url.Action("GetLocations", "Location")').load();
-			});
+            $('#searchForm').on('submit', function (e) {
+                e.preventDefault();
+                loadData();
+            });
 
-			$('#refreshBtn').on('click', function () {
-				table.ajax.reload();
-			});
+            $('#showAllBtn').on('click', function () {
+                $('#searchByName').val('');
+                $('#searchByStatus').val('');
+                table.ajax.url('@Url.Action("GetLocations", "Location")').load();
+            });
 
-			$('#locationTable').on('click', '.delete-btn', function () {
-				var id = $(this).data('id');
-				if (confirm("Are you sure you want to delete this location?")) {
-					$.ajax({
-						url: '/Location/Delete/' + id,
-						type: 'POST',
-						data: {
-							__RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() // Add token here
-						},
-						success: function (response) {
-							if(response)
-							{
-							 $('#notificationMessage').text('Location deleted successfully!');
-							 $('#notificationContainer').fadeIn().delay(4000).fadeOut();
-							 table.ajax.reload(); // Refresh the table data
-							}
-						},
-						error: function () {
-							alert("Failed to delete the Location.");
-						}
-					});
-				}
-			});
-		});
-	</script>
+            $('#refreshBtn').on('click', function () {
+                table.ajax.reload();
+            });
+
+            $('#locationTable').on('click', '.delete-btn', function () {
+                var id = $(this).data('id');
+                if (confirm("@T("Mobi.LocationList.ConfirmDelete")")) {
+                    $.ajax({
+                        url: '/Location/Delete/' + id,
+                        type: 'POST',
+                        data: {
+                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (response) {
+                            if (response) {
+                                $('#notificationMessage').text('@T("Mobi.LocationList.DeleteSuccess")');
+                                $('#notificationContainer').fadeIn().delay(4000).fadeOut();
+                                table.ajax.reload();
+                            }
+                        },
+                        error: function () {
+                            alert("@T("Mobi.LocationList.DeleteFailed")");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 }

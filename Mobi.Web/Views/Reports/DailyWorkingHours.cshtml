@@ -1,11 +1,9 @@
 ﻿@{
-    ViewData["Title"] = "Daily Working Hours Report";
+    ViewData["Title"] = @T("Mobi.Reports.DailyWorkingHoursReport");
 }
 
-
+<!-- jQuery and DataTables -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- DataTables -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
@@ -15,9 +13,7 @@
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
 
-
-
-<!-- Toastr for notifications -->
+<!-- Toastr -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
@@ -26,41 +22,39 @@
         <div class="col-md-12">
             <div class="card mb-12">
                 <div class="card-header">
-                    <h3 class="card-title">Daily Working Hours Report</h3>
+                    <h3 class="card-title">@T("Mobi.Reports.DailyWorkingHoursReport")</h3>
                 </div>
                 <div class="card-body">
-                    <!-- Search Filters -->
                     <div class="row mb-3">
                         <div class="col-md-3">
-                            <label for="EmployeeName">Employee Name:</label>
-                            <input id="EmployeeName" class="form-control" placeholder="Enter 3 characters to search" autocomplete="on" />
+                            <label for="EmployeeName">@T("Mobi.Reports.EmployeeName")</label>
+                            <input id="EmployeeName" class="form-control" placeholder="@T("Mobi.Placeholder.EnterName")" autocomplete="on" />
                             <input type="hidden" id="EmployeeId" />
                             <ul id="EmployeeNameDropdown" class="list-group position-absolute mt-1" style="display: none; z-index: 1000;"></ul>
                         </div>
                         <div class="col-md-3">
-                            <label for="startDate">Start Date:</label>
+                            <label for="startDate">@T("Mobi.Reports.StartDate")</label>
                             <input type="date" id="startDate" class="form-control">
                         </div>
                         <div class="col-md-3">
-                            <label for="endDate">End Date:</label>
+                            <label for="endDate">@T("Mobi.Reports.EndDate")</label>
                             <input type="date" id="endDate" class="form-control">
                         </div>
                         <div class="col-md-3 mt-4">
-                            <button id="searchBtn" class="btn btn-primary">Search</button>
+                            <button id="searchBtn" class="btn btn-primary">@T("Mobi.Common.Search")</button>
                         </div>
                     </div>
 
-                    <!-- Data Table -->
                     <table id="workingHoursTable" class="table table-bordered">
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Date</th>
-                                <th>Day</th>
-                                <th>Total Hours</th>
-                                <th>Total Minutes</th>
-                                <th>Total Transactions</th>
-                                <th>Notes</th>
+                                <th>@T("Mobi.Reports.Date")</th>
+                                <th>@T("Mobi.Reports.Day")</th>
+                                <th>@T("Mobi.Reports.TotalHours")</th>
+                                <th>@T("Mobi.Reports.TotalMinutes")</th>
+                                <th>@T("Mobi.Reports.TotalTransactions")</th>
+                                <th>@T("Mobi.Reports.Notes")</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -70,7 +64,6 @@
         </div>
     </div>
 </div>
-
 @section Scripts {
     <script>
         $(document).ready(function () {
@@ -90,7 +83,8 @@
                         extend: 'print',
                         text: '<i class="fas fa-print"></i> Print',
                         className: 'btn btn-secondary',
-                        title: 'Daily Working Hours Report',
+                        // title: 'Daily Working Hours Report',
+                        title: '',
                         exportOptions: { columns: ':visible' },
                         action: function (e, dt, node, config)
                         {
@@ -104,7 +98,7 @@
                         },
                         customize: function (win) {
                             $(win.document.head).find('title').text('');
-                            $(win.document.body).css('font-size', '10pt')                                
+                            $(win.document.body).css('font-size', '10pt')
                                 .prepend('<h4 class="text-center">Daily Working Hours Report</h4>');
 
                             let startDate = $('#startDate').val();

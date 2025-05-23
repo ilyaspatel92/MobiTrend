@@ -1,56 +1,54 @@
 ﻿@{
-    ViewData["Title"] = "System User";
+    ViewData["Title"] = @T("Mobi.SystemUser.Title");
 }
 
 <div class="container mt-4">
     <div class="card">
         <div class="card-header bg-info text-white">
-            <h3 class="card-title mb-0">System User</h3>
+            <h3 class="card-title mb-0">@T("Mobi.SystemUser.Header")</h3>
         </div>
         <div class="card-body">
-            <!-- Notification Section -->
             @if (TempData["SuccessMessage"] != null)
             {
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     @TempData["SuccessMessage"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="@T("Mobi.SystemUser.Close")"></button>
                 </div>
             }
             @if (TempData["ErrorMessage"] != null)
             {
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     @TempData["ErrorMessage"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="@T("Mobi.SystemUser.Close")"></button>
                 </div>
             }
 
-            <!-- Form Section -->
             <form id="userForm">
                 <input type="hidden" name="employeeId" >
                 <div class="row mb-3">
                     <div class="col-md-6 position-relative">
-                        <label for="EmployeeName" class="form-label">Employee Name</label>
-                        <input id="EmployeeName" class="form-control" placeholder="Enter 3 characters to search" autocomplete="off" />
+                        <label for="EmployeeName" class="form-label">@T("Mobi.SystemUser.EmployeeName")</label>
+                        <input id="EmployeeName" class="form-control" placeholder="@T("Mobi.SystemUser.EmployeeName.Placeholder")" autocomplete="off" />
                         <ul id="EmployeeNameDropdown" class="list-group position-absolute mt-1" style="display: none; z-index: 1000;"></ul>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="UserName" class="form-label">User Name</label>
-                        <input id="UserName" class="form-control" placeholder="User Name" />
-                        <span class="text-danger" id="UserNameError"></span> <!-- Validation Message -->
+                        <label for="UserName" class="form-label">@T("Mobi.SystemUser.UserName")</label>
+                        <input id="UserName" class="form-control" placeholder="@T("Mobi.SystemUser.UserName.Placeholder")" />
+                        <span class="text-danger" id="UserNameError"></span>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="Password" class="form-label">Password</label>
-                        <input id="Password" type="password" class="form-control" placeholder="Enter Password" />
-                        <span class="text-danger" id="PasswordError"></span> <!-- Make sure this is present -->
+                        <label for="Password" class="form-label">@T("Mobi.SystemUser.Password")</label>
+                        <input id="Password" type="password" class="form-control" placeholder="@T("Mobi.SystemUser.Password.Placeholder")" />
+                        <span class="text-danger" id="PasswordError"></span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <h5>Screen Authority</h5>
+                        <h5>@T("Mobi.SystemUser.ScreenAuthority")</h5>
                         <div id="authority-list">
                             @foreach (var authority in Enum.GetValues(typeof(ScreenAuthorityEnum)))
                             {
@@ -61,12 +59,10 @@
                             }
                         </div>
                     </div>
-                </div>                
+                </div>
                 <div class="d-flex justify-content-end mt-3">
-                    <a href="@Url.Action("index")" class="btn btn-light">
-                        Cancel
-                    </a>
-                    <button id="saveAccess" type="button" class="btn btn-success">Save</button>
+                    <a href="@Url.Action("index")" class="btn btn-light">@T("Mobi.SystemUser.ButtonCancel")</a>
+                    <button id="saveAccess" type="button" class="btn btn-success">@T("Mobi.SystemUser.ButtonSave")</button>
                 </div>
             </form>
         </div>
@@ -81,8 +77,6 @@
         const userNameInput = document.getElementById("UserName");
         const employeeId = document.getElementById("employeeId");
 
-
-        // Adjust Dropdown
         function adjustDropdownWidth() {
             employeeNameDropdown.style.width = `${employeeNameInput.offsetWidth}px`;
         }
@@ -92,13 +86,12 @@
 
         employeeNameInput.addEventListener("input", function () {
             const term = employeeNameInput.value;
-
             if (term.length < 3) {
                 employeeNameDropdown.style.display = "none";
                 return;
             }
 
-            employeeNameDropdown.innerHTML = '<li class="list-group-item">Loading...</li>';
+            employeeNameDropdown.innerHTML = '<li class="list-group-item">@T("Mobi.SystemUser.Loading")</li>';
             employeeNameDropdown.style.display = "block";
 
             fetch(`/SystemUsers/GetEmployeeNames?term=${term}`)
@@ -106,7 +99,7 @@
                 .then((data) => {
                     employeeNameDropdown.innerHTML = "";
                     if (data.length === 0) {
-                        employeeNameDropdown.innerHTML = '<li class="list-group-item text-muted">No record found</li>';
+                        employeeNameDropdown.innerHTML = '<li class="list-group-item text-muted">@T("Mobi.SystemUser.NoRecordFound")</li>';
                     } else {
                         data.forEach((item) => {
                             const option = document.createElement("li");
@@ -120,8 +113,7 @@
                                 userNameInput.value = item.userName || "";
                                 selectedUserId = item.id;
                                 employeeNameDropdown.style.display = "none";
-
-                                employeeId= item.id;
+                                employeeId = item.id;
                                 fetchAccess(selectedUserId);
                             });
                             employeeNameDropdown.appendChild(option);
@@ -129,7 +121,7 @@
                     }
                 })
                 .catch(() => {
-                    employeeNameDropdown.innerHTML = '<li class="list-group-item text-danger">Error fetching data</li>';
+                    employeeNameDropdown.innerHTML = '<li class="list-group-item text-danger">@T("Mobi.SystemUser.ErrorFetchingData")</li>';
                 });
         });
 
@@ -143,78 +135,63 @@
             fetch(`/SystemUsers/GetAccessForEmployee?userId=${userId}`)
                 .then((response) => response.json())
                 .then((data) => {
-                    document.querySelectorAll("input[name='authorities']").forEach((input) => {
-                        input.checked = false;
-                    });
+                    document.querySelectorAll("input[name='authorities']").forEach((input) => input.checked = false);
                     data.forEach((item) => {
                         const checkbox = document.querySelector(`#authority-list input[value='${item.screenAuthority}']`);
                         if (checkbox) checkbox.checked = true;
                     });
                 })
-                .catch(() => alert("Error fetching access."));
+                .catch(() => alert("@T("Mobi.SystemUser.ErrorFetchingAccess")"));
         }
 
         document.getElementById("saveAccess").addEventListener("click", function () {
-           
             const userNameInput = document.getElementById("UserName");
             const passwordInput = document.getElementById("Password");
             const userNameError = document.getElementById("UserNameError");
             const passwordError = document.getElementById("PasswordError");
 
-             if (selectedUserId === 0) {
-                alert("Please select an employee first.");
+            if (selectedUserId === 0) {
+                alert("@T("Mobi.SystemUser.SelectEmployeeFirst")");
                 return;
             }
-            // Clear previous errors before validation
+
             userNameError.textContent = "";
             passwordError.textContent = "";
 
             if (!userNameInput.value.trim()) {
-                userNameError.textContent = "User Name is required.";
+                userNameError.textContent = "@T("Mobi.SystemUser.Validation.UserNameRequired")";
                 return;
             }
 
             if (!passwordInput.value.trim()) {
-                passwordError.textContent = "Password is required.";
+                passwordError.textContent = "@T("Mobi.SystemUser.Validation.PasswordRequired")";
                 return;
             }
-                            let score = "";
 
-                 // Check if password is only numbers
-                 if (/^[0-9]{0,100}$/.test(passwordInput.value.trim())) {
-                     score = "VeryWeak";
-                     passwordError.textContent = "VeryWeak";
-                 }
-                 // Check if password is only letters or length < 6
-                 else if (/^[A-Za-z]{0,100}$/.test(passwordInput.value.trim()) || passwordInput.value.trim().length < 6) {
-                     score = "VeryWeak";
-                     passwordError.textContent = "VeryWeak";
-                 }
-                 // Check if password is strong: alphanumeric + at least one special character and at least 6 characters
-                 else if (
-                     passwordInput.value.trim().length >= 6 && /^(?=.*?[0-9a-zA-Z])(?=.*?[#?!@@$%^&*-]).{6,}$/.test(passwordInput.value.trim())
-                 ) {
-                     score = "Strong";
-                     passwordError.textContent = "Strong";
-                 } else {
-                     score = "Medium";
-                     passwordError.textContent = "Medium";
-                 }
+            let score = "";
+            const pwd = passwordInput.value.trim();
 
+            if (/^[0-9]{0,100}$/.test(pwd)) {
+                score = "VeryWeak";
+            } else if (/^[A-Za-z]{0,100}$/.test(pwd) || pwd.length < 6) {
+                score = "VeryWeak";
+            } else if (pwd.length >= 6 && /^(?=.*?[0-9a-zA-Z])(?=.*?[#?!@@$%^&*-]).{6,}$/.test(pwd)) {
+                score = "Strong";
+            } else {
+                score = "Medium";
+            }
 
-                 // Optional: Show alert or block based on score
-                 if (score === "VeryWeak") {
-                     passwordError.textContent = "Password is too weak. Please choose a stronger password. Password Should be strong: alphanumeric + at least one special character and at least 6 characters";
-                     return;
-                 }
+            if (score === "VeryWeak") {
+                passwordError.textContent = "@T("Mobi.SystemUser.Validation.PasswordStrength")";
+                return;
+            }
 
-            const selectedAuthorities = Array.from(document.querySelectorAll("input[name='authorities']:checked"))
-                .map(input => input.value);
+            const selectedAuthorities = Array.from(document.querySelectorAll("input[name='authorities']:checked")).map(input => input.value);
 
-             const requestData = {
+            const requestData = {
                 userId: selectedUserId,
-                userName: document.getElementById("UserName").value,
-                password: document.getElementById("Password").value,
+                userName: userNameInput.value,
+                password: passwordInput.value,
                 authorities: selectedAuthorities
             };
 
@@ -224,20 +201,19 @@
                 body: JSON.stringify(requestData)
             })
                 .then(response => {
-                   if (response.status === 409) {  // Handle username conflict
-                       return response.text().then(errorMessage => {
-                           document.getElementById("UserNameError").textContent = errorMessage;
-                           throw new Error(errorMessage);
-                       });
-                   }
-                   if (response.ok) {
-                       alert("Access saved successfully.");
-                       window.location.href = "/systemusers/index";
-                   } else {
-                       alert("Error saving access.");
-                   }
+                    if (response.status === 409) {
+                        return response.text().then(errorMessage => {
+                            userNameError.textContent = errorMessage;
+                            throw new Error(errorMessage);
+                        });
+                    }
+                    if (response.ok) {
+                        alert("@T("Mobi.SystemUser.SaveSuccess")");
+                        window.location.href = "/systemusers/index";
+                    } else {
+                        alert("@T("Mobi.SystemUser.SaveError")");
+                    }
                 });
-                // .catch(() => alert("Error saving access."));
         });
     });
 </script>

@@ -1,74 +1,77 @@
 ﻿@{
-    ViewData["Title"] = "Employees";
+    ViewData["Title"] = @T("Mobi.Employee.List.PageTitle");
 }
 <div class="card card-info card-outline mb-4 mx-3 custom-top-spacing">
-    <!-- Header Section -->
     <div class="card-header bg-white py-3 border-bottom">
         <div class="d-flex justify-content-between align-items-center">
-            <!-- Title -->
-            <h5 class="fw-bold mb-0">Employees</h5>
-            <!-- Buttons -->
+            <h5 class="fw-bold mb-0">@T("Mobi.Employee.List.Heading")</h5>
             <div class="d-flex gap-2">
-                <a href="@Url.Action("Create", "Employee")" class="btn btn-success btn-sm"><i class="fa-solid fa-user-plus"></i>  Add Employee</a>
+                <a href="@Url.Action("Create", "Employee")" class="btn btn-success btn-sm">
+                    <i class="fa-solid fa-user-plus"></i> @T("Mobi.Employee.List.AddButton")
+                </a>
             </div>
         </div>
         <form id="searchForm" method="get" action="@Url.Action("GetEmployees", "Employee")">
-            <!-- begin::Card Body -->
             <div class="card-body">
                 <div class="row g-4">
-                    <!-- Spacing between form elements -->
-                    <!-- Search by Name -->
                     <div class="col-md-6">
-                        <label for="searchByName" class="form-label"><i class="fas fa-user"></i> Search by Name</label>
-                        <input type="text" id="searchByName" name="name" class="form-control" placeholder="Enter Name" />
+                        <label for="searchByName" class="form-label">
+                            <i class="fas fa-user"></i> @T("Mobi.Employee.List.SearchByNameLabel")
+                        </label>
+                        <input type="text" id="searchByName" name="name" class="form-control" placeholder="@T("Mobi.Employee.List.SearchByNamePlaceholder")" />
                     </div>
 
-                    <!-- Search by ID -->
                     <div class="col-md-6">
-                        <label for="searchById" class="form-label"><i class="fas fa-file"></i> Search by File Number</label>
-                        <input type="text" id="searchById" name="id" class="form-control" placeholder="Enter  File Number" />
+                        <label for="searchById" class="form-label">
+                            <i class="fas fa-file"></i> @T("Mobi.Employee.List.SearchByFileNumberLabel")
+                        </label>
+                        <input type="text" id="searchById" name="id" class="form-control" placeholder="@T("Mobi.Employee.List.SearchByFileNumberPlaceholder")" />
                     </div>
-                </div> <!-- end::Row -->
-            </div> <!-- end::Card Body -->
-            <!-- begin::Card Footer -->
+                </div>
+            </div>
             <div class="card-footer d-flex justify-content-end gap-2">
-                <button type="submit" class="btn btn-primary px-4"><i class="fas fa-search"></i> Search</button>
-                <button type="button" id="showAllBtn" class="btn btn-warning px-4"><i class="fas fa-list"></i> Show All</button>
-            </div> <!-- end::Card Footer -->
+                <button type="submit" class="btn btn-primary px-4">
+                    <i class="fas fa-search"></i> @T("Mobi.Employee.List.SearchButton")
+                </button>
+                <button type="button" id="showAllBtn" class="btn btn-warning px-4">
+                    <i class="fas fa-list"></i> @T("Mobi.Employee.List.ShowAllButton")
+                </button>
+            </div>
         </form>
     </div>
 </div>
+
+<!-- Table Header -->
 <div class="app-content">
-    <!--begin::Container-->
     <div class="container-fluid">
-        <!--begin::Row-->
         <div class="row">
             <div class="col-md-12">
                 <div class="card mb-12">
                     <div class="card-header">
-                        <h3 class="card-title">Employee Table</h3>
-                    </div> <!-- /.card-header -->
+                        <h3 class="card-title">@T("Mobi.Employee.List.TableTitle")</h3>
+                    </div>
                     <div class="card-body">
                         <table class="table table-bordered" id="employeeTable">
                             <thead>
                                 <tr>
-                                    <th>File Number</th>
-                                    <th>Name (English)</th>
-                                    <th>Name (Arabic)</th>
-                                    <th>Status</th>                                    
-                                    <th>Mobile Number</th>
-                                    <th>Email</th>
-                                    <th>Actions</th>
+                                    <th>@T("Mobi.Employee.List.Column.FileNumber")</th>
+                                    <th>@T("Mobi.Employee.List.Column.NameEnglish")</th>
+                                    <th>@T("Mobi.Employee.List.Column.NameArabic")</th>
+                                    <th>@T("Mobi.Employee.List.Column.Status")</th>
+                                    <th>@T("Mobi.Employee.List.Column.MobileNumber")</th>
+                                    <th>@T("Mobi.Employee.List.Column.Email")</th>
+                                    <th>@T("Mobi.Employee.List.Column.Actions")</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
                         </table>
-                    </div> <!-- /.card-body -->
-                </div> <!-- /.card -->
-            </div> <!-- /.col -->
-        </div> <!--end::Row-->
-    </div> <!--end::Container-->
-</div> <!--end::App Content-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
         $(document).ready(function () {
@@ -85,7 +88,7 @@
                                 ? "<i class='fa fa-check text-success'></i>"
                                 : "<i class='fa fa-times text-danger'></i>";
                         }
-                    },                    
+                    },
                     { data: 'mobileNumber' },
                     { data: 'email' },
                     {
@@ -108,21 +111,21 @@
                 pageLength: 10,
                 language: {
                     paginate: {
-                        previous: "Previous",
-                        next: "Next"
+                        previous: "@T("Mobi.Common.Previous")",
+                        next: "@T("Mobi.Common.Next")"
                     },
-                    info: "Showing _START_ to _END_ of _TOTAL_ entries (filtered from _MAX_ total entries)"
+                    info: "@T("Mobi.Employee.List.TableInfoText")"
                 }
             });
 
-                 function loadData() {
-            var searchParams = {
-                name: $('#searchByName').val(),
-                id: $('#searchById').val()
-            };
+            function loadData() {
+                var searchParams = {
+                    name: $('#searchByName').val(),
+                    id: $('#searchById').val()
+                };
+                table.ajax.url('@Url.Action("GetEmployees", "Employee")' + '?' + $.param(searchParams)).load();
+            }
 
-             table.ajax.url('@Url.Action("GetEmployees", "Employee")' + '?' + $.param(searchParams)).load();
-        }
             $('#searchForm').on('submit', function (e) {
                 e.preventDefault();
                 loadData();
@@ -136,19 +139,19 @@
 
             $('#employeeTable').on('click', '.delete-btn', function () {
                 var id = $(this).data('id');
-                if (confirm("Are you sure you want to delete this employee?")) {
+                if (confirm("@T("Mobi.Employee.List.ConfirmDeleteMessage")")) {
                     $.ajax({
                         url: '/Employee/Delete/' + id,
                         type: 'POST',
                         data: {
                             __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
                         },
-                        success: function (response) {
-                            alert("Employee deleted successfully!");
+                        success: function () {
+                            alert("@T("Mobi.Employee.List.DeleteSuccessMessage")");
                             table.ajax.reload();
                         },
                         error: function () {
-                            alert("Failed to delete the employee.");
+                            alert("@T("Mobi.Employee.List.DeleteFailureMessage")");
                         }
                     });
                 }

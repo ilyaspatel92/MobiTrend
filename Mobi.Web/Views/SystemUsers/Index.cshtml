@@ -1,60 +1,57 @@
 ﻿@{
-    ViewData["Title"] = "System Users";
+    ViewData["Title"] = @T("Mobi.SystemUser.ListTitle");
 }
 
 <div class="card card-info card-outline mb-4 mx-3 custom-top-spacing">
     <div class="card-header bg-white py-3 border-bottom">
         <div class="d-flex justify-content-between align-items-center">
-            <!-- Title -->
-            <h5 class="fw-bold mb-0">System Users</h5>
-            <!-- Buttons -->
+            <h5 class="fw-bold mb-0">@T("Mobi.SystemUser.ListTitle")</h5>
             <div class="d-flex gap-2">
                 <a href="@Url.Action("Create", "SystemUsers")" class="btn btn-success btn-sm">
-                    <i class="fas fa-plus"></i> Add User
+                    <i class="fas fa-plus"></i> @T("Mobi.SystemUser.AddUser")
                 </a>
             </div>
         </div>
         <div class="card-body">
-            <!-- Search Form -->
             <form id="searchForm" class="mb-3">
                 <div class="row">
                     <div class="col-md-4">
-                        <label class="form-label"><i class="fas fa-user"></i> Employee Name</label>
-                        <input type="text" id="searchByName" name="employeeName" class="form-control" placeholder="Enter Employee Name">
+                        <label class="form-label"><i class="fas fa-user"></i> @T("Mobi.SystemUser.EmployeeName")</label>
+                        <input type="text" id="searchByName" name="employeeName" class="form-control" placeholder="@T("Mobi.SystemUser.EmployeeNamePlaceholder")">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label"><i class="fas fa-user-tag"></i> User Name</label>
-                        <input type="text" id="searchByUserName" name="userName" class="form-control" placeholder="Enter Username">
+                        <label class="form-label"><i class="fas fa-user-tag"></i> @T("Mobi.SystemUser.UserName")</label>
+                        <input type="text" id="searchByUserName" name="userName" class="form-control" placeholder="@T("Mobi.SystemUser.UserNamePlaceholder")">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label"><i class="fas fa-toggle-on"></i> User Status</label>
+                        <label class="form-label"><i class="fas fa-toggle-on"></i> @T("Mobi.SystemUser.UserStatus")</label>
                         <select id="searchByStatus" name="userStatus" class="form-control">
-                            <option value="">All</option>
-                            <option value="true">Active</option>
-                            <option value="false">Inactive</option>
+                            <option value="">@T("Mobi.SystemUser.StatusAll")</option>
+                            <option value="true">@T("Mobi.SystemUser.StatusActive")</option>
+                            <option value="false">@T("Mobi.SystemUser.StatusInactive")</option>
                         </select>
                     </div>
                 </div>
                 <div class="card-footer d-flex justify-content-end gap-2">
                     <button type="submit" class="btn btn-primary px-4">
-                        <i class="fas fa-search"></i> Search
+                        <i class="fas fa-search"></i> @T("Mobi.SystemUser.Search")
                     </button>
-                  
-                    <button type="button" id="showAllBtn" class="btn btn-warning px-4"><i class="fas fa-list"></i> Show All</button>
+                    <button type="button" id="showAllBtn" class="btn btn-warning px-4">
+                        <i class="fas fa-list"></i> @T("Mobi.SystemUser.ShowAll")
+                    </button>
                 </div>
             </form>
 
-            <!-- DataTable -->
             <div class="table-responsive">
                 <table class="table table-hover table-bordered text-center" id="userTable">
-                    <thead class="">
+                    <thead>
                         <tr>
-                            <th>File Number</th>
-                            <th>Employee Name</th>
-                            <th>Company ID</th>
-                            <th>User Name</th>
-                            <th>User Status</th>
-                            <th>Action</th>
+                            <th>@T("Mobi.SystemUser.FileNumber")</th>
+                            <th>@T("Mobi.SystemUser.EmployeeName")</th>
+                            <th>@T("Mobi.SystemUser.CompanyId")</th>
+                            <th>@T("Mobi.SystemUser.UserName")</th>
+                            <th>@T("Mobi.SystemUser.UserStatus")</th>
+                            <th>@T("Mobi.SystemUser.Action")</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -81,8 +78,8 @@
                         data: 'userStatus',
                         render: function (data) {
                             return data
-                                ? "<span class='badge bg-success'><i class='fas fa-check'></i> Active</span>"
-                                : "<span class='badge bg-danger'><i class='fas fa-times'></i> Inactive</span>";
+                                ? "<span class='badge bg-success'><i class='fas fa-check'></i> @T("Mobi.SystemUser.StatusActive")</span>"
+                                : "<span class='badge bg-danger'><i class='fas fa-times'></i> @T("Mobi.SystemUser.StatusInactive")</span>";
                         }
                     },
                     {
@@ -92,50 +89,47 @@
                     }
                 ],
                 paging: true,
-                order :[[0,"asc"]],
+                order: [[0, "asc"]],
                 searching: false,
                 lengthChange: true,
                 pageLength: 10,
                 language: {
                     paginate: { previous: "«", next: "»" },
-                    info: "Showing _START_ to _END_ of _TOTAL_ entries"
+                    info: "@T("Mobi.SystemUser.DataTableInfo")"
                 }
             });
-                             function loadData() {
-            var searchParams = {
-                employeeName: $('#searchByName').val(),
-                userName: $('#searchByUserName').val(),
-                userStatus: $('#searchByStatus').val()
-            };
 
-             table.ajax.url('@Url.Action("GetUserData", "SystemUsers")' + '?' + $.param(searchParams)).load();
-        }
-            // Search Form Submission
+            function loadData() {
+                var searchParams = {
+                    employeeName: $('#searchByName').val(),
+                    userName: $('#searchByUserName').val(),
+                    userStatus: $('#searchByStatus').val()
+                };
+                table.ajax.url('@Url.Action("GetUserData", "SystemUsers")' + '?' + $.param(searchParams)).load();
+            }
+
             $('#searchForm').on('submit', function (e) {
                 e.preventDefault();
-                //table.ajax.reload();
                 loadData();
             });
-             $('#showAllBtn').on('click', function (e) {
+
+            $('#showAllBtn').on('click', function (e) {
                 e.preventDefault();
-                //table.ajax.reload();
                 table.ajax.url('/SystemUsers/GetUserData').load();
             });
 
-            // Delete User
             $('#userTable').on('click', '.delete-btn', function () {
                 var id = $(this).data('id');
-                if (confirm("Are you sure you want to delete this user?")) {
+                if (confirm("@T("Mobi.SystemUser.ConfirmDelete")")) {
                     $.ajax({
                         url: '/SystemUsers/Delete/' + id,
                         type: 'POST',
                         success: function () {
-                            alert("User deleted successfully!");
-                            //table.ajax.reload();
+                            alert("@T("Mobi.SystemUser.DeleteSuccess")");
                             table.ajax.url('/SystemUsers/GetUserData').load();
                         },
                         error: function () {
-                            alert("Failed to delete user.");
+                            alert("@T("Mobi.SystemUser.DeleteFailed")");
                         }
                     });
                 }

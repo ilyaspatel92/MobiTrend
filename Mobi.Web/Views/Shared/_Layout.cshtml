@@ -3,7 +3,7 @@
 @{
     var languageCookie = HttpContextAccessor.HttpContext?.Request.Cookies["language"];
     var currentLanguage = languageCookie ?? "1"; // Default to "1" (English) if no cookie found
-    
+
     var successMessage = TempData["SuccessMessage"] as string;
     var errorMessage = TempData["ErrorMessage"] as string;
 
@@ -27,16 +27,15 @@
     @* <link rel="stylesheet" href="../../dist/css/all.min.css"> *@
 
     <!--begin::jQuery and DataTable scripts-->
-    <script src="~/datatables/jquery-3.6.0.min.js"></script>    
+    <script src="~/datatables/jquery-3.6.0.min.js"></script>
     <script src="~/datatables/jquery.dataTables.min.js"></script>
     <script src="~/datatables/dataTables.bootstrap5.min.js"></script>
     <link rel="stylesheet" href="~/datatables/dataTables.bootstrap5.min.css" />
     <!--end::jQuery and DataTable scripts-->
-
     @RenderSection("Scripts", required: false)
 </head> <!--end::Head--> <!--begin::Body-->
 @* <body class="layout-fixed sidebar-expand-lg sidebar-mini bg-body-tertiary"> *@
- <body class="layout-fixed  sidebar-mini bg-body-tertiary hold-transition"> 
+<body class="layout-fixed  sidebar-mini bg-body-tertiary hold-transition">
 
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
@@ -46,7 +45,7 @@
             <div class="container-fluid">
                 <!--begin::Start Navbar Links-->
                 <ul class="navbar-nav">
-                  @*   <li class="nav-item"> <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button"> <i class="bi bi-list"></i> </a> </li> *@
+                    @*   <li class="nav-item"> <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button"> <i class="bi bi-list"></i> </a> </li> *@
 
                     @*   <li class="nav-item">
                         <select id="language-switcher" onchange="changeLanguage()">
@@ -155,17 +154,17 @@
                                     <div class="col-4 text-center"> <a href="#">Friends</a> </div> *@
 
                                     <select class="btn btn-primary dropdown-toggle" id="language-switcher" onchange="changeLanguage()">
-                                        <option value="1" selected="@(currentLanguage == "1" ? "selected" : null)">English</option>
-                                        <option value="2" selected="@(currentLanguage == "2" ? "selected" : null)">Arabic</option>
+                                        <option value="1" selected="@(currentLanguage == "1" ? "selected" : null)">@T("Mobi.Layout.Language.English")</option>
+                                        <option value="2" selected="@(currentLanguage == "2" ? "selected" : null)">@T("Mobi.Layout.Language.Arabic")</option>
                                     </select>
                                 </div> <!--end::Row-->
                             </li> <!--end::Menu Body--> <!--begin::Menu Footer-->
                             <li class="user-footer">
-                                <a href="/systemusers/changepassword" class="btn btn-default btn-flat">Change Password</a>
+                                <a href="/systemusers/changepassword" class="btn btn-default btn-flat">@T("Mobi.Layout.ChangePassword")</a>
                                 @if (User.Identity.IsAuthenticated)
                                 {
                                     <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
-                                        <button class="btn btn-default btn-flat float-end" type="submit">Sign out</button>
+                                        <button class="btn btn-default btn-flat float-end" type="submit">@T("Mobi.Layout.SignOut")</button>
                                     </form>
                                 }
                             </li> <!--end::Menu Footer-->
@@ -176,15 +175,16 @@
         </nav> <!--end::Header--> <!--begin::Sidebar-->
 
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-            <div class="sidebar-brand"> 
-                <a href="/" class="brand-link"> <!--begin::Brand Image--> <img src="../../uploads/log_mobi.png" alt="AdminLTE Logo" class="brand-image opacity-75 shadow"> <!--end::Brand Image--> <!--begin::Brand Text--> <span class="brand-text fw-light"></span> <!--end::Brand Text--> </a> <!--end::Brand Link--> </div> <!--end::Sidebar Brand--> <!--begin::Sidebar Wrapper-->
+            <div class="sidebar-brand">
+                <a href="/" class="brand-link"> <!--begin::Brand Image--> <img src="../../uploads/log_mobi.png" alt="AdminLTE Logo" class="brand-image opacity-75 shadow"> <!--end::Brand Image--> <!--begin::Brand Text--> <span class="brand-text fw-light"></span> <!--end::Brand Text--> </a> <!--end::Brand Link-->
+            </div> <!--end::Sidebar Brand--> <!--begin::Sidebar Wrapper-->
             <div class="sidebar-wrapper">
                 <nav class="mt-2">
                     <script>
                                                 $(document).ready(function () {
-                       
 
-                                                    
+
+
                             // Restore active menu from localStorage
                             var activeMenu = localStorage.getItem("activeMenu");
 
@@ -243,134 +243,55 @@
                         <li class="nav-item">
                             <a href="/" class="nav-link">
                                 <i class="nav-icon fas fa-home"></i>
-                                <p>Dashboard</p>
+                                <p>@T("Mobi.Layout.Menu.Dashboard")</p>
                             </a>
                         </li>
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>
-                                <p>
-                                    Basic Data
-                                    <i class="nav-arrow bi bi-chevron-right"></i>
-                                </p>
+                                <p>@T("Mobi.Layout.Menu.BasicData")<i class="nav-arrow bi bi-chevron-right"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/location/List">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Locations</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="/employee/List" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Employees</p>
-                                    </a>
-                                </li>
+                                <li class="nav-item"><a class="nav-link" href="/location/List"><i class="nav-icon bi bi-circle"></i><p>@T("Mobi.Layout.Menu.Locations")</p></a></li>
+                                <li class="nav-item"><a href="/employee/List" class="nav-link"><i class="nav-icon bi bi-circle"></i><p>@T("Mobi.Layout.Menu.Employees")</p></a></li>
                             </ul>
                         </li>
-
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="fa-solid fa-bars-progress"></i>
-                                <p>
-                                    Manage
-                                    <i class="nav-arrow bi bi-chevron-right"></i>
-                                </p>
+                                <p>@T("Mobi.Layout.Menu.Manage")<i class="nav-arrow bi bi-chevron-right"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="/mobilemanage/mobilemanage" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Employee Mobile</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="/employeelocation/employeelocation" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Employee Locations</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="/employeeattendance/logs" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Employees Attendance</p>
-                                    </a>
-                                </li>
+                                <li class="nav-item"><a href="/mobilemanage/mobilemanage" class="nav-link"><i class="nav-icon bi bi-circle"></i><p>@T("Mobi.Layout.Menu.EmployeeMobile")</p></a></li>
+                                <li class="nav-item"><a href="/employeelocation/employeelocation" class="nav-link"><i class="nav-icon bi bi-circle"></i><p>@T("Mobi.Layout.Menu.EmployeeLocations")</p></a></li>
+                                <li class="nav-item"><a href="/employeeattendance/logs" class="nav-link"><i class="nav-icon bi bi-circle"></i><p>@T("Mobi.Layout.Menu.Attendance")</p></a></li>
                             </ul>
                         </li>
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="fa-solid fa-universal-access"></i>
-                                <p>
-                                    Permissions
-                                    <i class="nav-arrow bi bi-chevron-right"></i>
-                                </p>
+                                <p>@T("Mobi.Layout.Menu.Permissions")<i class="nav-arrow bi bi-chevron-right"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="/systemusers/index" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>System Users</p>
-                                    </a>
-                                </li>
+                                <li class="nav-item"><a href="/systemusers/index" class="nav-link"><i class="nav-icon bi bi-circle"></i><p>@T("Mobi.Layout.Menu.SystemUsers")</p></a></li>
                             </ul>
                         </li>
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-chart-pie"></i>
-                                <p>
-                                    Reports
-                                    <i class="nav-arrow bi bi-chevron-right"></i>
-                                </p>
+                                <p>@T("Mobi.Layout.Menu.Reports")<i class="nav-arrow bi bi-chevron-right"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="/reports/dailyattendancereport" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Daily Attendance Report</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="/reports/employeedata" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Employee Data Report</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="/reports/registeredphones" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Registered Phones</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="/reports/monthlyworkinghours" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Monthly Working Hours Reports</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="/reports/dailyworkinghours" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Daily Working Hours Report</p>
-                                    </a>
-                                </li>
-                               @*  <li class="nav-item">
-                                    <a href="/reports/dailyattendancereportbylocation" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Daily Attendance Reports by Location</p>
-                                    </a>
-                                </li> *@
-                                <li class="nav-item">
-                                    <a href="/reports/employeelocationauthorityreport" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Employee Location Authority Report</p>
-                                    </a>
-                                </li>
+                                <li class="nav-item"><a href="/reports/dailyattendancereport" class="nav-link"><i class="nav-icon bi bi-circle"></i><p>@T("Mobi.Layout.Menu.DailyAttendanceReport")</p></a></li>
+                                <li class="nav-item"><a href="/reports/employeedata" class="nav-link"><i class="nav-icon bi bi-circle"></i><p>@T("Mobi.Layout.Menu.EmployeeDataReport")</p></a></li>
+                                <li class="nav-item"><a href="/reports/registeredphones" class="nav-link"><i class="nav-icon bi bi-circle"></i><p>@T("Mobi.Layout.Menu.RegisteredPhones")</p></a></li>
+                                <li class="nav-item"><a href="/reports/monthlyworkinghours" class="nav-link"><i class="nav-icon bi bi-circle"></i><p>@T("Mobi.Layout.Menu.MonthlyWorkingHours")</p></a></li>
+                                <li class="nav-item"><a href="/reports/dailyworkinghours" class="nav-link"><i class="nav-icon bi bi-circle"></i><p>@T("Mobi.Layout.Menu.DailyWorkingHours")</p></a></li>
+                                <li class="nav-item"><a href="/reports/employeelocationauthorityreport" class="nav-link"><i class="nav-icon bi bi-circle"></i><p>@T("Mobi.Layout.Menu.EmployeeLocationAuthorityReport")</p></a></li>
                             </ul>
                         </li>
-
-                    </ul> <!--end::Sidebar Menu-->
+                    </ul>
+                    <!--end::Sidebar Menu-->
                 </nav>
             </div> <!--end::Sidebar Wrapper-->
         </aside> <!--end::Sidebar--> <!--begin::App Main-->

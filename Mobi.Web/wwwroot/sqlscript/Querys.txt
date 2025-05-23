@@ -1,0 +1,1761 @@
+﻿
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+    ('Mobi.HomePage.WelcomeMessage', 'Welcome to Mobi Tend', 1),
+    ('Mobi.HomePage.WelcomeMessage', N'مرحباً بكم في Mobi Tend', 2);
+	
+	
+-- Insert for Title
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+    ('Mobi.AccessDenied.Title', 'Access Denied', 1),
+    ('Mobi.AccessDenied.Title', N'تم رفض الوصول', 2);
+
+-- Insert for Card Title
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+    ('Mobi.AccessDenied.CardTitle', 'Access Denied', 1),
+    ('Mobi.AccessDenied.CardTitle', N'تم رفض الوصول', 2);
+
+-- Insert for Alert Heading
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+    ('Mobi.AccessDenied.AlertHeading', 'You do not have the necessary permissions to view this page.', 1),
+    ('Mobi.AccessDenied.AlertHeading', N'ليس لديك الأذونات اللازمة لعرض هذه الصفحة.', 2);
+
+-- Insert for Alert Message 1
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+    ('Mobi.AccessDenied.AlertMessage1', 'Your account does not have the required access rights to view the content of this page.', 1),
+    ('Mobi.AccessDenied.AlertMessage1', N'حسابك لا يمتلك حقوق الوصول المطلوبة لعرض محتوى هذه الصفحة.', 2);
+
+-- Insert for Alert Message 2
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+    ('Mobi.AccessDenied.AlertMessage2', 'Please contact the system administrator.', 1),
+    ('Mobi.AccessDenied.AlertMessage2', N'يرجى الاتصال بمسؤول النظام.', 2);
+
+-- Insert for Go Home Button
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+    ('Mobi.AccessDenied.GoHomeButton', 'Go to Home', 1),
+    ('Mobi.AccessDenied.GoHomeButton', N'الذهاب إلى الصفحة الرئيسية', 2);
+
+-- Insert for Go Back Button
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+    ('Mobi.AccessDenied.GoBackButton', 'Go Back', 1),
+    ('Mobi.AccessDenied.GoBackButton', N'العودة', 2);
+
+
+
+-- Title
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+    ('Mobi.AccessControl.Title', 'Manage Access Control', 1),
+    ('Mobi.AccessControl.Title', N'إدارة التحكم في الوصول', 2);
+
+-- Card Title
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+    ('Mobi.AccessControl.CardTitle', 'Manage Access Control', 1),
+    ('Mobi.AccessControl.CardTitle', N'إدارة التحكم في الوصول', 2);
+
+-- Close (for aria-label)
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+    ('Mobi.Common.Close', 'Close', 1),
+    ('Mobi.Common.Close', N'إغلاق', 2);
+
+-- Employee Name Label
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+    ('Mobi.AccessControl.EmployeeNameLabel', 'Employee Name', 1),
+    ('Mobi.AccessControl.EmployeeNameLabel', N'اسم الموظف', 2);
+
+-- Employee Name Placeholder
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+    ('Mobi.AccessControl.EmployeeNamePlaceholder', 'Enter 3 characters of system user for search', 1),
+    ('Mobi.AccessControl.EmployeeNamePlaceholder', N'أدخل 3 أحرف من اسم المستخدم للبحث', 2);
+
+-- Screen Authority Title
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+    ('Mobi.AccessControl.ScreenAuthorityTitle', 'Screen Authority', 1),
+    ('Mobi.AccessControl.ScreenAuthorityTitle', N'صلاحيات الشاشة', 2);
+
+-- Save Button
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+    ('Mobi.AccessControl.SaveButton', 'Save', 1),
+    ('Mobi.AccessControl.SaveButton', N'حفظ', 2);
+
+-- No Record Found
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+    ('Mobi.AccessControl.NoRecordFound', 'No record found', 1),
+    ('Mobi.AccessControl.NoRecordFound', N'لم يتم العثور على سجلات', 2);
+
+-- Error Fetching Data
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+    ('Mobi.AccessControl.ErrorFetchingData', 'Error fetching data', 1),
+    ('Mobi.AccessControl.ErrorFetchingData', N'حدث خطأ أثناء جلب البيانات', 2);
+
+-- Fetch Access Error
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+    ('Mobi.AccessControl.FetchAccessError', 'Error fetching access for the selected employee.', 1),
+    ('Mobi.AccessControl.FetchAccessError', N'حدث خطأ أثناء جلب صلاحيات الوصول للموظف المحدد.', 2);
+
+-- Select Employee Alert
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+    ('Mobi.AccessControl.SelectEmployeeAlert', 'Please select an employee first.', 1),
+    ('Mobi.AccessControl.SelectEmployeeAlert', N'يرجى اختيار موظف أولاً.', 2);
+
+-- Access Saved Success
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+    ('Mobi.AccessControl.AccessSavedSuccess', 'Access saved successfully.', 1),
+    ('Mobi.AccessControl.AccessSavedSuccess', N'تم حفظ الصلاحيات بنجاح.', 2);
+
+-- Access Save Error
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+    ('Mobi.AccessControl.AccessSaveError', 'Error saving access control.', 1),
+    ('Mobi.AccessControl.AccessSaveError', N'حدث خطأ أثناء حفظ الصلاحيات.', 2);
+
+
+
+
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+('Mobi.Account.ForgotPassword.Title', 'Forgot Password', 1),
+('Mobi.Account.ForgotPassword.Title', 'نسيت كلمة المرور', 2),
+
+('Mobi.Account.ForgotPassword.PageTitle', 'AdminLTE 4 | Forgot Password', 1),
+('Mobi.Account.ForgotPassword.PageTitle', 'ادمن LTE 4 | نسيت كلمة المرور', 2),
+
+('Mobi.Account.ForgotPassword.Admin', 'Admin', 1),
+('Mobi.Account.ForgotPassword.Admin', 'ادمن', 2),
+
+('Mobi.Account.ForgotPassword.Mobi', 'Mobi', 1),
+('Mobi.Account.ForgotPassword.Mobi', 'موبي', 2),
+
+('Mobi.Account.ForgotPassword.Message', 'Forgot your password? Enter your email to reset it.', 1),
+('Mobi.Account.ForgotPassword.Message', 'هل نسيت كلمة المرور؟ أدخل بريدك الإلكتروني لإعادة تعيينها.', 2),
+
+('Mobi.Account.ForgotPassword.Placeholder.Email', 'Email', 1),
+('Mobi.Account.ForgotPassword.Placeholder.Email', 'البريد الإلكتروني', 2),
+
+('Mobi.Account.ForgotPassword.BackToLogin', 'Back to Login', 1),
+('Mobi.Account.ForgotPassword.BackToLogin', 'العودة لتسجيل الدخول', 2),
+
+('Mobi.Account.ForgotPassword.Submit', 'Submit', 1),
+('Mobi.Account.ForgotPassword.Submit', 'إرسال', 2);
+
+
+
+
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+('Mobi.Account.ForgotPasswordConfirmation.Title', 'Forgot Password Confirmation', 1),
+('Mobi.Account.ForgotPasswordConfirmation.Title', 'تأكيد نسيت كلمة المرور', 2),
+
+('Mobi.Account.ForgotPasswordConfirmation.PageTitle', 'AdminLTE 4 | Forgot Password Confirmation', 1),
+('Mobi.Account.ForgotPasswordConfirmation.PageTitle', 'ادمن LTE 4 | تأكيد نسيت كلمة المرور', 2),
+
+('Mobi.Account.ForgotPasswordConfirmation.Heading', 'Forgot Password', 1),
+('Mobi.Account.ForgotPasswordConfirmation.Heading', 'نسيت كلمة المرور', 2),
+
+('Mobi.Account.ForgotPasswordConfirmation.BackToLogin', 'Back to Login', 1),
+('Mobi.Account.ForgotPasswordConfirmation.BackToLogin', 'العودة لتسجيل الدخول', 2);
+
+
+
+
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+('Mobi.Account.Login.PageTitle', 'AdminLTE 4 | Login Page', 1),
+('Mobi.Account.Login.PageTitle', 'ادمن LTE 4 | صفحة تسجيل الدخول', 2),
+
+('Mobi.Account.Login.SignIn', 'Sign in', 1),
+('Mobi.Account.Login.SignIn', 'تسجيل الدخول', 2),
+
+('Mobi.Account.Login.UserNamePlaceholder', 'Username', 1),
+('Mobi.Account.Login.UserNamePlaceholder', 'اسم المستخدم', 2),
+
+('Mobi.Account.Login.PasswordPlaceholder', 'Password', 1),
+('Mobi.Account.Login.PasswordPlaceholder', 'كلمة المرور', 2),
+
+('Mobi.Account.Login.LoginButton', 'Login', 1),
+('Mobi.Account.Login.LoginButton', 'تسجيل الدخول', 2),
+
+('Mobi.Account.Login.ForgotPasswordText', 'Did you forget your account information?', 1),
+('Mobi.Account.Login.ForgotPasswordText', 'هل نسيت معلومات حسابك؟', 2),
+
+('Mobi.Account.Login.ForgotPasswordLink', 'Click Here', 1),
+('Mobi.Account.Login.ForgotPasswordLink', 'اضغط هنا', 2);
+
+
+
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+('Mobi.Account.ResetPassword.Title', 'Reset Password', 1),
+('Mobi.Account.ResetPassword.Title', 'إعادة تعيين كلمة المرور', 2),
+
+('Mobi.General.AppName', 'Mobi', 1),
+('Mobi.General.AppName', 'موبي', 2),
+
+('Mobi.General.Admin', 'Admin', 1),
+('Mobi.General.Admin', 'مسؤول', 2),
+
+('Mobi.Account.ResetPassword.EnterAndConfirm', 'Please enter and confirm your new password.', 1),
+('Mobi.Account.ResetPassword.EnterAndConfirm', 'يرجى إدخال وتأكيد كلمة المرور الجديدة الخاصة بك.', 2),
+
+('Mobi.Account.ResetPassword.NewPasswordPlaceholder', 'New Password', 1),
+('Mobi.Account.ResetPassword.NewPasswordPlaceholder', 'كلمة مرور جديدة', 2),
+
+('Mobi.Account.ResetPassword.ConfirmPasswordPlaceholder', 'Confirm Password', 1),
+('Mobi.Account.ResetPassword.ConfirmPasswordPlaceholder', 'تأكيد كلمة المرور', 2),
+
+('Mobi.Account.ResetPassword.PasswordMismatch', 'Passwords do not match!', 1),
+('Mobi.Account.ResetPassword.PasswordMismatch', 'كلمات المرور غير متطابقة!', 2),
+
+('Mobi.Account.ResetPassword.BackToLogin', 'Back to Login', 1),
+('Mobi.Account.ResetPassword.BackToLogin', 'العودة لتسجيل الدخول', 2),
+
+('Mobi.Account.ResetPassword.ButtonText', 'Reset Password', 1),
+('Mobi.Account.ResetPassword.ButtonText', 'إعادة تعيين كلمة المرور', 2);
+
+
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+('Mobi.Employee.Add.Title', 'Add Employee', 1),
+('Mobi.Employee.Add.Title', 'إضافة موظف', 2),
+
+('Mobi.Employee.BackToList', 'Back to List', 1),
+('Mobi.Employee.BackToList', 'العودة إلى القائمة', 2),
+
+('Mobi.Employee.Save', 'Save', 1),
+('Mobi.Employee.Save', 'حفظ', 2),
+
+('Mobi.Employee.NameEnglish', 'Name (English)', 1),
+('Mobi.Employee.NameEnglish', 'الاسم (بالإنجليزية)', 2),
+
+('Mobi.Employee.Placeholder.NameEnglish', 'Enter Name (English)', 1),
+('Mobi.Employee.Placeholder.NameEnglish', 'أدخل الاسم (بالإنجليزية)', 2),
+
+('Mobi.Employee.NameArabic', 'Name (Arabic)', 1),
+('Mobi.Employee.NameArabic', 'الاسم (بالعربية)', 2),
+
+('Mobi.Employee.Placeholder.NameArabic', 'Enter Name (Arabic)', 1),
+('Mobi.Employee.Placeholder.NameArabic', 'أدخل الاسم (بالعربية)', 2),
+
+('Mobi.Employee.Status', 'Employee Status', 1),
+('Mobi.Employee.Status', 'حالة الموظف', 2),
+
+('Mobi.Employee.Status.Active', 'Active', 1),
+('Mobi.Employee.Status.Active', 'نشط', 2),
+
+('Mobi.Employee.Status.Inactive', 'Inactive', 1),
+('Mobi.Employee.Status.Inactive', 'غير نشط', 2),
+
+('Mobi.Employee.FileNumber', 'File Number', 1),
+('Mobi.Employee.FileNumber', 'رقم الملف', 2),
+
+('Mobi.Employee.Placeholder.FileNumber', 'Enter File Number', 1),
+('Mobi.Employee.Placeholder.FileNumber', 'أدخل رقم الملف', 2),
+
+('Mobi.Employee.MobileNumber', 'Mobile Number', 1),
+('Mobi.Employee.MobileNumber', 'رقم الهاتف المحمول', 2),
+
+('Mobi.Employee.Placeholder.MobileNumber', 'Enter Mobile Number', 1),
+('Mobi.Employee.Placeholder.MobileNumber', 'أدخل رقم الهاتف المحمول', 2),
+
+('Mobi.Employee.Email', 'Email', 1),
+('Mobi.Employee.Email', 'البريد الإلكتروني', 2),
+
+('Mobi.Employee.Placeholder.Email', 'Enter Email Address', 1),
+('Mobi.Employee.Placeholder.Email', 'أدخل عنوان البريد الإلكتروني', 2),
+
+('Mobi.Employee.CID', 'CID', 1),
+('Mobi.Employee.CID', 'رقم الهوية', 2),
+
+('Mobi.Employee.Placeholder.CID', 'Enter CID', 1),
+('Mobi.Employee.Placeholder.CID', 'أدخل رقم الهوية', 2);
+
+
+
+
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES
+('Mobi.Employee.Delete.Title', 'Delete Employee', 1),
+('Mobi.Employee.Delete.Title', 'حذف الموظف', 2),
+
+('Mobi.Employee.Delete.WarningTitle', 'Warning:', 1),
+('Mobi.Employee.Delete.WarningTitle', 'تحذير:', 2),
+
+('Mobi.Employee.Delete.WarningMessage', 'You are about to delete this employee. This action cannot be undone.', 1),
+('Mobi.Employee.Delete.WarningMessage', 'أنت على وشك حذف هذا الموظف. لا يمكن التراجع عن هذا الإجراء.', 2),
+
+('Mobi.Employee.Delete.Label.Id', 'ID:', 1),
+('Mobi.Employee.Delete.Label.Id', 'المعرف:', 2),
+
+('Mobi.Employee.Delete.Label.NameEnglish', 'Name (English):', 1),
+('Mobi.Employee.Delete.Label.NameEnglish', 'الاسم (بالإنجليزية):', 2),
+
+('Mobi.Employee.Delete.Label.NameArabic', 'Name (Arabic):', 1),
+('Mobi.Employee.Delete.Label.NameArabic', 'الاسم (بالعربية):', 2),
+
+('Mobi.Employee.Delete.Label.MobileNumber', 'Mobile Number:', 1),
+('Mobi.Employee.Delete.Label.MobileNumber', 'رقم الهاتف المحمول:', 2),
+
+('Mobi.Employee.Delete.Label.Email', 'Email:', 1),
+('Mobi.Employee.Delete.Label.Email', 'البريد الإلكتروني:', 2),
+
+('Mobi.Employee.Delete.ConfirmButton', 'Confirm Delete', 1),
+('Mobi.Employee.Delete.ConfirmButton', 'تأكيد الحذف', 2),
+
+('Mobi.Employee.Delete.CancelButton', 'Cancel', 1),
+('Mobi.Employee.Delete.CancelButton', 'إلغاء', 2);
+
+
+
+
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES
+('Mobi.Employee.Details.Title', 'Employee Details', 1),
+('Mobi.Employee.Details.Title', 'تفاصيل الموظف', 2),
+
+('Mobi.Employee.Details.BackToList', 'Back to List', 1),
+('Mobi.Employee.Details.BackToList', 'العودة إلى القائمة', 2),
+
+('Mobi.Employee.Details.Edit', 'Edit', 1),
+('Mobi.Employee.Details.Edit', 'تعديل', 2),
+
+('Mobi.Employee.Details.Delete', 'Delete', 1),
+('Mobi.Employee.Details.Delete', 'حذف', 2),
+
+('Mobi.Employee.Details.NameEnglish', 'Name (English):', 1),
+('Mobi.Employee.Details.NameEnglish', 'الاسم (بالإنجليزية):', 2),
+
+('Mobi.Employee.Details.NameArabic', 'Name (Arabic):', 1),
+('Mobi.Employee.Details.NameArabic', 'الاسم (بالعربية):', 2),
+
+('Mobi.Employee.Details.Status', 'Status:', 1),
+('Mobi.Employee.Details.Status', 'الحالة:', 2),
+
+('Mobi.Employee.Status.Active', 'Active', 1),
+('Mobi.Employee.Status.Active', 'نشط', 2),
+
+('Mobi.Employee.Status.Inactive', 'Inactive', 1),
+('Mobi.Employee.Status.Inactive', 'غير نشط', 2),
+
+('Mobi.Employee.Details.FileNumber', 'File Number:', 1),
+('Mobi.Employee.Details.FileNumber', 'رقم الملف:', 2),
+
+('Mobi.Employee.Details.MobileNumber', 'Mobile Number:', 1),
+('Mobi.Employee.Details.MobileNumber', 'رقم الهاتف المحمول:', 2),
+
+('Mobi.Employee.Details.Email', 'Email:', 1),
+('Mobi.Employee.Details.Email', 'البريد الإلكتروني:', 2),
+
+('Mobi.Employee.Details.CompanyId', 'Company ID:', 1),
+('Mobi.Employee.Details.CompanyId', 'معرف الشركة:', 2);
+
+
+
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES
+('Mobi.Employee.Edit.Title', 'Edit Employee', 1),
+('Mobi.Employee.Edit.Title', 'تعديل الموظف', 2),
+
+('Mobi.Employee.Edit.BackToList', 'Back to List', 1),
+('Mobi.Employee.Edit.BackToList', 'العودة إلى القائمة', 2),
+
+('Mobi.Employee.Edit.UpdateButton', 'Update Employee', 1),
+('Mobi.Employee.Edit.UpdateButton', 'تحديث الموظف', 2),
+
+('Mobi.Employee.Edit.NameEnglish', 'Name (English)', 1),
+('Mobi.Employee.Edit.NameEnglish', 'الاسم (بالإنجليزية)', 2),
+
+('Mobi.Employee.Edit.Placeholder.NameEnglish', 'Enter Name (English)', 1),
+('Mobi.Employee.Edit.Placeholder.NameEnglish', 'أدخل الاسم (بالإنجليزية)', 2),
+
+('Mobi.Employee.Edit.NameArabic', 'Name (Arabic)', 1),
+('Mobi.Employee.Edit.NameArabic', 'الاسم (بالعربية)', 2),
+
+('Mobi.Employee.Edit.Placeholder.NameArabic', 'Enter Name (Arabic)', 1),
+('Mobi.Employee.Edit.Placeholder.NameArabic', 'أدخل الاسم (بالعربية)', 2),
+
+('Mobi.Employee.Edit.Status', 'Status', 1),
+('Mobi.Employee.Edit.Status', 'الحالة', 2),
+
+('Mobi.Employee.Status.Active', 'Active', 1),
+('Mobi.Employee.Status.Active', 'نشط', 2),
+
+('Mobi.Employee.Status.Inactive', 'Inactive', 1),
+('Mobi.Employee.Status.Inactive', 'غير نشط', 2),
+
+('Mobi.Employee.Edit.FileNumber', 'File Number', 1),
+('Mobi.Employee.Edit.FileNumber', 'رقم الملف', 2),
+
+('Mobi.Employee.Edit.Placeholder.FileNumber', 'Enter File Number', 1),
+('Mobi.Employee.Edit.Placeholder.FileNumber', 'أدخل رقم الملف', 2),
+
+('Mobi.Employee.Edit.MobileNumber', 'Mobile Number', 1),
+('Mobi.Employee.Edit.MobileNumber', 'رقم الهاتف المحمول', 2),
+
+('Mobi.Employee.Edit.Placeholder.MobileNumber', 'Enter Mobile Number', 1),
+('Mobi.Employee.Edit.Placeholder.MobileNumber', 'أدخل رقم الهاتف المحمول', 2),
+
+('Mobi.Employee.Edit.Email', 'Email', 1),
+('Mobi.Employee.Edit.Email', 'البريد الإلكتروني', 2),
+
+('Mobi.Employee.Edit.Placeholder.Email', 'Enter Email Address', 1),
+('Mobi.Employee.Edit.Placeholder.Email', 'أدخل عنوان البريد الإلكتروني', 2),
+
+('Mobi.Employee.Edit.CID', 'CID', 1),
+('Mobi.Employee.Edit.CID', 'معرّف CID', 2),
+
+('Mobi.Employee.Edit.Placeholder.CID', 'Enter CID', 1),
+('Mobi.Employee.Edit.Placeholder.CID', 'أدخل المعرّف CID', 2),
+
+('Mobi.Employee.Edit.UserName', 'UserName', 1),
+('Mobi.Employee.Edit.UserName', 'اسم المستخدم', 2),
+
+('Mobi.Employee.Edit.Placeholder.UserName', 'Enter UserName', 1),
+('Mobi.Employee.Edit.Placeholder.UserName', 'أدخل اسم المستخدم', 2),
+
+('Mobi.Employee.Edit.Password', 'Password', 1),
+('Mobi.Employee.Edit.Password', 'كلمة المرور', 2),
+
+('Mobi.Employee.Edit.Placeholder.NewPassword', 'Enter New Password', 1),
+('Mobi.Employee.Edit.Placeholder.NewPassword', 'أدخل كلمة مرور جديدة', 2),
+
+('Mobi.Employee.Edit.ChangePassword', 'Change Password', 1),
+('Mobi.Employee.Edit.ChangePassword', 'تغيير كلمة المرور', 2),
+
+('Mobi.Employee.Edit.Save', 'Save', 1),
+('Mobi.Employee.Edit.Save', 'حفظ', 2),
+
+('Mobi.Employee.Edit.Cancel', 'Cancel', 1),
+('Mobi.Employee.Edit.Cancel', 'إلغاء', 2);
+
+
+
+
+-- English
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+('Mobi.Account.ResetPassword.PageTitle', 'Reset Password', 1),
+('Mobi.Account.Common.Admin', 'Admin', 1),
+('Mobi.Account.Common.Mobi', 'Mobi', 1),
+('Mobi.Account.ResetPassword.Description', 'Please enter and confirm your new password.', 1),
+('Mobi.Account.ResetPassword.Placeholder.NewPassword', 'New Password', 1),
+('Mobi.Account.ResetPassword.Placeholder.ConfirmPassword', 'Confirm Password', 1),
+('Mobi.Account.ResetPassword.PasswordMismatch', 'Passwords do not match!', 1),
+('Mobi.Account.ResetPassword.BackToLogin', 'Back to Login', 1),
+('Mobi.Account.ResetPassword.SubmitButton', 'Reset Password', 1);
+
+-- Arabic
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+('Mobi.Account.ResetPassword.PageTitle', 'إعادة تعيين كلمة المرور', 2),
+('Mobi.Account.Common.Admin', 'مسؤول', 2),
+('Mobi.Account.Common.Mobi', 'موبي', 2),
+('Mobi.Account.ResetPassword.Description', 'يرجى إدخال وتأكيد كلمة المرور الجديدة.', 2),
+('Mobi.Account.ResetPassword.Placeholder.NewPassword', 'كلمة المرور الجديدة', 2),
+('Mobi.Account.ResetPassword.Placeholder.ConfirmPassword', 'تأكيد كلمة المرور', 2),
+('Mobi.Account.ResetPassword.PasswordMismatch', 'كلمتا المرور غير متطابقتين!', 2),
+('Mobi.Account.ResetPassword.BackToLogin', 'العودة إلى تسجيل الدخول', 2),
+('Mobi.Account.ResetPassword.SubmitButton', 'إعادة تعيين كلمة المرور', 2);
+
+
+
+-- English
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId) VALUES
+('Mobi.Employee.List.PageTitle', 'Employees', 1),
+('Mobi.Employee.List.Heading', 'Employees', 1),
+('Mobi.Employee.List.AddButton', 'Add Employee', 1),
+('Mobi.Employee.List.SearchByNameLabel', 'Search by Name', 1),
+('Mobi.Employee.List.SearchByNamePlaceholder', 'Enter Name', 1),
+('Mobi.Employee.List.SearchByFileNumberLabel', 'Search by File Number', 1),
+('Mobi.Employee.List.SearchByFileNumberPlaceholder', 'Enter File Number', 1),
+('Mobi.Employee.List.SearchButton', 'Search', 1),
+('Mobi.Employee.List.ShowAllButton', 'Show All', 1),
+('Mobi.Employee.List.TableTitle', 'Employee Table', 1),
+('Mobi.Employee.List.Column.FileNumber', 'File Number', 1),
+('Mobi.Employee.List.Column.NameEnglish', 'Name (English)', 1),
+('Mobi.Employee.List.Column.NameArabic', 'Name (Arabic)', 1),
+('Mobi.Employee.List.Column.Status', 'Status', 1),
+('Mobi.Employee.List.Column.MobileNumber', 'Mobile Number', 1),
+('Mobi.Employee.List.Column.Email', 'Email', 1),
+('Mobi.Employee.List.Column.Actions', 'Actions', 1),
+('Mobi.Employee.List.ConfirmDeleteMessage', 'Are you sure you want to delete this employee?', 1),
+('Mobi.Employee.List.DeleteSuccessMessage', 'Employee deleted successfully!', 1),
+('Mobi.Employee.List.DeleteFailureMessage', 'Failed to delete the employee.', 1),
+('Mobi.Employee.List.TableInfoText', 'Showing _START_ to _END_ of _TOTAL_ entries (filtered from _MAX_ total entries)', 1),
+('Mobi.Common.Previous', 'Previous', 1),
+('Mobi.Common.Next', 'Next', 1);
+
+-- Arabic
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId) VALUES
+('Mobi.Employee.List.PageTitle', 'الموظفون', 2),
+('Mobi.Employee.List.Heading', 'الموظفون', 2),
+('Mobi.Employee.List.AddButton', 'إضافة موظف', 2),
+('Mobi.Employee.List.SearchByNameLabel', 'البحث بالاسم', 2),
+('Mobi.Employee.List.SearchByNamePlaceholder', 'أدخل الاسم', 2),
+('Mobi.Employee.List.SearchByFileNumberLabel', 'البحث برقم الملف', 2),
+('Mobi.Employee.List.SearchByFileNumberPlaceholder', 'أدخل رقم الملف', 2),
+('Mobi.Employee.List.SearchButton', 'بحث', 2),
+('Mobi.Employee.List.ShowAllButton', 'عرض الكل', 2),
+('Mobi.Employee.List.TableTitle', 'جدول الموظفين', 2),
+('Mobi.Employee.List.Column.FileNumber', 'رقم الملف', 2),
+('Mobi.Employee.List.Column.NameEnglish', 'الاسم (بالإنجليزية)', 2),
+('Mobi.Employee.List.Column.NameArabic', 'الاسم (بالعربية)', 2),
+('Mobi.Employee.List.Column.Status', 'الحالة', 2),
+('Mobi.Employee.List.Column.MobileNumber', 'رقم الجوال', 2),
+('Mobi.Employee.List.Column.Email', 'البريد الإلكتروني', 2),
+('Mobi.Employee.List.Column.Actions', 'إجراءات', 2),
+('Mobi.Employee.List.ConfirmDeleteMessage', 'هل أنت متأكد أنك تريد حذف هذا الموظف؟', 2),
+('Mobi.Employee.List.DeleteSuccessMessage', 'تم حذف الموظف بنجاح!', 2),
+('Mobi.Employee.List.DeleteFailureMessage', 'فشل في حذف الموظف.', 2),
+('Mobi.Employee.List.TableInfoText', 'عرض _START_ إلى _END_ من أصل _TOTAL_ مدخل (تمت التصفية من _MAX_)', 2),
+('Mobi.Common.Previous', 'السابق', 2),
+('Mobi.Common.Next', 'التالي', 2);
+
+
+
+
+
+
+-- English
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId) VALUES
+('Mobi.Attendance.ActionType.In', 'IN', 1),
+('Mobi.Attendance.ActionType.Out', 'OUT', 1),
+('Mobi.Attendance.Status.Approved', 'Approved', 1),
+('Mobi.Attendance.Status.Rejected', 'Rejected', 1),
+('Mobi.Common.Button.Edit', 'Edit', 1),
+('Mobi.Common.Button.Save', 'Save', 1),
+('Mobi.Common.Button.Cancel', 'Cancel', 1),
+('Mobi.Attendance.NoRecordsFound', 'No records found', 1);
+
+-- Arabic
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId) VALUES
+('Mobi.Attendance.ActionType.In', 'دخول', 2),
+('Mobi.Attendance.ActionType.Out', 'خروج', 2),
+('Mobi.Attendance.Status.Approved', 'موافق عليه', 2),
+('Mobi.Attendance.Status.Rejected', 'مرفوض', 2),
+('Mobi.Common.Button.Edit', 'تعديل', 2),
+('Mobi.Common.Button.Save', 'حفظ', 2),
+('Mobi.Common.Button.Cancel', 'إلغاء', 2),
+('Mobi.Attendance.NoRecordsFound', 'لا توجد سجلات', 2);
+
+
+
+
+-- English (LanguageId = 1) and Arabic (LanguageId = 2)
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+('Mobi.Attendance.Logs.PageTitle', 'Employees Attendance Logs', 1),
+('Mobi.Attendance.Logs.PageTitle', 'سجلات حضور الموظفين', 2),
+
+('Mobi.Attendance.Filter.StartDate', 'Start Date', 1),
+('Mobi.Attendance.Filter.StartDate', 'تاريخ البدء', 2),
+
+('Mobi.Attendance.Filter.EndDate', 'End Date', 1),
+('Mobi.Attendance.Filter.EndDate', 'تاريخ الانتهاء', 2),
+
+('Mobi.Attendance.Filter.EmployeeName', 'Employee Name', 1),
+('Mobi.Attendance.Filter.EmployeeName', 'اسم الموظف', 2),
+
+('Mobi.Attendance.Filter.Placeholder.EmployeeName', 'Enter Employee Name', 1),
+('Mobi.Attendance.Filter.Placeholder.EmployeeName', 'أدخل اسم الموظف', 2),
+
+('Mobi.Attendance.Filter.FileNumber', 'File Number', 1),
+('Mobi.Attendance.Filter.FileNumber', 'رقم الملف', 2),
+
+('Mobi.Attendance.Filter.Placeholder.FileNumber', 'Enter File Number ID', 1),
+('Mobi.Attendance.Filter.Placeholder.FileNumber', 'أدخل رقم الملف', 2),
+
+('Mobi.Attendance.Filter.TransStatus', 'Trans Status', 1),
+('Mobi.Attendance.Filter.TransStatus', 'حالة المعاملة', 2),
+
+('Mobi.Common.All', 'All', 1),
+('Mobi.Common.All', 'الكل', 2),
+
+('Mobi.Attendance.Status.Approved', 'Approved', 1),
+('Mobi.Attendance.Status.Approved', 'معتمد', 2),
+
+('Mobi.Attendance.Status.Rejected', 'Rejected', 1),
+('Mobi.Attendance.Status.Rejected', 'مرفوض', 2),
+
+('Mobi.Attendance.Filter.Search', 'Search', 1),
+('Mobi.Attendance.Filter.Search', 'بحث', 2),
+
+('Mobi.Attendance.Table.FileNumber', 'File Number', 1),
+('Mobi.Attendance.Table.FileNumber', 'رقم الملف', 2),
+
+('Mobi.Attendance.Table.EmployeeName', 'Employee Name', 1),
+('Mobi.Attendance.Table.EmployeeName', 'اسم الموظف', 2),
+
+('Mobi.Attendance.Table.DateAndTime', 'Date and Time', 1),
+('Mobi.Attendance.Table.DateAndTime', 'التاريخ والوقت', 2),
+
+('Mobi.Attendance.Table.TransType', 'Trans Type', 1),
+('Mobi.Attendance.Table.TransType', 'نوع المعاملة', 2),
+
+('Mobi.Attendance.Table.TransStatus', 'Trans Status', 1),
+('Mobi.Attendance.Table.TransStatus', 'حالة المعاملة', 2),
+
+('Mobi.Attendance.Table.ProofType', 'Proof Type', 1),
+('Mobi.Attendance.Table.ProofType', 'نوع الإثبات', 2),
+
+('Mobi.Attendance.Table.Location', 'Location', 1),
+('Mobi.Attendance.Table.Location', 'الموقع', 2),
+
+('Mobi.Attendance.Table.Action', 'Action', 1),
+('Mobi.Attendance.Table.Action', 'الإجراء', 2),
+
+('Mobi.Attendance.ActionType.In', 'IN', 1),
+('Mobi.Attendance.ActionType.In', 'دخول', 2),
+
+('Mobi.Attendance.ActionType.Out', 'OUT', 1),
+('Mobi.Attendance.ActionType.Out', 'خروج', 2),
+
+('Mobi.Common.Print', 'Print', 1),
+('Mobi.Common.Print', 'طباعة', 2),
+
+('Mobi.Attendance.Alert.NoRecords', 'No records found to print.', 1),
+('Mobi.Attendance.Alert.NoRecords', 'لا توجد سجلات للطباعة.', 2);
+
+
+
+
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES
+-- Titles and Labels
+('Mobi.EmployeeLocation.PageTitle', 'Employee Locations', 1),
+('Mobi.EmployeeLocation.PageTitle', 'مواقع الموظفين', 2),
+
+('Mobi.EmployeeLocation.SearchEmployee', 'Search Employee', 1),
+('Mobi.EmployeeLocation.SearchEmployee', 'بحث الموظف', 2),
+
+('Mobi.EmployeeLocation.Filter.EmployeeName', 'Employee Name', 1),
+('Mobi.EmployeeLocation.Filter.EmployeeName', 'اسم الموظف', 2),
+
+('Mobi.EmployeeLocation.Placeholder.EmployeeName', 'Enter employee name', 1),
+('Mobi.EmployeeLocation.Placeholder.EmployeeName', 'أدخل اسم الموظف', 2),
+
+('Mobi.EmployeeLocation.Filter.FileNumber', 'File Number', 1),
+('Mobi.EmployeeLocation.Filter.FileNumber', 'رقم الملف', 2),
+
+('Mobi.EmployeeLocation.Placeholder.FileNumber', 'Enter file number', 1),
+('Mobi.EmployeeLocation.Placeholder.FileNumber', 'أدخل رقم الملف', 2),
+
+('Mobi.EmployeeLocation.Filter.SiteStatus', 'Site Status', 1),
+('Mobi.EmployeeLocation.Filter.SiteStatus', 'حالة الموقع', 2),
+
+('Mobi.EmployeeLocation.SiteStatus.Set', 'Set', 1),
+('Mobi.EmployeeLocation.SiteStatus.Set', 'تم التعيين', 2),
+
+-- Buttons
+('Mobi.EmployeeLocation.Button.Search', 'Search', 1),
+('Mobi.EmployeeLocation.Button.Search', 'بحث', 2),
+
+('Mobi.EmployeeLocation.Button.ShowAll', 'Show All', 1),
+('Mobi.EmployeeLocation.Button.ShowAll', 'عرض الكل', 2),
+
+-- Table Headings
+('Mobi.EmployeeLocation.Table.Title', 'Employee Location Details', 1),
+('Mobi.EmployeeLocation.Table.Title', 'تفاصيل موقع الموظف', 2),
+
+('Mobi.EmployeeLocation.Table.FileNumber', 'File Number', 1),
+('Mobi.EmployeeLocation.Table.FileNumber', 'رقم الملف', 2),
+
+('Mobi.EmployeeLocation.Table.EmployeeName', 'Employee Name', 1),
+('Mobi.EmployeeLocation.Table.EmployeeName', 'اسم الموظف', 2),
+
+('Mobi.EmployeeLocation.Table.LocationName', 'Location Name', 1),
+('Mobi.EmployeeLocation.Table.LocationName', 'اسم الموقع', 2),
+
+('Mobi.EmployeeLocation.Table.Action', 'Action', 1),
+('Mobi.EmployeeLocation.Table.Action', 'الإجراء', 2),
+
+-- Messages and Actions
+('Mobi.EmployeeLocation.Action.SetLocation', 'Set Location', 1),
+('Mobi.EmployeeLocation.Action.SetLocation', 'تعيين الموقع', 2),
+
+('Mobi.EmployeeLocation.Message.Empty', 'Please use the search form or click Show All to load data.', 1),
+('Mobi.EmployeeLocation.Message.Empty', 'يرجى استخدام نموذج البحث أو النقر على "عرض الكل" لتحميل البيانات.', 2),
+
+-- Common strings
+('Mobi.Common.All', 'All', 1),
+('Mobi.Common.All', 'الكل', 2),
+
+('Mobi.Common.Previous', 'Previous', 1),
+('Mobi.Common.Previous', 'السابق', 2),
+
+('Mobi.Common.Next', 'Next', 1),
+('Mobi.Common.Next', 'التالي', 2),
+
+('Mobi.Common.PaginationInfo', 'Showing _START_ to _END_ of _TOTAL_ entries', 1),
+('Mobi.Common.PaginationInfo', 'عرض _START_ إلى _END_ من أصل _TOTAL_ إدخالات', 2);
+
+
+
+-- Load error
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId) VALUES 
+('Mobi.EmployeeLocation.LoadError', 'Error loading locations.', 1),
+('Mobi.EmployeeLocation.LoadError', N'حدث خطأ أثناء تحميل المواقع.', 2);
+
+-- No locations
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId) VALUES 
+('Mobi.EmployeeLocation.NoLocationsAvailable', 'No locations available for this employee.', 1),
+('Mobi.EmployeeLocation.NoLocationsAvailable', N'لا توجد مواقع متاحة لهذا الموظف.', 2);
+
+-- Select employee alert
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId) VALUES 
+('Mobi.EmployeeLocation.SelectEmployeeAlert', 'Please select an employee.', 1),
+('Mobi.EmployeeLocation.SelectEmployeeAlert', N'يرجى اختيار موظف.', 2);
+
+-- Select location alert
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId) VALUES 
+('Mobi.EmployeeLocation.SelectLocationAlert', 'Please select at least one location.', 1),
+('Mobi.EmployeeLocation.SelectLocationAlert', N'يرجى اختيار موقع واحد على الأقل.', 2);
+
+-- Save success
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId) VALUES 
+('Mobi.EmployeeLocation.SaveSuccess', 'Locations saved successfully!', 1),
+('Mobi.EmployeeLocation.SaveSuccess', N'تم حفظ المواقع بنجاح!', 2);
+
+-- Save error
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId) VALUES 
+('Mobi.EmployeeLocation.SaveError', 'Error saving locations.', 1),
+('Mobi.EmployeeLocation.SaveError', N'حدث خطأ أثناء حفظ المواقع.', 2);
+
+
+-- Page Title
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+('Mobi.PrivacyPolicy.PageTitle', 'Privacy Policy', 1),
+('Mobi.PrivacyPolicy.PageTitle', N'سياسة الخصوصية', 2);
+
+-- Heading (same as title for header)
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+('Mobi.PrivacyPolicy.Heading', 'Privacy Policy', 1),
+('Mobi.PrivacyPolicy.Heading', N'سياسة الخصوصية', 2);
+
+-- Description Paragraph
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+('Mobi.PrivacyPolicy.Description', 'Use this page to detail your site''s privacy policy.', 1),
+('Mobi.PrivacyPolicy.Description', N'استخدم هذه الصفحة لتفصيل سياسة الخصوصية لموقعك.', 2);
+
+
+
+
+-- Title and Buttons
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+('Mobi.Location.AddTitle', 'Add Location', 1),
+('Mobi.Location.AddTitle', N'إضافة موقع', 2),
+
+('Mobi.Location.BackToList', 'Back to List', 1),
+('Mobi.Location.BackToList', N'العودة إلى القائمة', 2),
+
+('Mobi.Location.SaveButton', 'Save Location', 1),
+('Mobi.Location.SaveButton', N'حفظ الموقع', 2);
+
+-- Fields
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+('Mobi.Location.NameEnglish', 'Location Name (English)', 1),
+('Mobi.Location.NameEnglish', N'اسم الموقع (إنجليزي)', 2),
+
+('Mobi.Location.NameEnglishPlaceholder', 'Enter Location Name (English)', 1),
+('Mobi.Location.NameEnglishPlaceholder', N'أدخل اسم الموقع (بالإنجليزية)', 2),
+
+('Mobi.Location.NameArabic', 'Location Name (Arabic)', 1),
+('Mobi.Location.NameArabic', N'اسم الموقع (عربي)', 2),
+
+('Mobi.Location.NameArabicPlaceholder', 'Enter Location Name (Arabic)', 1),
+('Mobi.Location.NameArabicPlaceholder', N'أدخل اسم الموقع (بالعربية)', 2),
+
+('Mobi.Location.Status', 'Status', 1),
+('Mobi.Location.Status', N'الحالة', 2),
+
+('Mobi.Location.StatusActive', 'Active', 1),
+('Mobi.Location.StatusActive', N'نشط', 2),
+
+('Mobi.Location.StatusInactive', 'Inactive', 1),
+('Mobi.Location.StatusInactive', N'غير نشط', 2);
+
+-- Proof Type
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+('Mobi.Location.ProofType', 'Proof Type', 1),
+('Mobi.Location.ProofType', N'نوع الإثبات', 2),
+
+('Mobi.Location.ProofType.GPS', 'GPS Proof', 1),
+('Mobi.Location.ProofType.GPS', N'إثبات GPS', 2),
+
+('Mobi.Location.ProofType.Beacon', 'Beacon Proof', 1),
+('Mobi.Location.ProofType.Beacon', N'إثبات Beacon', 2);
+
+-- Section Headers
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+('Mobi.Location.GPSHeader', 'Map Coordination', 1),
+('Mobi.Location.GPSHeader', N'إحداثيات الخريطة', 2),
+
+('Mobi.Location.BeaconHeader', 'Beacon List', 1),
+('Mobi.Location.BeaconHeader', N'قائمة Beacon', 2),
+
+('Mobi.Location.SaveFirstNote', 'You need to save the location before you can add beacon for this location.', 1),
+('Mobi.Location.SaveFirstNote', N'يجب حفظ الموقع قبل أن تتمكن من إضافة Beacon لهذا الموقع.', 2);
+
+
+
+-- Page Title
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+('Mobi.Location.DeleteTitle', 'Delete Location', 1),
+('Mobi.Location.DeleteTitle', N'حذف الموقع', 2);
+
+-- Confirmation Message
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+('Mobi.Location.DeleteConfirmation', 'Are you sure you want to delete this location?', 1),
+('Mobi.Location.DeleteConfirmation', N'هل أنت متأكد أنك تريد حذف هذا الموقع؟', 2);
+
+-- Buttons
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+('Mobi.Location.DeleteButton', 'Delete', 1),
+('Mobi.Location.DeleteButton', N'حذف', 2),
+
+('Mobi.Location.CancelButton', 'Cancel', 1),
+('Mobi.Location.CancelButton', N'إلغاء', 2);
+
+
+-- Page Title and Header
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+('Mobi.Location.DetailsTitle', 'Location Details', 1),
+('Mobi.Location.DetailsTitle', N'تفاصيل الموقع', 2),
+
+('Mobi.Location.DetailsHeader', 'Location Details', 1),
+('Mobi.Location.DetailsHeader', N'تفاصيل الموقع', 2);
+
+-- Buttons
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+('Mobi.Location.BackToList', 'Back to List', 1),
+('Mobi.Location.BackToList', N'العودة إلى القائمة', 2),
+
+('Mobi.Location.EditButton', 'Edit', 1),
+('Mobi.Location.EditButton', N'تعديل', 2),
+
+('Mobi.Location.DeleteButton', 'Delete', 1),
+('Mobi.Location.DeleteButton', N'حذف', 2);
+
+-- Labels
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId)
+VALUES 
+('Mobi.Location.NameEnglish', 'Location Name (English):', 1),
+('Mobi.Location.NameEnglish', N'اسم الموقع (بالإنجليزية):', 2),
+
+('Mobi.Location.NameArabic', 'Location Name (Arabic):', 1),
+('Mobi.Location.NameArabic', N'اسم الموقع (بالعربية):', 2),
+
+('Mobi.Location.Status', 'Status:', 1),
+('Mobi.Location.Status', N'الحالة:', 2),
+
+('Mobi.Location.StatusActive', 'Active', 1),
+('Mobi.Location.StatusActive', N'نشط', 2),
+
+('Mobi.Location.StatusInactive', 'Inactive', 1),
+('Mobi.Location.StatusInactive', N'غير نشط', 2),
+
+('Mobi.Location.ProofType', 'Proof Type:', 1),
+('Mobi.Location.ProofType', N'نوع الإثبات:', 2),
+
+('Mobi.Location.Latitude', 'Latitude:', 1),
+('Mobi.Location.Latitude', N'خط العرض:', 2),
+
+('Mobi.Location.Longitude', 'Longitude:', 1),
+('Mobi.Location.Longitude', N'خط الطول:', 2),
+
+('Mobi.Location.SetRadius', 'Set Radius:', 1),
+('Mobi.Location.SetRadius', N'تحديد نصف القطر:', 2),
+
+('Mobi.Location.GPSLocationAddress', 'GPS Location Address:', 1),
+('Mobi.Location.GPSLocationAddress', N'عنوان الموقع عبر GPS:', 2),
+
+('Mobi.Location.CompanyId', 'Company ID:', 1),
+('Mobi.Location.CompanyId', N'معرف الشركة:', 2),
+
+('Mobi.Location.CreatedDate', 'Created Date:', 1),
+('Mobi.Location.CreatedDate', N'تاريخ الإنشاء:', 2);
+
+
+
+
+-- Page Header & Buttons
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId) VALUES
+('Mobi.Location.EditTitle', 'Edit Location', 1),
+('Mobi.Location.EditTitle', N'تعديل الموقع', 2),
+
+('Mobi.Location.BackToList', 'Back to List', 1),
+('Mobi.Location.BackToList', N'العودة إلى القائمة', 2),
+
+('Mobi.Location.SaveButton', 'Save Location', 1),
+('Mobi.Location.SaveButton', N'حفظ الموقع', 2),
+
+-- Location Name Fields
+('Mobi.Location.NameEnglish', 'Location Name (English)', 1),
+('Mobi.Location.NameEnglish', N'اسم الموقع (بالإنجليزية)', 2),
+
+('Mobi.Location.NameEnglishPlaceholder', 'Enter Location Name (English)', 1),
+('Mobi.Location.NameEnglishPlaceholder', N'أدخل اسم الموقع (بالإنجليزية)', 2),
+
+('Mobi.Location.NameArabic', 'Location Name (Arabic)', 1),
+('Mobi.Location.NameArabic', N'اسم الموقع (بالعربية)', 2),
+
+('Mobi.Location.NameArabicPlaceholder', 'Enter Location Name (Arabic)', 1),
+('Mobi.Location.NameArabicPlaceholder', N'أدخل اسم الموقع (بالعربية)', 2),
+
+-- Status Dropdown
+('Mobi.Location.Status', 'Status', 1),
+('Mobi.Location.Status', N'الحالة', 2),
+
+('Mobi.Location.StatusActive', 'Active', 1),
+('Mobi.Location.StatusActive', N'نشط', 2),
+
+('Mobi.Location.StatusInactive', 'Inactive', 1),
+('Mobi.Location.StatusInactive', N'غير نشط', 2),
+
+-- Proof Type Section
+('Mobi.Location.ProofType', 'Proof Type', 1),
+('Mobi.Location.ProofType', N'نوع الإثبات', 2),
+
+('Mobi.Location.ProofType.GPS', 'GPS Proof', 1),
+('Mobi.Location.ProofType.GPS', N'إثبات الموقع الجغرافي', 2),
+
+('Mobi.Location.ProofType.Beacon', 'Beacon Proof', 1),
+('Mobi.Location.ProofType.Beacon', N'إثبات بيكون', 2),
+
+-- GPS Section
+('Mobi.Location.GPSHeader', 'Map Coordination', 1),
+('Mobi.Location.GPSHeader', N'إحداثيات الخريطة', 2),
+
+('Mobi.Location.GPSSearchNote', 'Search for a location or provide coordinates for GPS Proof.', 1),
+('Mobi.Location.GPSSearchNote', N'ابحث عن موقع أو قدم إحداثيات لإثبات GPS.', 2),
+
+('Mobi.Location.SearchAddressPlaceholder', 'Search address', 1),
+('Mobi.Location.SearchAddressPlaceholder', N'ابحث عن عنوان', 2),
+
+('Mobi.Location.Latitude', 'Latitude', 1),
+('Mobi.Location.Latitude', N'خط العرض', 2),
+
+('Mobi.Location.Longitude', 'Longitude', 1),
+('Mobi.Location.Longitude', N'خط الطول', 2),
+
+('Mobi.Location.SetRadius', 'Radius', 1),
+('Mobi.Location.SetRadius', N'نصف القطر', 2),
+
+('Mobi.Location.DrawPolygon', 'Draw Polygon', 1),
+('Mobi.Location.DrawPolygon', N'رسم مضلع', 2),
+
+('Mobi.Location.SetRadiusButton', 'Set Radius', 1),
+('Mobi.Location.SetRadiusButton', N'تعيين نصف القطر', 2),
+
+('Mobi.Location.ClearShapesButton', 'Clear Shapes', 1),
+('Mobi.Location.ClearShapesButton', N'مسح الأشكال', 2),
+
+-- Beacon Section
+('Mobi.Location.BeaconListHeader', 'Beacon List', 1),
+('Mobi.Location.BeaconListHeader', N'قائمة البيكون', 2),
+
+('Mobi.Location.ManageBeaconNote', 'Manage your beacons below:', 1),
+('Mobi.Location.ManageBeaconNote', N'إدارة البيكونات أدناه:', 2),
+
+('Mobi.Location.BeaconName', 'Beacon Name', 1),
+('Mobi.Location.BeaconName', N'اسم البيكون', 2),
+
+('Mobi.Location.UUID', 'UUID', 1),
+('Mobi.Location.UUID', N'UUID', 2),
+
+('Mobi.Location.Actions', 'Actions', 1),
+('Mobi.Location.Actions', N'الإجراءات', 2),
+
+('Mobi.Location.AddNewBeacon', 'Add New', 1),
+('Mobi.Location.AddNewBeacon', N'إضافة جديد', 2);
+
+
+-- Page Titles and Buttons
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId) VALUES
+('Mobi.LocationList.PageTitle', 'Locations', 1),
+('Mobi.LocationList.PageTitle', N'المواقع', 2),
+
+('Mobi.LocationList.HeaderTitle', 'Locations', 1),
+('Mobi.LocationList.HeaderTitle', N'المواقع', 2),
+
+('Mobi.LocationList.AddLocationButton', 'Add Location', 1),
+('Mobi.LocationList.AddLocationButton', N'إضافة موقع', 2),
+
+-- Search Fields
+('Mobi.LocationList.SearchByName', 'Search by Name', 1),
+('Mobi.LocationList.SearchByName', N'البحث بالاسم', 2),
+
+('Mobi.LocationList.EnterNamePlaceholder', 'Enter Name', 1),
+('Mobi.LocationList.EnterNamePlaceholder', N'أدخل الاسم', 2),
+
+('Mobi.LocationList.SearchByStatus', 'Search by Status', 1),
+('Mobi.LocationList.SearchByStatus', N'البحث حسب الحالة', 2),
+
+('Mobi.LocationList.All', 'All', 1),
+('Mobi.LocationList.All', N'الكل', 2),
+
+('Mobi.LocationList.Active', 'Active', 1),
+('Mobi.LocationList.Active', N'نشط', 2),
+
+('Mobi.LocationList.Inactive', 'Inactive', 1),
+('Mobi.LocationList.Inactive', N'غير نشط', 2),
+
+('Mobi.LocationList.SearchButton', 'Search', 1),
+('Mobi.LocationList.SearchButton', N'بحث', 2),
+
+('Mobi.LocationList.ShowAllButton', 'Show All', 1),
+('Mobi.LocationList.ShowAllButton', N'عرض الكل', 2),
+
+-- Table
+('Mobi.LocationList.TableTitle', 'Location Table', 1),
+('Mobi.LocationList.TableTitle', N'جدول المواقع', 2),
+
+('Mobi.LocationList.Column.Id', 'ID', 1),
+('Mobi.LocationList.Column.Id', N'المعرف', 2),
+
+('Mobi.LocationList.Column.NameEnglish', 'Location Name (English)', 1),
+('Mobi.LocationList.Column.NameEnglish', N'اسم الموقع (بالإنجليزية)', 2),
+
+('Mobi.LocationList.Column.NameArabic', 'Location Name (Arabic)', 1),
+('Mobi.LocationList.Column.NameArabic', N'اسم الموقع (بالعربية)', 2),
+
+('Mobi.LocationList.Column.ProofType', 'Proof Type', 1),
+('Mobi.LocationList.Column.ProofType', N'نوع الإثبات', 2),
+
+('Mobi.LocationList.Column.Actions', 'Actions', 1),
+('Mobi.LocationList.Column.Actions', N'الإجراءات', 2),
+
+-- DataTables + JS
+('Mobi.LocationList.PrintButton', 'Print', 1),
+('Mobi.LocationList.PrintButton', N'طباعة', 2),
+
+('Mobi.LocationList.Previous', 'Previous', 1),
+('Mobi.LocationList.Previous', N'السابق', 2),
+
+('Mobi.LocationList.Next', 'Next', 1),
+('Mobi.LocationList.Next', N'التالي', 2),
+
+('Mobi.LocationList.InfoText', 'Showing _START_ to _END_ of _TOTAL_ entries (filtered from _MAX_ total entries)', 1),
+('Mobi.LocationList.InfoText', N'عرض _START_ إلى _END_ من أصل _TOTAL_ إدخال (مفلترة من _MAX_ إدخال)', 2),
+
+('Mobi.LocationList.ConfirmDelete', 'Are you sure you want to delete this location?', 1),
+('Mobi.LocationList.ConfirmDelete', N'هل أنت متأكد أنك تريد حذف هذا الموقع؟', 2),
+
+('Mobi.LocationList.DeleteSuccess', 'Location deleted successfully!', 1),
+('Mobi.LocationList.DeleteSuccess', N'تم حذف الموقع بنجاح!', 2),
+
+('Mobi.LocationList.DeleteFailed', 'Failed to delete the Location.', 1),
+('Mobi.LocationList.DeleteFailed', N'فشل حذف الموقع.', 2);
+
+
+-- Page Title and Buttons
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId) VALUES
+('Mobi.MobileQR.Title', 'Mobile Register using QR', 1),
+('Mobi.MobileQR.Title', N'تسجيل الجوال باستخدام رمز QR', 2),
+
+('Mobi.MobileQR.RegisterButton', 'Register new mobile', 1),
+('Mobi.MobileQR.RegisterButton', N'تسجيل جوال جديد', 2),
+
+('Mobi.MobileQR.RemoveButton', 'Remove registered Mobile', 1),
+('Mobi.MobileQR.RemoveButton', N'إزالة الجوال المسجل', 2),
+
+('Mobi.MobileQR.CancelButton', 'Cancel', 1),
+('Mobi.MobileQR.CancelButton', N'إلغاء', 2),
+
+-- Confirmation Dialogs
+('Mobi.MobileQR.ConfirmRegister', 'Are you sure you want to register a new mobile ? \nPLEASE NOTE THAT THE CURRENTLY REGISTERED MOBILE WILL BE REMOVED.', 1),
+('Mobi.MobileQR.ConfirmRegister', N'هل أنت متأكد أنك تريد تسجيل جوال جديد؟\nيرجى ملاحظة أن الجوال المسجل حاليًا سيتم إزالته.', 2),
+
+('Mobi.MobileQR.ConfirmRemove', 'Are you sure you want to remove the registered mobile?', 1),
+('Mobi.MobileQR.ConfirmRemove', N'هل أنت متأكد أنك تريد إزالة الجوال المسجل؟', 2);
+
+
+-- Page & Header
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId) VALUES
+('Mobi.MobileManage.PageTitle', 'Mobile Manage', 1),
+('Mobi.MobileManage.PageTitle', N'إدارة الجوال', 2),
+
+-- Form Fields
+('Mobi.MobileManage.EmployeeName', 'Employee Name', 1),
+('Mobi.MobileManage.EmployeeName', N'اسم الموظف', 2),
+
+('Mobi.MobileManage.SearchByName', 'Search by name', 1),
+('Mobi.MobileManage.SearchByName', N'البحث بالاسم', 2),
+
+('Mobi.MobileManage.FileNumber', 'File Number', 1),
+('Mobi.MobileManage.FileNumber', N'رقم الملف', 2),
+
+('Mobi.MobileManage.SearchByFileNumber', 'Search by file number', 1),
+('Mobi.MobileManage.SearchByFileNumber', N'البحث برقم الملف', 2),
+
+('Mobi.MobileManage.SearchButton', 'Search', 1),
+('Mobi.MobileManage.SearchButton', N'بحث', 2),
+
+('Mobi.MobileManage.ShowAllButton', 'Show All', 1),
+('Mobi.MobileManage.ShowAllButton', N'عرض الكل', 2),
+
+-- Table Columns
+('Mobi.MobileManage.Column.EmployeeName', 'Employee Name', 1),
+('Mobi.MobileManage.Column.EmployeeName', N'اسم الموظف', 2),
+
+('Mobi.MobileManage.Column.FileNumber', 'File Number', 1),
+('Mobi.MobileManage.Column.FileNumber', N'رقم الملف', 2),
+
+('Mobi.MobileManage.Column.MobileType', 'Mobile Type', 1),
+('Mobi.MobileManage.Column.MobileType', N'نوع الجوال', 2),
+
+('Mobi.MobileManage.Column.RegDate', 'Reg Date', 1),
+('Mobi.MobileManage.Column.RegDate', N'تاريخ التسجيل', 2),
+
+('Mobi.MobileManage.Column.RegVia', 'Reg Via', 1),
+('Mobi.MobileManage.Column.RegVia', N'تم التسجيل عبر', 2),
+
+('Mobi.MobileManage.Column.Admin', 'Admin', 1),
+('Mobi.MobileManage.Column.Admin', N'المسؤول', 2),
+
+('Mobi.MobileManage.Column.RegStatus', 'Reg Status', 1),
+('Mobi.MobileManage.Column.RegStatus', N'حالة التسجيل', 2),
+
+('Mobi.MobileManage.Column.Action', 'Action', 1),
+('Mobi.MobileManage.Column.Action', N'الإجراء', 2),
+
+-- Status Labels
+('Mobi.MobileManage.Registered', 'Registered', 1),
+('Mobi.MobileManage.Registered', N'مسجل', 2),
+
+('Mobi.MobileManage.NotRegistered', 'Not Registered', 1),
+('Mobi.MobileManage.NotRegistered', N'غير مسجل', 2),
+
+-- Pagination & Info Text
+('Mobi.MobileManage.Previous', 'Previous', 1),
+('Mobi.MobileManage.Previous', N'السابق', 2),
+
+('Mobi.MobileManage.Next', 'Next', 1),
+('Mobi.MobileManage.Next', N'التالي', 2),
+
+('Mobi.MobileManage.InfoText', 'Showing _START_ to _END_ of _TOTAL_ entries (filtered from _MAX_ total entries)', 1),
+('Mobi.MobileManage.InfoText', N'عرض _START_ إلى _END_ من أصل _TOTAL_ إدخالات (مفلترة من _MAX_)', 2);
+
+
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId) VALUES
+('Mobi.MobileQRScan.Title', 'Mobile Register using QR', 1),
+('Mobi.MobileQRScan.Title', N'تسجيل الجوال باستخدام رمز QR', 2),
+
+('Mobi.MobileQRScan.Subtitle', 'Please scan the QR code using the mobile app', 1),
+('Mobi.MobileQRScan.Subtitle', N'يرجى مسح رمز QR باستخدام تطبيق الجوال', 2),
+
+('Mobi.MobileQRScan.QRImageAlt', 'QR Code', 1),
+('Mobi.MobileQRScan.QRImageAlt', N'رمز QR', 2),
+
+('Mobi.MobileQRScan.NoQRMessage', 'No QR Code available', 1),
+('Mobi.MobileQRScan.NoQRMessage', N'لا يوجد رمز QR متاح', 2),
+
+('Mobi.MobileQRScan.RegisterSuccess', 'Your mobile has been successfully registered!', 1),
+('Mobi.MobileQRScan.RegisterSuccess', N'تم تسجيل الجوال بنجاح!', 2),
+
+('Mobi.MobileQRScan.BackToList', 'Back to list', 1),
+('Mobi.MobileQRScan.BackToList', N'العودة إلى القائمة', 2);
+
+
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId) VALUES
+-- Title and Metadata
+('Mobi.Layout.Title', 'Mobi Admin | Dashboard', 1),
+('Mobi.Layout.Title', N'لوحة تحكم موبي', 2),
+
+('Mobi.Layout.Description', 'AdminLTE is a Free Bootstrap 5 Admin Dashboard.', 1),
+('Mobi.Layout.Description', N'AdminLTE هو لوحة تحكم مجانية باستخدام Bootstrap 5.', 2),
+
+-- Language Dropdown
+('Mobi.Layout.Language.English', 'English', 1),
+('Mobi.Layout.Language.English', N'الإنجليزية', 2),
+
+('Mobi.Layout.Language.Arabic', 'Arabic', 1),
+('Mobi.Layout.Language.Arabic', N'العربية', 2),
+
+-- User Menu
+('Mobi.Layout.ChangePassword', 'Change Password', 1),
+('Mobi.Layout.ChangePassword', N'تغيير كلمة المرور', 2),
+
+('Mobi.Layout.SignOut', 'Sign out', 1),
+('Mobi.Layout.SignOut', N'تسجيل الخروج', 2),
+
+-- Footer
+('Mobi.Layout.AllRightsReserved', 'All rights reserved.', 1),
+('Mobi.Layout.AllRightsReserved', N'جميع الحقوق محفوظة.', 2),
+
+-- Sidebar Menu
+('Mobi.Layout.Menu.Dashboard', 'Dashboard', 1),
+('Mobi.Layout.Menu.Dashboard', N'لوحة القيادة', 2),
+
+('Mobi.Layout.Menu.BasicData', 'Basic Data', 1),
+('Mobi.Layout.Menu.BasicData', N'البيانات الأساسية', 2),
+
+('Mobi.Layout.Menu.Locations', 'Locations', 1),
+('Mobi.Layout.Menu.Locations', N'المواقع', 2),
+
+('Mobi.Layout.Menu.Employees', 'Employees', 1),
+('Mobi.Layout.Menu.Employees', N'الموظفين', 2),
+
+('Mobi.Layout.Menu.Manage', 'Manage', 1),
+('Mobi.Layout.Menu.Manage', N'إدارة', 2),
+
+('Mobi.Layout.Menu.EmployeeMobile', 'Employee Mobile', 1),
+('Mobi.Layout.Menu.EmployeeMobile', N'جوال الموظف', 2),
+
+('Mobi.Layout.Menu.EmployeeLocations', 'Employee Locations', 1),
+('Mobi.Layout.Menu.EmployeeLocations', N'مواقع الموظفين', 2),
+
+('Mobi.Layout.Menu.Attendance', 'Employees Attendance', 1),
+('Mobi.Layout.Menu.Attendance', N'حضور الموظفين', 2),
+
+('Mobi.Layout.Menu.Permissions', 'Permissions', 1),
+('Mobi.Layout.Menu.Permissions', N'الصلاحيات', 2),
+
+('Mobi.Layout.Menu.SystemUsers', 'System Users', 1),
+('Mobi.Layout.Menu.SystemUsers', N'مستخدمي النظام', 2),
+
+('Mobi.Layout.Menu.Reports', 'Reports', 1),
+('Mobi.Layout.Menu.Reports', N'التقارير', 2),
+
+('Mobi.Layout.Menu.DailyAttendanceReport', 'Daily Attendance Report', 1),
+('Mobi.Layout.Menu.DailyAttendanceReport', N'تقرير الحضور اليومي', 2),
+
+('Mobi.Layout.Menu.EmployeeDataReport', 'Employee Data Report', 1),
+('Mobi.Layout.Menu.EmployeeDataReport', N'تقرير بيانات الموظف', 2),
+
+('Mobi.Layout.Menu.RegisteredPhones', 'Registered Phones', 1),
+('Mobi.Layout.Menu.RegisteredPhones', N'الهواتف المسجلة', 2),
+
+('Mobi.Layout.Menu.MonthlyWorkingHours', 'Monthly Working Hours Reports', 1),
+('Mobi.Layout.Menu.MonthlyWorkingHours', N'تقارير ساعات العمل الشهرية', 2),
+
+('Mobi.Layout.Menu.DailyWorkingHours', 'Daily Working Hours Report', 1),
+('Mobi.Layout.Menu.DailyWorkingHours', N'تقرير ساعات العمل اليومية', 2),
+
+('Mobi.Layout.Menu.EmployeeLocationAuthorityReport', 'Employee Location Authority Report', 1),
+('Mobi.Layout.Menu.EmployeeLocationAuthorityReport', N'تقرير صلاحيات موقع الموظف', 2);
+
+
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId) VALUES
+-- Titles and Labels
+('Mobi.ChangePassword.Title', 'Change Password', 1),
+('Mobi.ChangePassword.Title', N'تغيير كلمة المرور', 2),
+
+('Mobi.ChangePassword.Header', 'Change Password', 1),
+('Mobi.ChangePassword.Header', N'تغيير كلمة المرور', 2),
+
+('Mobi.ChangePassword.CurrentPassword', 'Current Password', 1),
+('Mobi.ChangePassword.CurrentPassword', N'كلمة المرور الحالية', 2),
+
+('Mobi.ChangePassword.CurrentPasswordPlaceholder', 'Enter current password', 1),
+('Mobi.ChangePassword.CurrentPasswordPlaceholder', N'أدخل كلمة المرور الحالية', 2),
+
+('Mobi.ChangePassword.NewPassword', 'New Password', 1),
+('Mobi.ChangePassword.NewPassword', N'كلمة المرور الجديدة', 2),
+
+('Mobi.ChangePassword.NewPasswordPlaceholder', 'Enter new password', 1),
+('Mobi.ChangePassword.NewPasswordPlaceholder', N'أدخل كلمة المرور الجديدة', 2),
+
+('Mobi.ChangePassword.ConfirmPassword', 'Confirm Password', 1),
+('Mobi.ChangePassword.ConfirmPassword', N'تأكيد كلمة المرور', 2),
+
+('Mobi.ChangePassword.ConfirmPasswordPlaceholder', 'Confirm new password', 1),
+('Mobi.ChangePassword.ConfirmPasswordPlaceholder', N'تأكيد كلمة المرور الجديدة', 2),
+
+-- Buttons
+('Mobi.ChangePassword.ButtonChange', 'Change Password', 1),
+('Mobi.ChangePassword.ButtonChange', N'تغيير كلمة المرور', 2),
+
+('Mobi.ChangePassword.ButtonCancel', 'Cancel', 1),
+('Mobi.ChangePassword.ButtonCancel', N'إلغاء', 2),
+
+-- Feedback Text
+('Mobi.ChangePassword.FeedbackTooShort', 'Password is too short.', 1),
+('Mobi.ChangePassword.FeedbackTooShort', N'كلمة المرور قصيرة جدًا.', 2),
+
+('Mobi.ChangePassword.FeedbackUppercase', 'Add at least one uppercase letter.', 1),
+('Mobi.ChangePassword.FeedbackUppercase', N'أضف حرفًا كبيرًا واحدًا على الأقل.', 2),
+
+('Mobi.ChangePassword.FeedbackLowercase', 'Add at least one lowercase letter.', 1),
+('Mobi.ChangePassword.FeedbackLowercase', N'أضف حرفًا صغيرًا واحدًا على الأقل.', 2),
+
+('Mobi.ChangePassword.FeedbackNumber', 'Add at least one number.', 1),
+('Mobi.ChangePassword.FeedbackNumber', N'أضف رقمًا واحدًا على الأقل.', 2),
+
+('Mobi.ChangePassword.FeedbackSpecialChar', 'Add at least one special character (!@#$%^&*).', 1),
+('Mobi.ChangePassword.FeedbackSpecialChar', N'أضف رمزًا خاصًا واحدًا على الأقل (!@#$%^&*).', 2),
+
+('Mobi.ChangePassword.FeedbackStrong', 'Your password is strong. Nice work!', 1),
+('Mobi.ChangePassword.FeedbackStrong', N'كلمة المرور قوية. عمل رائع!', 2),
+
+('Mobi.ChangePassword.Mismatch', 'Passwords do not match', 1),
+('Mobi.ChangePassword.Mismatch', N'كلمتا المرور غير متطابقتين', 2);
+
+
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId) VALUES
+-- Header
+('Mobi.SystemUser.Title', 'System User', 1),
+('Mobi.SystemUser.Title', N'مستخدم النظام', 2),
+
+('Mobi.SystemUser.Header', 'System User', 1),
+('Mobi.SystemUser.Header', N'مستخدم النظام', 2),
+
+('Mobi.SystemUser.Close', 'Close', 1),
+('Mobi.SystemUser.Close', N'إغلاق', 2),
+
+-- Form Labels and Placeholders
+('Mobi.SystemUser.EmployeeName', 'Employee Name', 1),
+('Mobi.SystemUser.EmployeeName', N'اسم الموظف', 2),
+
+('Mobi.SystemUser.EmployeeName.Placeholder', 'Enter 3 characters to search', 1),
+('Mobi.SystemUser.EmployeeName.Placeholder', N'أدخل 3 أحرف للبحث', 2),
+
+('Mobi.SystemUser.UserName', 'User Name', 1),
+('Mobi.SystemUser.UserName', N'اسم المستخدم', 2),
+
+('Mobi.SystemUser.UserName.Placeholder', 'User Name', 1),
+('Mobi.SystemUser.UserName.Placeholder', N'اسم المستخدم', 2),
+
+('Mobi.SystemUser.Password', 'Password', 1),
+('Mobi.SystemUser.Password', N'كلمة المرور', 2),
+
+('Mobi.SystemUser.Password.Placeholder', 'Enter Password', 1),
+('Mobi.SystemUser.Password.Placeholder', N'أدخل كلمة المرور', 2),
+
+('Mobi.SystemUser.ScreenAuthority', 'Screen Authority', 1),
+('Mobi.SystemUser.ScreenAuthority', N'صلاحيات الشاشات', 2),
+
+-- Buttons
+('Mobi.SystemUser.ButtonCancel', 'Cancel', 1),
+('Mobi.SystemUser.ButtonCancel', N'إلغاء', 2),
+
+('Mobi.SystemUser.ButtonSave', 'Save', 1),
+('Mobi.SystemUser.ButtonSave', N'حفظ', 2),
+
+-- JS Messages
+('Mobi.SystemUser.Loading', 'Loading...', 1),
+('Mobi.SystemUser.Loading', N'جاري التحميل...', 2),
+
+('Mobi.SystemUser.NoRecordFound', 'No record found', 1),
+('Mobi.SystemUser.NoRecordFound', N'لا توجد سجلات', 2),
+
+('Mobi.SystemUser.ErrorFetchingData', 'Error fetching data', 1),
+('Mobi.SystemUser.ErrorFetchingData', N'حدث خطأ أثناء جلب البيانات', 2),
+
+('Mobi.SystemUser.ErrorFetchingAccess', 'Error fetching access.', 1),
+('Mobi.SystemUser.ErrorFetchingAccess', N'حدث خطأ أثناء جلب الصلاحيات.', 2),
+
+('Mobi.SystemUser.SelectEmployeeFirst', 'Please select an employee first.', 1),
+('Mobi.SystemUser.SelectEmployeeFirst', N'يرجى اختيار موظف أولاً.', 2),
+
+-- Validations
+('Mobi.SystemUser.Validation.UserNameRequired', 'User Name is required.', 1),
+('Mobi.SystemUser.Validation.UserNameRequired', N'اسم المستخدم مطلوب.', 2),
+
+('Mobi.SystemUser.Validation.PasswordRequired', 'Password is required.', 1),
+('Mobi.SystemUser.Validation.PasswordRequired', N'كلمة المرور مطلوبة.', 2),
+
+('Mobi.SystemUser.Validation.PasswordStrength', 'Password is too weak. Please choose a stronger password.', 1),
+('Mobi.SystemUser.Validation.PasswordStrength', N'كلمة المرور ضعيفة جدًا. يرجى اختيار كلمة مرور أقوى.', 2),
+
+-- Save status
+('Mobi.SystemUser.SaveSuccess', 'Access saved successfully.', 1),
+('Mobi.SystemUser.SaveSuccess', N'تم حفظ الوصول بنجاح.', 2),
+
+('Mobi.SystemUser.SaveError', 'Error saving access.', 1),
+('Mobi.SystemUser.SaveError', N'حدث خطأ أثناء الحفظ.', 2);
+
+
+
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId) VALUES
+('Mobi.SystemUser.EditTitle', 'Edit System User', 1),
+('Mobi.SystemUser.EditTitle', N'تعديل مستخدم النظام', 2),
+
+('Mobi.SystemUser.BackToList', 'Back to List', 1),
+('Mobi.SystemUser.BackToList', N'العودة إلى القائمة', 2),
+
+('Mobi.SystemUser.EmployeeName', 'Employee Name', 1),
+('Mobi.SystemUser.EmployeeName', N'اسم الموظف', 2),
+
+('Mobi.SystemUser.EmployeeName.Placeholder', 'Enter employee name', 1),
+('Mobi.SystemUser.EmployeeName.Placeholder', N'أدخل اسم الموظف', 2),
+
+('Mobi.SystemUser.UserName', 'User Name', 1),
+('Mobi.SystemUser.UserName', N'اسم المستخدم', 2),
+
+('Mobi.SystemUser.UserName.Placeholder', 'Enter username', 1),
+('Mobi.SystemUser.UserName.Placeholder', N'أدخل اسم المستخدم', 2),
+
+('Mobi.SystemUser.ScreenAuthority', 'Screen Authority', 1),
+('Mobi.SystemUser.ScreenAuthority', N'صلاحيات الشاشات', 2),
+
+('Mobi.SystemUser.Update', 'Update', 1),
+('Mobi.SystemUser.Update', N'تحديث', 2),
+
+('Mobi.SystemUser.Cancel', 'Cancel', 1),
+('Mobi.SystemUser.Cancel', N'إلغاء', 2),
+
+-- JS alerts
+('Mobi.SystemUser.SaveSuccess', 'Access saved successfully.', 1),
+('Mobi.SystemUser.SaveSuccess', N'تم حفظ الصلاحيات بنجاح.', 2),
+
+('Mobi.SystemUser.SaveError', 'Error saving access control.', 1),
+('Mobi.SystemUser.SaveError', N'حدث خطأ أثناء حفظ الصلاحيات.', 2),
+
+('Mobi.SystemUser.SelectEmployeeFirst', 'Please select an employee first.', 1),
+('Mobi.SystemUser.SelectEmployeeFirst', N'يرجى اختيار موظف أولاً.', 2),
+
+('Mobi.SystemUser.ErrorFetchingAccess', 'Error fetching access for the selected employee.', 1),
+('Mobi.SystemUser.ErrorFetchingAccess', N'حدث خطأ أثناء جلب صلاحيات الموظف.', 2);
+
+
+
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId) VALUES
+('Mobi.SystemUser.ListTitle', 'System Users', 1),
+('Mobi.SystemUser.ListTitle', N'مستخدمي النظام', 2),
+
+('Mobi.SystemUser.AddUser', 'Add User', 1),
+('Mobi.SystemUser.AddUser', N'إضافة مستخدم', 2),
+
+('Mobi.SystemUser.EmployeeName', 'Employee Name', 1),
+('Mobi.SystemUser.EmployeeName', N'اسم الموظف', 2),
+
+('Mobi.SystemUser.EmployeeNamePlaceholder', 'Enter Employee Name', 1),
+('Mobi.SystemUser.EmployeeNamePlaceholder', N'أدخل اسم الموظف', 2),
+
+('Mobi.SystemUser.UserName', 'User Name', 1),
+('Mobi.SystemUser.UserName', N'اسم المستخدم', 2),
+
+('Mobi.SystemUser.UserNamePlaceholder', 'Enter Username', 1),
+('Mobi.SystemUser.UserNamePlaceholder', N'أدخل اسم المستخدم', 2),
+
+('Mobi.SystemUser.UserStatus', 'User Status', 1),
+('Mobi.SystemUser.UserStatus', N'حالة المستخدم', 2),
+
+('Mobi.SystemUser.StatusAll', 'All', 1),
+('Mobi.SystemUser.StatusAll', N'الكل', 2),
+
+('Mobi.SystemUser.StatusActive', 'Active', 1),
+('Mobi.SystemUser.StatusActive', N'نشط', 2),
+
+('Mobi.SystemUser.StatusInactive', 'Inactive', 1),
+('Mobi.SystemUser.StatusInactive', N'غير نشط', 2),
+
+('Mobi.SystemUser.Search', 'Search', 1),
+('Mobi.SystemUser.Search', N'بحث', 2),
+
+('Mobi.SystemUser.ShowAll', 'Show All', 1),
+('Mobi.SystemUser.ShowAll', N'عرض الكل', 2),
+
+('Mobi.SystemUser.FileNumber', 'File Number', 1),
+('Mobi.SystemUser.FileNumber', N'رقم الملف', 2),
+
+('Mobi.SystemUser.CompanyId', 'Company ID', 1),
+('Mobi.SystemUser.CompanyId', N'معرف الشركة', 2),
+
+('Mobi.SystemUser.Action', 'Action', 1),
+('Mobi.SystemUser.Action', N'الإجراء', 2),
+
+('Mobi.SystemUser.DataTableInfo', 'Showing _START_ to _END_ of _TOTAL_ entries', 1),
+('Mobi.SystemUser.DataTableInfo', N'عرض _START_ إلى _END_ من إجمالي _TOTAL_', 2),
+
+('Mobi.SystemUser.ConfirmDelete', 'Are you sure you want to delete this user?', 1),
+('Mobi.SystemUser.ConfirmDelete', N'هل أنت متأكد أنك تريد حذف هذا المستخدم؟', 2),
+
+('Mobi.SystemUser.DeleteSuccess', 'User deleted successfully!', 1),
+('Mobi.SystemUser.DeleteSuccess', N'تم حذف المستخدم بنجاح!', 2),
+
+('Mobi.SystemUser.DeleteFailed', 'Failed to delete user.', 1),
+('Mobi.SystemUser.DeleteFailed', N'فشل في حذف المستخدم.', 2);
+
+
+INSERT INTO LocaleStringResource (ResourceName, ResourceValue, LanguageId) VALUES
+('Mobi.Reports.DailyAttendance.Title', 'Daily Attendance Report', 1),
+('Mobi.Reports.DailyAttendance.Title', N'تقرير الحضور اليومي', 2),
+
+('Mobi.Reports.DailyAttendance.EmployeeName', 'Employee Name', 1),
+('Mobi.Reports.DailyAttendance.EmployeeName', N'اسم الموظف', 2),
+
+('Mobi.Reports.DailyAttendance.EmployeePlaceholder', 'Enter 3 characters to search', 1),
+('Mobi.Reports.DailyAttendance.EmployeePlaceholder', N'أدخل 3 أحرف للبحث', 2),
+
+('Mobi.Reports.DailyAttendance.StartDate', 'Start Date', 1),
+('Mobi.Reports.DailyAttendance.StartDate', N'تاريخ البداية', 2),
+
+('Mobi.Reports.DailyAttendance.EndDate', 'End Date', 1),
+('Mobi.Reports.DailyAttendance.EndDate', N'تاريخ الانتهاء', 2),
+
+('Mobi.Reports.DailyAttendance.Search', 'Search', 1),
+('Mobi.Reports.DailyAttendance.Search', N'بحث', 2),
+
+('Mobi.Reports.DailyAttendance.Date', 'Date', 1),
+('Mobi.Reports.DailyAttendance.Date', N'التاريخ', 2),
+
+('Mobi.Reports.DailyAttendance.Time', 'Time', 1),
+('Mobi.Reports.DailyAttendance.Time', N'الوقت', 2),
+
+('Mobi.Reports.DailyAttendance.EventType', 'Event Type', 1),
+('Mobi.Reports.DailyAttendance.EventType', N'نوع الحدث', 2),
+
+('Mobi.Reports.DailyAttendance.Location', 'Location', 1),
+('Mobi.Reports.DailyAttendance.Location', N'الموقع', 2),
+
+('Mobi.Reports.DailyAttendance.ProofType', 'Proof Type', 1),
+('Mobi.Reports.DailyAttendance.ProofType', N'نوع الإثبات', 2),
+
+('Mobi.Reports.DailyAttendance.Print', 'Print', 1),
+('Mobi.Reports.DailyAttendance.Print', N'طباعة', 2),
+
+('Mobi.Reports.DailyAttendance.NoDataToPrint', 'No data available to print.', 1),
+('Mobi.Reports.DailyAttendance.NoDataToPrint', N'لا توجد بيانات للطباعة.', 2),
+
+('Mobi.Reports.DailyAttendance.From', 'From', 1),
+('Mobi.Reports.DailyAttendance.From', N'من', 2),
+
+('Mobi.Reports.DailyAttendance.To', 'To', 1),
+('Mobi.Reports.DailyAttendance.To', N'إلى', 2),
+
+('Mobi.Reports.DailyAttendance.Employee', 'Employee:', 1),
+('Mobi.Reports.DailyAttendance.Employee', N'الموظف:', 2),
+
+('Mobi.Reports.DailyAttendance.Loading', 'Loading...', 1),
+('Mobi.Reports.DailyAttendance.Loading', N'جارٍ التحميل...', 2),
+
+('Mobi.Reports.DailyAttendance.NoRecordFound', 'No record found', 1),
+('Mobi.Reports.DailyAttendance.NoRecordFound', N'لا يوجد سجلات', 2),
+
+('Mobi.Reports.DailyAttendance.ErrorFetching', 'Error fetching data', 1),
+('Mobi.Reports.DailyAttendance.ErrorFetching', N'حدث خطأ أثناء جلب البيانات', 2),
+
+('Mobi.Reports.DailyAttendance.SelectStartDate', 'Please select a start date.', 1),
+('Mobi.Reports.DailyAttendance.SelectStartDate', N'يرجى اختيار تاريخ البدء.', 2),
+
+('Mobi.Reports.DailyAttendance.SelectEndDate', 'Please select an end date.', 1),
+('Mobi.Reports.DailyAttendance.SelectEndDate', N'يرجى اختيار تاريخ الانتهاء.', 2),
+
+('Mobi.Reports.DailyAttendance.ErrorFetchingData', 'Error fetching data.', 1),
+('Mobi.Reports.DailyAttendance.ErrorFetchingData', N'حدث خطأ أثناء جلب البيانات.', 2);
+
+
+INSERT INTO LocaleStringResource (LanguageId, ResourceName, ResourceValue) VALUES
+(1, 'Mobi.Reports.EmployeeDataReport', 'Employee Data Report'),
+(1, 'Mobi.Reports.FileNumber', 'File Number'),
+(1, 'Mobi.Reports.NameEnglish', 'Name (English)'),
+(1, 'Mobi.Reports.Email', 'Email'),
+(1, 'Mobi.Reports.RegDate', 'Registration Date'),
+(1, 'Mobi.Common.Print', 'Print'),
+(1, 'Mobi.Reports.ListOfEmployees', 'List of Employees'),
+(1, 'Mobi.Reports.TotalRecords', 'Total Records');
+
+
+
+INSERT INTO LocaleStringResource (LanguageId, ResourceName, ResourceValue) VALUES
+(2, 'Mobi.Reports.EmployeeDataReport', 'تقرير بيانات الموظف'),
+(2, 'Mobi.Reports.FileNumber', 'رقم الملف'),
+(2, 'Mobi.Reports.NameEnglish', 'الاسم (إنجليزي)'),
+(2, 'Mobi.Reports.Email', 'البريد الإلكتروني'),
+(2, 'Mobi.Reports.RegDate', 'تاريخ التسجيل'),
+(2, 'Mobi.Common.Print', 'طباعة'),
+(2, 'Mobi.Reports.ListOfEmployees', 'قائمة الموظفين'),
+(2, 'Mobi.Reports.TotalRecords', 'إجمالي السجلات');
+
+
+
+-- English (LanguageId = 1)
+INSERT INTO LocaleStringResource (LanguageId, ResourceName, ResourceValue)
+VALUES 
+(1, 'Mobi.Reports.MonthlyWorkingHoursReport', 'Monthly Working Hours Report'),
+(1, 'Mobi.Reports.Year', 'Year'),
+(1, 'Mobi.Reports.Month', 'Month'),
+(1, 'Mobi.Reports.EmployeeId', 'Employee ID'),
+(1, 'Mobi.Reports.EmployeeName', 'Employee Name'),
+(1, 'Mobi.Reports.TotalHours', 'Total Hours'),
+(1, 'Mobi.Reports.TotalMinutes', 'Total Minutes'),
+(1, 'Mobi.Reports.Notes', 'Notes'),
+(1, 'Mobi.Common.Search', 'Search'),
+(1, 'Mobi.Common.Print', 'Print'),
+(1, 'Mobi.Reports.NoDataToPrint', 'No data available to print.');
+
+-- Arabic (LanguageId = 2)
+INSERT INTO LocaleStringResource (LanguageId, ResourceName, ResourceValue)
+VALUES 
+(2, 'Mobi.Reports.MonthlyWorkingHoursReport', 'تقرير ساعات العمل الشهرية'),
+(2, 'Mobi.Reports.Year', 'السنة'),
+(2, 'Mobi.Reports.Month', 'الشهر'),
+(2, 'Mobi.Reports.EmployeeId', 'رقم الموظف'),
+(2, 'Mobi.Reports.EmployeeName', 'اسم الموظف'),
+(2, 'Mobi.Reports.TotalHours', 'إجمالي الساعات'),
+(2, 'Mobi.Reports.TotalMinutes', 'إجمالي الدقائق'),
+(2, 'Mobi.Reports.Notes', 'ملاحظات'),
+(2, 'Mobi.Common.Search', 'بحث'),
+(2, 'Mobi.Common.Print', 'طباعة'),
+(2, 'Mobi.Reports.NoDataToPrint', 'لا توجد بيانات للطباعة.');
+
+
+-- English (LanguageId = 1)
+INSERT INTO LocaleStringResource (LanguageId, ResourceName, ResourceValue)
+VALUES 
+(1, 'Mobi.Reports.RegisteredMobileReport', 'Registered Employees Mobile Report'),
+(1, 'Mobi.Employee.FileNumber', 'File Number'),
+(1, 'Mobi.Employee.Name', 'Employee Name'),
+(1, 'Mobi.Employee.Email', 'Email'),
+(1, 'Mobi.Mobile.Type', 'Mob Type'),
+(1, 'Mobi.Mobile.RegistrationDate', 'Registration Date'),
+(1, 'Mobi.Mobile.LastTransactionDate', 'Last Transaction Date'),
+(1, 'Mobi.Common.Print', 'Print');
+
+-- Arabic (LanguageId = 2)
+INSERT INTO LocaleStringResource (LanguageId, ResourceName, ResourceValue)
+VALUES 
+(2, 'Mobi.Reports.RegisteredMobileReport', 'تقرير هواتف الموظفين المسجلين'),
+(2, 'Mobi.Employee.FileNumber', 'رقم الملف'),
+(2, 'Mobi.Employee.Name', 'اسم الموظف'),
+(2, 'Mobi.Employee.Email', 'البريد الإلكتروني'),
+(2, 'Mobi.Mobile.Type', 'نوع الهاتف'),
+(2, 'Mobi.Mobile.RegistrationDate', 'تاريخ التسجيل'),
+(2, 'Mobi.Mobile.LastTransactionDate', 'تاريخ آخر معاملة'),
+(2, 'Mobi.Common.Print', 'طباعة');
+
+-- English (LanguageId = 1)
+INSERT INTO LocaleStringResource (LanguageId, ResourceName, ResourceValue) VALUES
+(1, 'Reports.DailyAttendanceReportByLocation.Title', 'Daily Attendance Report by Location'),
+(1, 'Reports.DailyAttendanceReportByLocation.Header', 'Daily Attendance Report by Location'),
+(1, 'Reports.DailyAttendanceReportByLocation.EmployeeName', 'Employee Name'),
+(1, 'Reports.DailyAttendanceReportByLocation.EmployeeName.Placeholder', 'Enter 3 characters to search'),
+(1, 'Reports.DailyAttendanceReportByLocation.StartDate', 'Start Date'),
+(1, 'Reports.DailyAttendanceReportByLocation.EndDate', 'End Date'),
+(1, 'Reports.DailyAttendanceReportByLocation.Error.SelectEmployee', 'Please select an employee first!'),
+(1, 'Reports.DailyAttendanceReportByLocation.Print.Title', 'Daily Attendance Report'),
+(1, 'Reports.DailyAttendanceReportByLocation.Print.Employee', 'Employee'),
+(1, 'Reports.DailyAttendanceReportByLocation.Print.DateRange', 'Date Range'),
+(1, 'Reports.DailyAttendanceReportByLocation.Column.Location', 'Location'),
+(1, 'Reports.DailyAttendanceReportByLocation.Column.Date', 'Date'),
+(1, 'Reports.DailyAttendanceReportByLocation.Column.Time', 'Time'),
+(1, 'Reports.DailyAttendanceReportByLocation.Column.EventType', 'Event Type'),
+(1, 'Reports.DailyAttendanceReportByLocation.Column.ProofType', 'Proof Type'),
+(1, 'Common.Search', 'Search'),
+(1, 'Common.PrintFullReport', 'Print Full Report'),
+(1, 'Common.Loading', 'Loading...'),
+(1, 'Common.NoRecordsFound', 'No record found'),
+
+-- Daily Working Hours Report
+(1, 'Mobi.Reports.DailyWorkingHoursReport', 'Daily Working Hours Report'),
+(1, 'Mobi.Reports.EmployeeName', 'Employee Name'),
+(1, 'Mobi.Placeholder.EnterName', 'Enter 3 characters to search'),
+(1, 'Mobi.Reports.StartDate', 'Start Date'),
+(1, 'Mobi.Reports.EndDate', 'End Date'),
+(1, 'Mobi.Common.Search', 'Search'),
+(1, 'Mobi.Reports.Date', 'Date'),
+(1, 'Mobi.Reports.Day', 'Day'),
+(1, 'Mobi.Reports.TotalHours', 'Total Hours'),
+(1, 'Mobi.Reports.TotalMinutes', 'Total Minutes'),
+(1, 'Mobi.Reports.TotalTransactions', 'Total Transactions'),
+(1, 'Mobi.Reports.Notes', 'Notes'),
+
+-- Employee Location Authority Report
+(1, 'Mobi.Reports.EmployeeLocationAuthorityReport', 'Employee Location Authority Report'),
+(1, 'Mobi.Reports.EmployeeId', 'ID'),
+(1, 'Mobi.Reports.LocationName', 'Location Name'),
+(1, 'Mobi.Reports.ProofType', 'Proof Type'),
+(1, 'Mobi.Common.Print', 'Print'),
+(1, 'Mobi.Common.NoDataToPrint', 'No data available to print.');
+
+
+
+-- Arabic (LanguageId = 2)
+INSERT INTO LocaleStringResource (LanguageId, ResourceName, ResourceValue) VALUES
+(2, 'Reports.DailyAttendanceReportByLocation.Title', N'تقرير الحضور اليومي حسب الموقع'),
+(2, 'Reports.DailyAttendanceReportByLocation.Header', N'تقرير الحضور اليومي حسب الموقع'),
+(2, 'Reports.DailyAttendanceReportByLocation.EmployeeName', N'اسم الموظف'),
+(2, 'Reports.DailyAttendanceReportByLocation.EmployeeName.Placeholder', N'أدخل 3 أحرف للبحث'),
+(2, 'Reports.DailyAttendanceReportByLocation.StartDate', N'تاريخ البدء'),
+(2, 'Reports.DailyAttendanceReportByLocation.EndDate', N'تاريخ الانتهاء'),
+(2, 'Reports.DailyAttendanceReportByLocation.Error.SelectEmployee', N'يرجى اختيار موظف أولاً!'),
+(2, 'Reports.DailyAttendanceReportByLocation.Print.Title', N'تقرير الحضور اليومي'),
+(2, 'Reports.DailyAttendanceReportByLocation.Print.Employee', N'الموظف'),
+(2, 'Reports.DailyAttendanceReportByLocation.Print.DateRange', N'الفترة الزمنية'),
+(2, 'Reports.DailyAttendanceReportByLocation.Column.Location', N'الموقع'),
+(2, 'Reports.DailyAttendanceReportByLocation.Column.Date', N'التاريخ'),
+(2, 'Reports.DailyAttendanceReportByLocation.Column.Time', N'الوقت'),
+(2, 'Reports.DailyAttendanceReportByLocation.Column.EventType', N'نوع الحدث'),
+(2, 'Reports.DailyAttendanceReportByLocation.Column.ProofType', N'نوع الإثبات'),
+(2, 'Common.Search', N'بحث'),
+(2, 'Common.PrintFullReport', N'طباعة التقرير الكامل'),
+(2, 'Common.Loading', N'جارٍ التحميل...'),
+(2, 'Common.NoRecordsFound', N'لم يتم العثور على سجلات'),
+
+-- Daily Working Hours Report
+(2, 'Mobi.Reports.DailyWorkingHoursReport', N'تقرير ساعات العمل اليومية'),
+(2, 'Mobi.Reports.EmployeeName', N'اسم الموظف'),
+(2, 'Mobi.Placeholder.EnterName', N'أدخل 3 أحرف للبحث'),
+(2, 'Mobi.Reports.StartDate', N'تاريخ البدء'),
+(2, 'Mobi.Reports.EndDate', N'تاريخ الانتهاء'),
+(2, 'Mobi.Common.Search', N'بحث'),
+(2, 'Mobi.Reports.Date', N'التاريخ'),
+(2, 'Mobi.Reports.Day', N'اليوم'),
+(2, 'Mobi.Reports.TotalHours', N'إجمالي الساعات'),
+(2, 'Mobi.Reports.TotalMinutes', N'إجمالي الدقائق'),
+(2, 'Mobi.Reports.TotalTransactions', N'إجمالي الحركات'),
+(2, 'Mobi.Reports.Notes', N'ملاحظات'),
+
+-- Employee Location Authority Report
+(2, 'Mobi.Reports.EmployeeLocationAuthorityReport', N'تقرير صلاحية مواقع الموظفين'),
+(2, 'Mobi.Reports.EmployeeId', N'المعرف'),
+(2, 'Mobi.Reports.EmployeeName', N'اسم الموظف'),
+(2, 'Mobi.Reports.LocationName', N'اسم الموقع'),
+(2, 'Mobi.Reports.ProofType', N'نوع الإثبات'),
+(2, 'Mobi.Common.Print', N'طباعة'),
+(2, 'Mobi.Common.NoDataToPrint', N'لا توجد بيانات للطباعة.');
+
+	-- English
+INSERT INTO LocaleStringResource (LanguageId, ResourceName, ResourceValue)
+VALUES
+(1, 'mobi.employeelocation.pageheader', 'Set Employee Locations'),
+(1, 'mobi.employeelocation.employeename', 'Employee Name'),
+(1, 'mobi.employeelocation.filenumber', 'File Number'),
+(1, 'mobi.employeelocation.selectlocations', 'Select Locations'),
+(1, 'mobi.employeelocation.selectall', 'Select All'),
+(1, 'mobi.employeelocation.freelocation', 'Free Location'),
+(1, 'mobi.employeelocation.backtolist', 'Back to List'),
+(1, 'mobi.employeelocation.savebutton', 'Save');
+
+-- Arabic
+INSERT INTO LocaleStringResource (LanguageId, ResourceName, ResourceValue)
+VALUES
+(2, 'mobi.employeelocation.pageheader', 'تعيين مواقع الموظف'),
+(2, 'mobi.employeelocation.employeename', 'اسم الموظف'),
+(2, 'mobi.employeelocation.filenumber', 'رقم الملف'),
+(2, 'mobi.employeelocation.selectlocations', 'اختر المواقع'),
+(2, 'mobi.employeelocation.selectall', 'اختر الكل'),
+(2, 'mobi.employeelocation.freelocation', 'موقع حر'),
+(2, 'mobi.employeelocation.backtolist', 'العودة إلى القائمة'),
+(2, 'mobi.employeelocation.savebutton', 'حفظ');

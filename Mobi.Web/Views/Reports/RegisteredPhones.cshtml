@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Registered Employees Mobile Report";
+    ViewData["Title"] = @T("Mobi.Reports.RegisteredMobileReport");
 }
 
 <div class="container-fluid">
@@ -7,19 +7,19 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Registered Employees Mobile Report</h3>
+                    <h3 class="card-title">@T("Mobi.Reports.RegisteredMobileReport")</h3>
                 </div>
                 <div class="card-body">
                     <table id="mobileTable" class="table table-bordered table-striped">
                         <thead class="thead-dark">
                             <tr>
                                 <th>#</th>
-                                <th>File Number</th>
-                                <th>Employee Name</th>
-                                <th>Email</th>
-                                <th>Mob Type</th>
-                                <th>Reg Date</th>
-                                <th>Last Trans Date</th>
+                                <th>@T("Mobi.Employee.FileNumber")</th>
+                                <th>@T("Mobi.Employee.Name")</th>
+                                <th>@T("Mobi.Employee.Email")</th>
+                                <th>@T("Mobi.Mobile.Type")</th>
+                                <th>@T("Mobi.Mobile.RegistrationDate")</th>
+                                <th>@T("Mobi.Mobile.LastTransactionDate")</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -38,7 +38,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 
     <script>
-               $(document).ready(function () {
+        $(document).ready(function () {
             var table = $('#mobileTable').DataTable({
                 processing: true,
                 serverSide: false,
@@ -49,17 +49,16 @@
                 buttons: [
                     {
                         extend: 'print',
-                        text: '<i class="fas fa-print"></i> Print',
+                        text: '<i class="fas fa-print"></i> @T("Mobi.Common.Print")',
                         className: 'btn btn-secondary',
                         title: '',
                         exportOptions: { columns: ':visible' },
                         customize: function (win) {
-                                $(win.document.body).find('thead').css('display', 'none');
+                            $(win.document.body).find('thead').css('display', 'none');
                             $(win.document.body).find('tfoot').css('display', 'none');
-
                             $(win.document.head).find('title').text('');
-                            $(win.document.body).css('font-size', '10pt')                                         
-                                .prepend('<h4 class="text-center">Registered Employees Mobile Report</h4>');
+                            $(win.document.body).css('font-size', '10pt')
+                                .prepend('<h4 class="text-center">@T("Mobi.Reports.RegisteredMobileReport")</h4>');
 
                             $(win.document.body).find('table')
                                 .addClass('display')
@@ -83,6 +82,5 @@
                 ]
             });
         });
-
     </script>
 }

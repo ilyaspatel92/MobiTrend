@@ -1,26 +1,27 @@
 ﻿@{
-    ViewData["Title"] = "Mobile Manage";
+    ViewData["Title"] = @T("Mobi.MobileManage.PageTitle");
 }
+
 <div class="card card-info card-outline mb-4 mx-3 custom-top-spacing">
     <div class="card-header">
-        <h3 class="card-title">Mobile Manage</h3>
+        <h3 class="card-title">@T("Mobi.MobileManage.PageTitle")</h3>
     </div>
     <div class="card-body">
         <form id="searchForm">
             <div class="row mb-4">
                 <div class="col-md-4">
-                    <label for="employeeName" class="form-label"><i class="fas fa-user"></i> Employee Name</label>
-                    <input type="text" name="name" id="employeeName" class="form-control" placeholder="Search by name">
+                    <label for="employeeName" class="form-label"><i class="fas fa-user"></i> @T("Mobi.MobileManage.EmployeeName")</label>
+                    <input type="text" name="name" id="employeeName" class="form-control" placeholder="@T("Mobi.MobileManage.SearchByName")">
                 </div>
                 <div class="col-md-2">
-                    <label for="filenumber" class="form-label"><i class="fas fa-file"></i>  File Number</label>
-                    <input type="text" name="filenumber" id="filenumber" class="form-control" placeholder="Search by file number">
+                    <label for="filenumber" class="form-label"><i class="fas fa-file"></i> @T("Mobi.MobileManage.FileNumber")</label>
+                    <input type="text" name="filenumber" id="filenumber" class="form-control" placeholder="@T("Mobi.MobileManage.SearchByFileNumber")">
                 </div>
                 <div class="col-md-3 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search"></i> Search</button>
+                    <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search"></i> @T("Mobi.MobileManage.SearchButton")</button>
                 </div>
                 <div class="col-md-3 d-flex align-items-end">
-                    <button type="button" id="showAll" class="btn btn-secondary w-100"><i class="fas fa-list"></i> Show All</button>
+                    <button type="button" id="showAll" class="btn btn-secondary w-100"><i class="fas fa-list"></i> @T("Mobi.MobileManage.ShowAllButton")</button>
                 </div>
             </div>
         </form>
@@ -28,14 +29,14 @@
         <table id="mobileManageTable" class="table table-bordered text-center" style="width:100%;">
             <thead class="table-light">
                 <tr>
-                    <th>Employee Name</th>
-                    <th>File Number</th>
-                    <th>Mobile Type</th>
-                    <th>Reg Date</th>
-                    <th>Reg Via</th>
-                    <th>Admin</th>
-                    <th>Reg Status</th>
-                    <th>Action</th>
+                    <th>@T("Mobi.MobileManage.Column.EmployeeName")</th>
+                    <th>@T("Mobi.MobileManage.Column.FileNumber")</th>
+                    <th>@T("Mobi.MobileManage.Column.MobileType")</th>
+                    <th>@T("Mobi.MobileManage.Column.RegDate")</th>
+                    <th>@T("Mobi.MobileManage.Column.RegVia")</th>
+                    <th>@T("Mobi.MobileManage.Column.Admin")</th>
+                    <th>@T("Mobi.MobileManage.Column.RegStatus")</th>
+                    <th>@T("Mobi.MobileManage.Column.Action")</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -46,23 +47,22 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // Initialize DataTable without loading data
             var table = $('#mobileManageTable').DataTable({
                 processing: true,
                 serverSide: false,
-                order :[[0,"asc"]],
+                order: [[0, "asc"]],
                 paging: true,
                 searching: false,
                 lengthChange: true,
                 pageLength: 10,
                 language: {
                     paginate: {
-                        previous: "Previous",
-                        next: "Next"
+                        previous: "@T("Mobi.MobileManage.Previous")",
+                        next: "@T("Mobi.MobileManage.Next")"
                     },
-                    info: "Showing _START_ to _END_ of _TOTAL_ entries (filtered from _MAX_ total entries)"
+                    info: "@T("Mobi.MobileManage.InfoText")"
                 },
-                columns: [                    
+                columns: [
                     { data: 'nameEng' },
                     { data: 'fileNumber' },
                     { data: 'mobileType' },
@@ -72,17 +72,15 @@
                     { data: 'registerStatus' },
                     { data: 'action' }
                 ],
-                ajax: null // No initial ajax call
+                ajax: null
             });
 
-            // Function to load data and reload table
             function loadData(name = "", filenumber = "") {
                 $(".dataTables_processing").show();
                 $.ajax({
                     url: `/MobileManage/GetMobileManageData?name=${name}&filenumber=${filenumber}`,
                     type: 'GET',
                     success: function (result) {
-                        // Clear and add the formatted data to the DataTable
                         table.clear().rows.add(result.data.map((employee, index) => ({
                             no: index + 1,
                             nameEng: employee.nameEng,
@@ -91,22 +89,20 @@
                             mobRegistrationDate: employee.mobRegistrationDate,
                             registrationVia: employee.registrationTypeName,
                             createdBy: employee.createdBy,
-                            registerStatus: employee.registerStatus ? "Registered" : "Not Registered",
+                            registerStatus: employee.registerStatus ? "@T("Mobi.MobileManage.Registered")" : "@T("Mobi.MobileManage.NotRegistered")",
                             action: employee.isQrVerify
-                                ? `<a href="/MobileManage/EditMobile/${employee.id}" class="btn btn-link"><i class="fas fa-edit"></a>`
+                                ? `<a href="/MobileManage/EditMobile/${employee.id}" class="btn btn-link"><i class="fas fa-edit"></i></a>`
                                 : `<a href="/MobileManage/RegisterMobile/${employee.id}" class="btn btn-link"><i class="fa-solid fa-user-plus"></i></a>`
                         }))).draw();
-                         $(".dataTables_processing").hide();
-
+                        $(".dataTables_processing").hide();
                     },
                     error: function (xhr, status, error) {
-                         $(".dataTables_processing").hide();
+                        $(".dataTables_processing").hide();
                         console.error("Error fetching data:", error);
                     }
                 });
             }
 
-            // Trigger the AJAX request on form submit
             $('#searchForm').on('submit', function (e) {
                 e.preventDefault();
                 const name = $('#employeeName').val();
@@ -114,7 +110,6 @@
                 loadData(name, filenumber);
             });
 
-            // Handle show all button click
             $('#showAll').on('click', function () {
                 $('#employeeName').val('');
                 $('#filenumber').val('');

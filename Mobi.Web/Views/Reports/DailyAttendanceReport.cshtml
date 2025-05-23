@@ -1,67 +1,55 @@
 ﻿@{
-    ViewData["Title"] = "Daily Attendance Report";
+    ViewData["Title"] = @T("Mobi.Reports.DailyAttendance.Title");
 }
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- DataTables -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-<!-- DataTables Buttons -->
-@* <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css">
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script> *@
-
-
-	<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css">
-	<script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
-	<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
-	<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
-
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
             <div class="card mb-12">
                 <div class="card-header">
-                    <h3 class="card-title">Daily Attendance Report</h3>
+                    <h3 class="card-title">@T("Mobi.Reports.DailyAttendance.Title")</h3>
                 </div>
                 <div class="card-body">
-                    <!-- Search Filters -->
                     <div class="row mb-3">
                         <div class="col-md-3">
-                            <label for="EmployeeName">Employee Name:</label>
-                            <input id="EmployeeName" class="form-control" placeholder="Enter 3 characters to search" autocomplete="off" />
+                            <label for="EmployeeName">@T("Mobi.Reports.DailyAttendance.EmployeeName")</label>
+                            <input id="EmployeeName" class="form-control" placeholder="@T("Mobi.Reports.DailyAttendance.EmployeePlaceholder")" autocomplete="off" />
                             <input type="hidden" id="EmployeeId" />
                             <ul id="EmployeeNameDropdown" class="list-group position-absolute mt-1" style="display: none; z-index: 1000;"></ul>
                         </div>
                         <div class="col-md-3">
-                            <label for="startDate">Start Date:</label>
+                            <label for="startDate">@T("Mobi.Reports.DailyAttendance.StartDate")</label>
                             <input type="date" id="startDate" class="form-control" required>
                         </div>
                         <div class="col-md-3">
-                            <label for="endDate">End Date:</label>
+                            <label for="endDate">@T("Mobi.Reports.DailyAttendance.EndDate")</label>
                             <input type="date" id="endDate" class="form-control" required>
                         </div>
                         <div class="col-md-3 mt-4">
-                            <button id="searchBtn" class="btn btn-primary">Search</button>
+                            <button id="searchBtn" class="btn btn-primary">@T("Mobi.Reports.DailyAttendance.Search")</button>
                         </div>
                     </div>
 
-                    <!-- Data Table -->
                     <table id="attendanceTable" class="table table-bordered">
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Employee Name</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Event Type</th>
-                                <th>Location</th>
-                                <th>Proof Type</th>
+                                <th>@T("Mobi.Reports.DailyAttendance.EmployeeName")</th>
+                                <th>@T("Mobi.Reports.DailyAttendance.Date")</th>
+                                <th>@T("Mobi.Reports.DailyAttendance.Time")</th>
+                                <th>@T("Mobi.Reports.DailyAttendance.EventType")</th>
+                                <th>@T("Mobi.Reports.DailyAttendance.Location")</th>
+                                <th>@T("Mobi.Reports.DailyAttendance.ProofType")</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -86,42 +74,36 @@
                 buttons: [
                     {
                         extend: 'print',
-                        text: '<i class="fas fa-print"></i> Print',
+                        text: '<i class="fas fa-print"></i> @T("Mobi.Reports.DailyAttendance.Print")',
                         className: 'btn btn-secondary',
-                        title:'Daily Attendance Report',
-                        action: function (e, dt, node, config)
-                        {
-                            let dataCount = dt.rows({ search: 'applied' }).count(); // Get count of filtered rows
-
+                        title: '@T("Mobi.Reports.DailyAttendance.Title")',
+                        action: function (e, dt, node, config) {
+                            let dataCount = dt.rows({ search: 'applied' }).count();
                             if (dataCount === 0) {
-                                alert("No data available to print.");
+                                alert("@T("Mobi.Reports.DailyAttendance.NoDataToPrint")");
                             } else {
                                 $.fn.dataTable.ext.buttons.print.action.call(this, e, dt, node, config);
                             }
                         },
                         customize: function (win) {
                             $(win.document.head).find('title').text('');
-
-                               $(win.document.body).find('thead').css('display', 'none');
-                               $(win.document.body).find('tfoot').css('display', 'none');
+                            //$(win.document.body).find('thead, tfoot').hide();
 
                             let startDate = $('#startDate').val();
                             let endDate = $('#endDate').val();
                             let employeeName = $('#EmployeeName').val();
 
                             if (startDate && endDate) {
-                                $(win.document.body).prepend('<h5 class="text-center">From ' + startDate + ' To ' + endDate + '</h5>');
+                                $(win.document.body).prepend('<h5 class="text-center">@T("Mobi.Reports.DailyAttendance.From") ' + startDate + ' @T("Mobi.Reports.DailyAttendance.To") ' + endDate + '</h5>');
                             }
                             if (employeeName) {
-                                $(win.document.body).prepend('<h5 class="text-center">Employee: ' + employeeName + '</h5>');
+                                $(win.document.body).prepend('<h5 class="text-center">@T("Mobi.Reports.DailyAttendance.Employee") ' + employeeName + '</h5>');
                             }
-
-                            $(win.document.body).find('table').addClass('display').css('font-size', 'inherit');
                         }
                     }
                 ],
                 columns: [
-                    { data: null, orderable: false, render: function (data, type, row, meta) { return meta.row + 1; } },
+                    { data: null, orderable: false, render: (data, type, row, meta) => meta.row + 1 },
                     { data: 'employeeName' },
                     { data: 'date' },
                     { data: 'time' },
@@ -131,7 +113,6 @@
                 ]
             });
 
-            // Employee Autocomplete
             $('#EmployeeName').on('input', function () {
                 let term = $(this).val();
                 if (term.length < 3) {
@@ -139,18 +120,16 @@
                     return;
                 }
 
-                $('#EmployeeNameDropdown').html('<li class="list-group-item">Loading...</li>').show();
+                $('#EmployeeNameDropdown').html('<li class="list-group-item">@T("Mobi.Reports.DailyAttendance.Loading")</li>').show();
 
                 $.getJSON('/SystemUsers/GetEmployeeNames', { term: term }, function (data) {
                     $('#EmployeeNameDropdown').empty();
                     if (data.length === 0) {
-                        $('#EmployeeNameDropdown').html('<li class="list-group-item text-muted">No record found</li>');
+                        $('#EmployeeNameDropdown').html('<li class="list-group-item text-muted">@T("Mobi.Reports.DailyAttendance.NoRecordFound")</li>');
                     } else {
                         data.forEach(function (item) {
                             let listItem = $('<li class="list-group-item"></li>').text(item.nameEng);
-                            listItem.attr("data-id", item.id);
-                            listItem.css("cursor", "pointer");
-                            listItem.on("click", function () {
+                            listItem.attr("data-id", item.id).css("cursor", "pointer").on("click", function () {
                                 $('#EmployeeName').val(item.nameEng);
                                 $('#EmployeeId').val(item.id);
                                 selectedEmployeeId = item.id;
@@ -160,47 +139,40 @@
                         });
                     }
                 }).fail(function () {
-                    $('#EmployeeNameDropdown').html('<li class="list-group-item text-danger">Error fetching data</li>');
+                    $('#EmployeeNameDropdown').html('<li class="list-group-item text-danger">@T("Mobi.Reports.DailyAttendance.ErrorFetching")</li>');
                 });
             });
 
-            // Hide Dropdown on Outside Click
             $(document).on("click", function (e) {
                 if (!$('#EmployeeName').is(e.target) && !$('#EmployeeNameDropdown').is(e.target) && $('#EmployeeNameDropdown').has(e.target).length === 0) {
                     $('#EmployeeNameDropdown').hide();
                 }
             });
 
-            // Search Button Click
             $('#searchBtn').click(function () {
                 let startDate = $('#startDate').val();
                 let endDate = $('#endDate').val();
                 let employeeId = $('#EmployeeId').val();
 
                 if (!startDate) {
-                    alert("Please select a start date.");
+                    alert("@T("Mobi.Reports.DailyAttendance.SelectStartDate")");
                     return;
                 }
 
                 if (!endDate) {
-                    alert("Please select an end date.");
+                    alert("@T("Mobi.Reports.DailyAttendance.SelectEndDate")");
                     return;
                 }
 
                 $.ajax({
                     url: '@Url.Action("GetDailyAttendanceData", "Reports")',
                     type: 'GET',
-                    data: { startDate: startDate, endDate: endDate, employeeId: employeeId },
+                    data: { startDate, endDate, employeeId },
                     success: function (response) {
-                        table.clear();
-                        if (response.data) {
-                            table.rows.add(response.data).draw();
-                        } else {
-                            table.rows.add(response).draw();
-                        }
+                        table.clear().rows.add(response.data || response).draw();
                     },
-                    error: function (xhr) {
-                        console.error("Error fetching data:", xhr);
+                    error: function () {
+                        console.error("@T("Mobi.Reports.DailyAttendance.ErrorFetchingData")");
                     }
                 });
             });

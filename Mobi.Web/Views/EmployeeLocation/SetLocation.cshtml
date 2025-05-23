@@ -1,25 +1,26 @@
 ﻿@model EmployeeLocationViewModel
 
 @{
-    ViewData["Title"] = "Employee Locations";
+    ViewData["Title"] = @T("Mobi.EmployeeLocation.PageTitle");
 }
+
 <div class="card card-info card-outline mb-4 mx-3 custom-top-spacing">
     <!-- Header Section -->
     <div class="card-header bg-white py-3 border-bottom">
         <div class="d-flex justify-content-between align-items-center">
             <!-- Title -->
-            <h5 class="fw-bold mb-0">Set Employee Locations</h5>
+            <h5 class="fw-bold mb-0">@T("Mobi.EmployeeLocation.PageHeader")</h5>
 
             <!-- Back to List Button -->
-            <a href="employeelocation/employeelocation" class="btn btn-outline-secondary btn-sm">Back to List</a>
+            <a href="employeelocation/employeelocation" class="btn btn-outline-secondary btn-sm">@T("Mobi.EmployeeLocation.BackToList")</a>
         </div>
         <!-- begin::Card Body -->
         <div class="card-body">
             <div class="row g-4">
                 <div class="col-md-6">
-                    <label for="employeeName" class="form-label">Employee Name</label>
+                    <label for="employeeName" class="form-label">@T("Mobi.EmployeeLocation.EmployeeName")</label>
                     <div class="input-group position-relative">
-                        <input type="text" id="employeeName" class="form-control" placeholder="Enter 3 Character for Search Employee" value="@Model?.EmployeeName" autocomplete="off">
+                        <input type="text" id="employeeName" class="form-control" placeholder="@T("Mobi.EmployeeLocation.EmployeeSearchPlaceholder")" value="@Model?.EmployeeName" autocomplete="off">
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="bi bi-search"></i></span>
                         </div>
@@ -29,24 +30,23 @@
 
                 <!-- Employee ID -->
                 <div class="col-md-6">
-                    <label for="filenumber" class="form-label">File Number</label>
+                    <label for="filenumber" class="form-label">@T("Mobi.EmployeeLocation.FileNumber")</label>
                     <input type="text" id="filenumber" name="filenumber" class="form-control" value="@Model?.FileNumber" readonly>
                 </div>
                 <input type="text" id="employeeId" class="form-control" value="@Model?.EmployeeId" hidden>
-
             </div>
 
             <div class="row g-4">
                 <div class="col">
-                    <label class="form-label">Select Locations</label>
+                    <label class="form-label">@T("Mobi.EmployeeLocation.SelectLocations")</label>
                     <div class="d-flex gap-3 align-items-center mb-2">
                         <div>
                             <input type="checkbox" id="selectAll">
-                            <label for="selectAll" class="form-check-label">Select All</label>
+                            <label for="selectAll" class="form-check-label">@T("Mobi.EmployeeLocation.SelectAll")</label>
                         </div>
                         <div>
                             <input type="checkbox" id="freeLocation">
-                            <label for="freeLocation" class="form-check-label">Free Location</label>
+                            <label for="freeLocation" class="form-check-label">@T("Mobi.EmployeeLocation.FreeLocation")</label>
                         </div>
                     </div>
                     <div id="locationList" class="border p-3" style="max-height: 300px; overflow-y: auto;">
@@ -60,16 +60,15 @@
                                 </div>
                             }
                         }
-
-                        <!-- Dynamic location checkboxes will render here -->
                     </div>
                 </div>
             </div>
-        </div> <!-- end::Card Body -->
-        <!-- begin::Card Footer -->
+        </div>
+
+        <!-- Footer -->
         <div class="card-footer d-flex justify-content-end">
-            <button id="saveButton" class="btn btn-primary px-4">Save</button>
-        </div> <!-- end::Card Footer -->
+            <button id="saveButton" class="btn btn-primary px-4">@T("Mobi.EmployeeLocation.SaveButton")</button>
+        </div>
     </div>
 </div>
 
@@ -80,11 +79,9 @@
         const filenumberInput = document.getElementById("filenumber");
         const autocompleteResults = document.getElementById("autocomplete-results");
         const freeLocationCheckbox = document.getElementById("freeLocation");
+        let typingTimer;
+        const typingInterval = 500;
 
-        let typingTimer; // Timer to handle debounce
-        const typingInterval = 500; // Wait 500ms after typing stops
-
-        // Initialize autocomplete for employee name
         employeeNameInput.addEventListener("input", function () {
             const query = employeeNameInput.value.trim();
             if (query.length >= 3) {
@@ -104,74 +101,58 @@
             }
         });
 
-        // Show autocomplete suggestions
-            function showAutocompleteResults(employees) {
-        autocompleteResults.innerHTML = ""; // Clear previous suggestions
-        if (employees.length === 0) {
-            autocompleteResults.style.display = "none";
-            return;
+        function showAutocompleteResults(employees) {
+            autocompleteResults.innerHTML = "";
+            if (employees.length === 0) {
+                autocompleteResults.style.display = "none";
+                return;
+            }
+
+            employees.forEach(employee => {
+                const li = document.createElement("li");
+                li.classList.add("list-group-item", "cursor-pointer");
+                li.textContent = employee.label;
+                li.addEventListener("click", function () {
+                    selectEmployee(employee);
+                });
+                autocompleteResults.appendChild(li);
+            });
+
+            const rect = employeeNameInput.getBoundingClientRect();
+            autocompleteResults.style.width = `${rect.width}px`;
+            autocompleteResults.style.display = "block";
         }
 
-        employees.forEach(employee => {
-            const li = document.createElement("li");
-            li.classList.add("list-group-item", "cursor-pointer");
-            li.textContent = employee.label;
-            li.addEventListener("click", function () {
-                selectEmployee(employee);
-            });
-            autocompleteResults.appendChild(li);
-        });
-
-        // Get the position of the input field
-        const rect = employeeNameInput.getBoundingClientRect();
-
-        // // Set position and width of the dropdown
-        // autocompleteResults.style.left = `${rect.left + window.scrollX}px`; // Adjust for scrolling
-        // autocompleteResults.style.top = `${rect.bottom + window.scrollY}px`; // Position below input
-        autocompleteResults.style.width = `${rect.width}px`; // Match input width
-        autocompleteResults.style.display = "block"; // Show results
-    }
-
-
-        // Handle employee selection from the autocomplete results
         function selectEmployee(employee) {
-            console.log(employee);
-            employeeNameInput.value = employee.label; // Set employee name
-            employeeIdInput.value = employee.id; // Set employee ID
-            filenumberInput.value = employee.filenumber; // Set filenumber
-
-            // Load locations for the selected employee
+            employeeNameInput.value = employee.label;
+            employeeIdInput.value = employee.id;
+            filenumberInput.value = employee.filenumber;
             loadLocations(employee.id);
-
-            // Hide the autocomplete dropdown after selection
             autocompleteResults.style.display = "none";
         }
 
-        // Load Locations by Employee ID
-            function loadLocations(employeeId) {
-        fetch(`/EmployeeLocation/GetLocationsByEmployeeId?employeeId=${employeeId}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data) {
-                    renderLocationList(data.locations, data.isFreeLocation);
-                    document.getElementById("freeLocation").checked = data.isFreeLocation;
-                } else {
-                    alert("Error loading locations.");
-                }
-            })
-            .catch(error => {
-                alert("Error loading locations.");
-            });
-    }
+        function loadLocations(employeeId) {
+            fetch(`/EmployeeLocation/GetLocationsByEmployeeId?employeeId=${employeeId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data) {
+                        renderLocationList(data.locations);
+                        document.getElementById("freeLocation").checked = data.isFreeLocation;
+                    } else {
+                        alert("@T("Mobi.EmployeeLocation.LoadError")");
+                    }
+                })
+                .catch(error => {
+                    alert("@T("Mobi.EmployeeLocation.LoadError")");
+                });
+        }
 
-
-        // Render locations as checkboxes
         function renderLocationList(locations) {
             const locationList = document.getElementById("locationList");
-            locationList.innerHTML = ""; // Clear previous locations
+            locationList.innerHTML = "";
 
             if (locations.length === 0) {
-                locationList.innerHTML = "<p>No locations available for this employee.</p>";
+                locationList.innerHTML = `<p>@T("Mobi.EmployeeLocation.NoLocationsAvailable")</p>`;
                 return;
             }
 
@@ -185,6 +166,7 @@
                 checkbox.value = location.id;
                 checkbox.id = `location-${location.id}`;
                 checkbox.checked = location.isSelected;
+
                 const label = document.createElement("label");
                 label.classList.add("form-check-label");
                 label.setAttribute("for", `location-${location.id}`);
@@ -196,95 +178,71 @@
                 locationList.appendChild(checkboxDiv);
             });
 
-            // Handle Select All functionality
-            const selectAll = document.getElementById("selectAll");
-            selectAll.addEventListener("change", function () {
+            document.getElementById("selectAll").addEventListener("change", function () {
                 const checkboxes = document.querySelectorAll(".location-checkbox");
-                checkboxes.forEach(checkbox => checkbox.checked = selectAll.checked);
+                checkboxes.forEach(checkbox => checkbox.checked = this.checked);
             });
         }
 
-        // Save selected locations
-        const saveButton = document.getElementById("saveButton");
-        saveButton.addEventListener("click", function () {
+        document.getElementById("saveButton").addEventListener("click", function () {
             const employeeId = employeeIdInput.value;
-
-            // Collect selected location IDs
             const selectedLocations = Array.from(document.querySelectorAll(".location-checkbox:checked"))
-                .map(checkbox => checkbox.value);  // Get location IDs from checked checkboxes
-
-            if (!employeeId) {
-                alert("Please select an employee.");
-                return;
-            }
-
-            if (selectedLocations.length === 0 && !freeLocationCheckbox.checked) {
-                alert("Please select at least one location.");
-                return;
-            }
+                .map(checkbox => checkbox.value);
             const isFreeLocationChecked = freeLocationCheckbox.checked;
 
-            // Send the selected locations and employee ID to the server
+            if (!employeeId) {
+                alert("@T("Mobi.EmployeeLocation.SelectEmployeeAlert")");
+                return;
+            }
+
+            if (selectedLocations.length === 0 && !isFreeLocationChecked) {
+                alert("@T("Mobi.EmployeeLocation.SelectLocationAlert")");
+                return;
+            }
+
             fetch("/EmployeeLocation/SaveEmployeeLocations", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    employeeId: employeeId,         // Send employee ID
-                    locationIds: selectedLocations.length > 0 ? selectedLocations : null,  // Send the array of selected location IDs
+                    employeeId: employeeId,
+                    locationIds: selectedLocations.length > 0 ? selectedLocations : null,
                     isFreeLocation: isFreeLocationChecked
                 })
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert("Locations saved successfully!");
+                    alert("@T("Mobi.EmployeeLocation.SaveSuccess")");
                     window.location.href = "/employeelocation/employeelocation";
-
                 } else {
-                    alert("Error saving locations.");
+                    alert("@T("Mobi.EmployeeLocation.SaveError")");
                 }
             })
             .catch(error => {
-                alert("Error saving locations.",error);
+                alert("@T("Mobi.EmployeeLocation.SaveError")");
             });
         });
-         if (employeeIdInput.value) 
-         {
-             loadLocations(employeeIdInput.value);
-         }
 
-             const selectAllCheckbox = document.getElementById("selectAll");
+        if (employeeIdInput.value) {
+            loadLocations(employeeIdInput.value);
+        }
 
-    selectAllCheckbox.addEventListener("change", function () {
-        const locationCheckboxes = document.querySelectorAll(".location-checkbox");
-        const isChecked = selectAllCheckbox.checked;
-
-        // Check/uncheck all location checkboxes
-        locationCheckboxes.forEach(checkbox => {
-            checkbox.checked = isChecked;
+        document.getElementById("selectAll").addEventListener("change", function () {
+            const checkboxes = document.querySelectorAll(".location-checkbox");
+            const isChecked = this.checked;
+            checkboxes.forEach(cb => cb.checked = isChecked);
+            if (isChecked) {
+                freeLocationCheckbox.checked = false;
+            }
         });
 
-        // If "Select All" is checked, uncheck "Free Location"
-        if (isChecked) {
-            freeLocationCheckbox.checked = false;
-        }
-    });
-
-    freeLocationCheckbox.addEventListener("change", function () {
-        const locationCheckboxes = document.querySelectorAll(".location-checkbox");
-        const isFreeLocationChecked = freeLocationCheckbox.checked;
-
-        // Uncheck all location checkboxes if "Free Location" is checked
-        if (isFreeLocationChecked) {
-            locationCheckboxes.forEach(checkbox => {
-                checkbox.checked = false;
-            });
-            // Uncheck "Select All"
-            selectAllCheckbox.checked = false;
-        }
-    });
+        freeLocationCheckbox.addEventListener("change", function () {
+            const checkboxes = document.querySelectorAll(".location-checkbox");
+            const isFree = this.checked;
+            if (isFree) {
+                checkboxes.forEach(cb => cb.checked = false);
+                document.getElementById("selectAll").checked = false;
+            }
+        });
     });
 </script>
-
