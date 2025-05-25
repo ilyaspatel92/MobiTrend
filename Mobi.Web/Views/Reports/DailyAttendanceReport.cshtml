@@ -76,7 +76,8 @@
                         extend: 'print',
                         text: '<i class="fas fa-print"></i> @T("Mobi.Reports.DailyAttendance.Print")',
                         className: 'btn btn-secondary',
-                        title: '@T("Mobi.Reports.DailyAttendance.Title")',
+                        // title: '@T("Mobi.Reports.DailyAttendance.Title")',
+                        title: '',
                         action: function (e, dt, node, config) {
                             let dataCount = dt.rows({ search: 'applied' }).count();
                             if (dataCount === 0) {
@@ -93,12 +94,16 @@
                             let endDate = $('#endDate').val();
                             let employeeName = $('#EmployeeName').val();
 
+                                let titleBlock = '';
+                            if (employeeName) 
+                            {
+                                titleBlock += '<h4 class="text-center">' + employeeName + ' - @T("Mobi.Reports.DailyAttendance.Title")</h4>';
+                            }
                             if (startDate && endDate) {
-                                $(win.document.body).prepend('<h5 class="text-center">@T("Mobi.Reports.DailyAttendance.From") ' + startDate + ' @T("Mobi.Reports.DailyAttendance.To") ' + endDate + '</h5>');
+                                titleBlock += '<h5 class="text-center">@T("Mobi.Reports.DailyAttendance.From") ' + startDate + ' @T("Mobi.Reports.DailyAttendance.To") ' + endDate + '</h5>';
                             }
-                            if (employeeName) {
-                                $(win.document.body).prepend('<h5 class="text-center">@T("Mobi.Reports.DailyAttendance.Employee") ' + employeeName + '</h5>');
-                            }
+
+                            $(win.document.body).prepend(titleBlock);
                         }
                     }
                 ],
@@ -149,6 +154,21 @@
                 }
             });
 
+            function updateHeader() {
+                const employeeName = $('#EmployeeName').val();
+                const startDate = $('#startDate').val();
+                const endDate = $('#endDate').val();
+
+                if (employeeName) {
+                    $('#reportTitle').text(employeeName + ' - ' + '@T("Mobi.Reports.DailyAttendance.Title")');
+                }
+
+                if (startDate && endDate) {
+                    $('#reportDateRange').text('@T("Mobi.Reports.DailyAttendance.From") ' + startDate + ' @T("Mobi.Reports.DailyAttendance.To") ' + endDate);
+                }
+            }
+
+
             $('#searchBtn').click(function () {
                 let startDate = $('#startDate').val();
                 let endDate = $('#endDate').val();
@@ -170,6 +190,7 @@
                     data: { startDate, endDate, employeeId },
                     success: function (response) {
                         table.clear().rows.add(response.data || response).draw();
+                         updateHeader();
                     },
                     error: function () {
                         console.error("@T("Mobi.Reports.DailyAttendance.ErrorFetchingData")");
@@ -177,5 +198,13 @@
                 });
             });
         });
+
+
     </script>
 }
+<style type="text/css" media="print">
+    @@page {
+        size: auto; /* auto is the initial value */
+        margin: 2mm; /* this affects the margin in the printer settings */
+    }
+</style>

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Mobi.Data.Domain.Employees;
 using Mobi.Repository;
 using Mobi.Repository.Migrations;
 using Mobi.Service.AccessControls;
@@ -131,7 +132,27 @@ namespace Mobi.Web
                     },
                     OnTokenValidated = context =>
                     {
-                        Console.WriteLine("Token validated successfully.");
+                        var claimsPrincipal = context.Principal;
+                        var employeeId = claimsPrincipal.FindFirst("EmployeeId")?.Value;
+
+                        if (!string.IsNullOrEmpty(employeeId))
+                        {
+                            // Resolve scoped service here
+                            var scopeFactory = context.HttpContext.RequestServices.GetRequiredService<IServiceScopeFactory>();
+                            using var scope = scopeFactory.CreateScope();
+                            var employeeService = scope.ServiceProvider.GetRequiredService<IEmployeeService>();
+
+                            var employee = employeeService.GetEmployeeById(int.Parse(employeeId));
+
+                            if (employee != null && string.IsNullOrWhiteSpace(employee.DeviceId))
+                            {
+                                context.Fail("device_invalid");                                
+                            }
+                        }
+                        else
+                        {
+                            context.Fail("employeeid_missing");
+                        }                        
                         return Task.CompletedTask;
                     },
                     OnAuthenticationFailed = context =>
@@ -144,7 +165,21 @@ namespace Mobi.Web
                         context.HandleResponse();
                         context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                         context.Response.ContentType = "application/json";
-                        return context.Response.WriteAsync("{\"error\":\"Unauthorized - Invalid or missing JWT token.\"}");
+
+                        // Customize based on the reason if needed
+                        var errorMessage = context.AuthenticateFailure.Message switch
+                        {
+                            "device_invalid" => "Access denied: your device is no longer authorized. Please log in again.",
+                            "employeeid_missing" => "Access denied: token is invalid or expired.",
+                            _ => "Unauthorized: token is invalid or expired."
+                        };
+
+                        return context.Response.WriteAsync($"{{\"error\":\"{errorMessage}\"}}");
+
+                        context.HandleResponse();
+                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        context.Response.ContentType = "application/json";
+                        return context.Response.WriteAsync("{\"error\":\"Unauthorized - token is invalid or device access has been revoked.\"}");
                     }
                 };
             });
