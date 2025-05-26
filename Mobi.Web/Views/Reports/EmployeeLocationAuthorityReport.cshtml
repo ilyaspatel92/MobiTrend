@@ -59,25 +59,29 @@
                             }
                         },
                         customize: function (win) {
-                            win.document.addEventListener('DOMContentLoaded', function () {
-                                let body = win.document.body;
-                                if (body) {
-                                    $(body).css({
-                                        'font-size': '14px',
-                                        'text-align': 'center'
-                                    });
-
-                                    $(body).find('table').addClass('display').css({
-                                        'width': '100%',
-                                        'border-collapse': 'collapse'
-                                    });
-
-                                    $(body).find('table th, table td').css({
-                                        'border': '1px solid black',
-                                        'padding': '8px'
-                                    });
+                                let body = win.document.body;                                
+                                let titleElement = win.document.querySelector('h1');
+                                if (titleElement) {
+                                    titleElement.style.fontSize = "16px";
+                                    titleElement.style.marginBottom = "10px";
                                 }
-                            });
+                                $(body).css({
+                                    'font-size': '12px',
+                                    'text-align': 'center',
+                                    'margin': '10px'
+                                });
+                                $(body).find('table')
+                                    .addClass('table table-bordered')
+                                    .css({
+                                        'width': '100%',
+                                        'border-collapse': 'collapse',
+                                        'margin-top': '20px'
+                                });
+                                $(body).find('table th, table td').css({
+                                    'border': '1px solid black',
+                                    'padding': '5px',
+                                    'font-size': '12px'
+                                });
                         }
                     }
                 ],

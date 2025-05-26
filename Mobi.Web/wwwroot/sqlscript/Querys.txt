@@ -1763,11 +1763,11 @@ VALUES
 -- English
 INSERT INTO LocaleStringResource (LanguageId, ResourceName, ResourceValue)
 VALUES 
-(1, 'mobi.account.login.brandname', 'Mobi Admin'),
-(1, 'mobi.account.login.admin', 'Admin Login');
+(1, 'mobi.account.login.brandname', 'Mobi'),
+(1, 'mobi.account.login.admin', 'Admin');
 
 -- Arabic
 INSERT INTO LocaleStringResource (LanguageId, ResourceName, ResourceValue)
 VALUES 
-(2, 'mobi.account.login.brandname', 'موبي المسؤول'),
-(2, 'mobi.account.login.admin', 'تسجيل دخول المسؤول');
+(2, 'Mobi.Account.Login.Brand', 'موبي'),
+(2, 'Mobi.Account.Login.admin', 'المسؤول')
