@@ -69,6 +69,7 @@ namespace Mobi.Web.Controllers
                   log,
                   emp.NameEng,
                   emp.Id,
+                  emp.FileNumber
               });
 
             if (startDate.HasValue)
@@ -87,15 +88,17 @@ namespace Mobi.Web.Controllers
                 return new EmployeeAttendanceLogModel
                 {
                     Id = entry.log.Id,
+                    FileNumber = entry.FileNumber,
                     EmployeeName = entry.NameEng,
                     Date = kuwaitTime.ToString("dd/MM/yyyy"),
                     Time = kuwaitTime.ToString("hh:mm tt"),
                     ActionTypeId = entry.log.ActionTypeId,
                     ActionTypeName = GetActionTypeName(entry.log.ActionTypeId),
                     ProofType = GetProofType(entry.log.ProofTypeId),
-                    Location = entry.log.LocationId == 0
-                        ? "Free Location"
-                        : _locationService.GetLocationById(Convert.ToInt32(entry.log.LocationId))?.LocationNameEnglish,
+                    Location = entry.log.CurrentLocation,
+                    //Location = entry.log.LocationId == 0
+                    //    ? "Free Location"
+                    //    : _locationService.GetLocationById(Convert.ToInt32(entry.log.LocationId))?.LocationNameEnglish,
                     ActionTypeStatus = entry.log.ActionTypeId == 1
                 };
             }).ToList();
@@ -245,16 +248,12 @@ namespace Mobi.Web.Controllers
                 .Join(_employeeRepository.GetAll(),
                       log => log.EmployeeId,
                       emp => emp.Id,
-                      (log, emp) => new { log, emp.NameEng, emp.Id })
+                      (log, emp) => new { log, emp.NameEng, emp.Id , emp.FileNumber })
                 .OrderBy(entry => entry.Id)
                 .ThenBy(entry => entry.log.AttendanceDateTime);
 
-            // Optional employee filter
-            // if (employeeId.HasValue && employeeId > 0)
-            //     query = query.Where(entry => entry.Id == employeeId);
-
             var groupedData = query.AsEnumerable()
-                .GroupBy(entry => new { entry.Id, entry.NameEng })
+                .GroupBy(entry => new { entry.Id, entry.NameEng , entry.FileNumber })
                 .Select(group =>
                 {
                     int totalMinutes = 0;
@@ -275,10 +274,9 @@ namespace Mobi.Web.Controllers
                     }
 
                     bool hasMissingOut = inQueue.Count > 0;
-
                     return new
                     {
-                        EmployeeId = group.Key.Id,
+                        EmployeeId = group.Key.FileNumber,
                         EmployeeName = group.Key.NameEng,
                         TotalHours = totalMinutes / 60,
                         TotalMinutes = totalMinutes % 60,
@@ -316,11 +314,11 @@ namespace Mobi.Web.Controllers
                 .Join(_employeeRepository.GetAll(),
                       log => log.EmployeeId,
                       emp => emp.Id,
-                      (log, emp) => new { log, emp.NameEng, emp.Id })
+                      (log, emp) => new { log, emp.NameEng, emp.Id, emp.FileNumber })
                 .ToList();
 
             var groupedData = query
-                .GroupBy(entry => new { entry.Id, entry.NameEng, entry.log.AttendanceDateTime.Date })
+                .GroupBy(entry => new { entry.Id, entry.NameEng, entry.FileNumber, entry.log.AttendanceDateTime.Date })
                 .Select(group =>
                 {
                     var logs = group.OrderBy(x => x.log.AttendanceDateTime).ToList();
@@ -349,6 +347,7 @@ namespace Mobi.Web.Controllers
                         Day = group.Key.Date.DayOfWeek.ToString(),
                         EmployeeId = group.Key.Id,
                         EmployeeName = group.Key.NameEng,
+                        FileNumber = group.Key.FileNumber,
                         TotalHours = totalMinutes / 60,
                         TotalMinutes = totalMinutes % 60,
                         TotalTransactions = totalTransactions,
@@ -434,31 +433,51 @@ namespace Mobi.Web.Controllers
         [HttpGet]
         public IActionResult GetEmployeeLocationAuthorityReport()
         {
-            var employees = _employeeService.GetAllEmployees();
+            var allEmployees = _employeeService.GetAllEmployees();
+            var allEmployeeLocations = _employeeLocationService.GetAllEmployeeLocations();
+            var allLocations = _locationService.GetAllLocations();
 
-            var employeeData = employees
-                .SelectMany(e => _employeeLocationService.GetAllEmployeeLocations()
-                    .Where(el => el.EmployeeId == e.Id)
-                    .Join(_locationService.GetAllLocations(),
-                        el => el.LocationId,
-                        loc => loc.Id,
-                        (el, loc) => new
-                        {
-                            EmployeeId = e.Id,
-                            EmployeeName = e.NameEng,
-                            LocationName = loc.LocationNameEnglish ?? "N/A",
-                            ProofType = loc.ProofType == 1 ? "GPS" : "Beacon"
-                        }))
+            var reportData = allEmployees
+                .Select(emp =>
+                {
+                    var empLocationLinks = allEmployeeLocations
+                        .Where(el => el.EmployeeId == emp.Id)
+                        .ToList();
+
+                    var empLocations = empLocationLinks
+                        .Join(allLocations,
+                            el => el.LocationId,
+                            loc => loc.Id,
+                            (el, loc) => new
+                            {
+                                loc.LocationNameEnglish,
+                                loc.ProofType
+                            })
+                        .ToList();
+
+                    var locationNames = empLocations.Select(l => l.LocationNameEnglish).ToList();
+                    var isFreeLocation = empLocationLinks.Any(x => x.IsFreeLocation);
+
+                    return new
+                    {
+                        FileNumber = emp.FileNumber,
+                        EmployeeName = emp.NameEng,
+                        LocationName = locationNames.Any() ? string.Join(", ", locationNames) : "",
+                        ProofType = isFreeLocation ? "Free Location" : "GPS"
+                    };
+                })
                 .ToList();
 
             return Json(new
             {
                 draw = Request.Query["draw"],
-                recordsTotal = employees.Count(),
-                recordsFiltered = employeeData.Count(),
-                data = employeeData
+                recordsTotal = allEmployees.Count(),
+                recordsFiltered = reportData.Count(),
+                data = reportData
             });
         }
+
+
 
 
 

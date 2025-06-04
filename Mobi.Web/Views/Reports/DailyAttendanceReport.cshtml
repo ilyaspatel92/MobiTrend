@@ -44,6 +44,7 @@
                         <thead>
                             <tr>
                                 <th>#</th>
+                                <th>@T("Mobi.Employee.FileNumber")</th>
                                 <th>@T("Mobi.Reports.DailyAttendance.EmployeeName")</th>
                                 <th>@T("Mobi.Reports.DailyAttendance.Date")</th>
                                 <th>@T("Mobi.Reports.DailyAttendance.Time")</th>
@@ -109,6 +110,7 @@
                 ],
                 columns: [
                     { data: null, orderable: false, render: (data, type, row, meta) => meta.row + 1 },
+                    { data: 'fileNumber' },
                     { data: 'employeeName' },
                     { data: 'date' },
                     { data: 'time' },
