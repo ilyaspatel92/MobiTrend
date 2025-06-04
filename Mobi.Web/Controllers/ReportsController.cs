@@ -239,7 +239,6 @@ namespace Mobi.Web.Controllers
             return View();
         }
 
-        // Controller Code
         [HttpGet]
         public IActionResult GetMonthlyWorkingHours(int year, int month, int? employeeId)
         {
@@ -248,32 +247,48 @@ namespace Mobi.Web.Controllers
                 .Join(_employeeRepository.GetAll(),
                       log => log.EmployeeId,
                       emp => emp.Id,
-                      (log, emp) => new { log, emp.NameEng, emp.Id , emp.FileNumber })
+                      (log, emp) => new { log, emp.NameEng, emp.FileNumber, emp.Id })
                 .OrderBy(entry => entry.Id)
                 .ThenBy(entry => entry.log.AttendanceDateTime);
 
-            var groupedData = query.AsEnumerable()
-                .GroupBy(entry => new { entry.Id, entry.NameEng , entry.FileNumber })
+            var groupedData = query
+                .AsEnumerable()
+                .GroupBy(entry => new { entry.Id, entry.NameEng, entry.FileNumber })
                 .Select(group =>
                 {
-                    int totalMinutes = 0;
                     var logs = group.OrderBy(x => x.log.AttendanceDateTime).ToList();
                     var inQueue = new Queue<DateTime>();
+                    int totalMinutes = 0;
+                    bool hasMissingOut = false;
 
                     foreach (var entry in logs)
                     {
-                        if (entry.log.ActionTypeId == 1) // IN
+                        var time = entry.log.AttendanceDateTime;
+                        var type = entry.log.ActionTypeId;
+
+                        if (type == 1) // IN
                         {
-                            inQueue.Enqueue(entry.log.AttendanceDateTime);
+                            inQueue.Enqueue(time);
                         }
-                        else if (entry.log.ActionTypeId == 2 && inQueue.Count > 0) // OUT
+                        else if (type == 2 && inQueue.Count > 0) // OUT
                         {
-                            var inTimeVal = inQueue.Dequeue();
-                            totalMinutes += (int)Math.Round((entry.log.AttendanceDateTime - inTimeVal).TotalMinutes);
+                            var inTime = inQueue.Dequeue();
+                            if (inTime.Date == time.Date) // Only allow same-day IN/OUT
+                            {
+                                var duration = (int)Math.Ceiling((time - inTime).TotalMinutes);
+                                if (duration >= 0) totalMinutes += duration;
+                            }
+                            else
+                            {
+                                hasMissingOut = true; // OUT on different date, discard
+                            }
                         }
                     }
 
-                    bool hasMissingOut = inQueue.Count > 0;
+                    // If any INs remain unpaired
+                    if (inQueue.Count > 0)
+                        hasMissingOut = true;
+
                     return new
                     {
                         EmployeeId = group.Key.FileNumber,
@@ -292,6 +307,8 @@ namespace Mobi.Web.Controllers
                 data = groupedData
             });
         }
+
+
 
 
 
