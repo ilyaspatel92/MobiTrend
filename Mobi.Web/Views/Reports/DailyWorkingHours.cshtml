@@ -49,6 +49,8 @@
                         <thead>
                             <tr>
                                 <th>#</th>
+                                <th>@T("Mobi.Reports.EmployeeName")</th>
+                                <th>@T("Mobi.Employee.FileNumber")</th>
                                 <th>@T("Mobi.Reports.Date")</th>
                                 <th>@T("Mobi.Reports.Day")</th>
                                 <th>@T("Mobi.Reports.TotalHours")</th>
@@ -116,6 +118,8 @@
                 ],
                 columns: [
                     { data: null, orderable: false, render: function (data, type, row, meta) { return meta.row + 1; } },
+                    { data: 'employeeName' },
+                    { data: 'fileNumber' },
                     { data: 'date' },
                     { data: 'day' },
                     { data: 'totalHours' },

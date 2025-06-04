@@ -95,9 +95,10 @@ namespace Mobi.Web.Controllers
                     ActionTypeId = entry.log.ActionTypeId,
                     ActionTypeName = GetActionTypeName(entry.log.ActionTypeId),
                     ProofType = GetProofType(entry.log.ProofTypeId),
-                    Location = entry.log.LocationId == 0
-                        ? "Free Location"
-                        : _locationService.GetLocationById(Convert.ToInt32(entry.log.LocationId))?.LocationNameEnglish,
+                    Location = entry.log.CurrentLocation,
+                    //Location = entry.log.LocationId == 0
+                    //    ? "Free Location"
+                    //    : _locationService.GetLocationById(Convert.ToInt32(entry.log.LocationId))?.LocationNameEnglish,
                     ActionTypeStatus = entry.log.ActionTypeId == 1
                 };
             }).ToList();
@@ -313,11 +314,11 @@ namespace Mobi.Web.Controllers
                 .Join(_employeeRepository.GetAll(),
                       log => log.EmployeeId,
                       emp => emp.Id,
-                      (log, emp) => new { log, emp.NameEng, emp.Id })
+                      (log, emp) => new { log, emp.NameEng, emp.Id, emp.FileNumber })
                 .ToList();
 
             var groupedData = query
-                .GroupBy(entry => new { entry.Id, entry.NameEng, entry.log.AttendanceDateTime.Date })
+                .GroupBy(entry => new { entry.Id, entry.NameEng, entry.FileNumber, entry.log.AttendanceDateTime.Date })
                 .Select(group =>
                 {
                     var logs = group.OrderBy(x => x.log.AttendanceDateTime).ToList();
@@ -346,6 +347,7 @@ namespace Mobi.Web.Controllers
                         Day = group.Key.Date.DayOfWeek.ToString(),
                         EmployeeId = group.Key.Id,
                         EmployeeName = group.Key.NameEng,
+                        FileNumber = group.Key.FileNumber,
                         TotalHours = totalMinutes / 60,
                         TotalMinutes = totalMinutes % 60,
                         TotalTransactions = totalTransactions,

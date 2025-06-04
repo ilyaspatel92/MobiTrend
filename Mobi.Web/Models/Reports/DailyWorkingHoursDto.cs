@@ -5,6 +5,7 @@
         public string Date { get; set; }
         public string Day { get; set; }
         public int EmployeeId { get; set; }
+        public string FileNumber { get; set; }
         public string EmployeeName { get; set; }
         public int TotalHours { get; set; }
         public int TotalMinutes { get; set; }

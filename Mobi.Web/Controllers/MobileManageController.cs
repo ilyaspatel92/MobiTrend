@@ -118,6 +118,7 @@ namespace Mobi.Web.Controllers
                 employee.RegisterStatus = false;
                 employee.IsQrVerify = false;
                 employee.MobRegistrationDate = null;
+                _employeeService.UpdateEmployee(employee);
 
                 // Redirect to the RegisterMobile action with the employee ID
                 return RedirectToAction(nameof(RegisterMobile), new { id });
