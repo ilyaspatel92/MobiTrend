@@ -5,7 +5,7 @@ using System.Net.Mail;
 namespace Mobi.Service.EmailServices
 {
     /// <summary>
-    /// Email service implementation for sending emails.
+    /// Email service implementation for sending emails via Gmail SMTP.
     /// </summary>
     public class EmailService
     {
@@ -19,8 +19,8 @@ namespace Mobi.Service.EmailServices
         /// </summary>
         /// <param name="smtpHost">SMTP server host.</param>
         /// <param name="smtpPort">SMTP server port.</param>
-        /// <param name="smtpUser">SMTP username.</param>
-        /// <param name="smtpPass">SMTP password.</param>
+        /// <param name="smtpUser">SMTP username (email address).</param>
+        /// <param name="smtpPass">SMTP password (App Password for Gmail).</param>
         public EmailService(string smtpHost, int smtpPort, string smtpUser, string smtpPass)
         {
             _smtpHost = smtpHost ?? throw new ArgumentNullException(nameof(smtpHost));
@@ -47,38 +47,44 @@ namespace Mobi.Service.EmailServices
             try
             {
                 using (var client = CreateSmtpClient())
+                using (var mailMessage = CreateMailMessage(toEmail, subject, messageBody))
                 {
-                    var mailMessage = CreateMailMessage(toEmail, subject, messageBody);
-                    client.Send(mailMessage); // Send email synchronously
+                    client.Send(mailMessage);
                 }
+            }
+            catch (SmtpException smtpEx)
+            {
+                throw new InvalidOperationException("SMTP error occurred while sending email.", smtpEx);
             }
             catch (Exception ex)
             {
-                // Log or handle exception as needed
                 throw new InvalidOperationException("Failed to send email.", ex);
             }
         }
 
         /// <summary>
-        /// Creates and configures an SMTP client.
+        /// Configures the SMTP client.
         /// </summary>
-        /// <returns>A configured instance of SmtpClient.</returns>
+        /// <returns>A fully configured SmtpClient instance.</returns>
         private SmtpClient CreateSmtpClient()
         {
             return new SmtpClient(_smtpHost, _smtpPort)
             {
                 Credentials = new NetworkCredential(_smtpUser, _smtpPass),
-                EnableSsl = true
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Timeout = 10000
             };
         }
 
         /// <summary>
-        /// Creates and configures a MailMessage.
+        /// Creates the MailMessage with appropriate headers.
         /// </summary>
         /// <param name="toEmail">Recipient email address.</param>
-        /// <param name="subject">Email subject.</param>
-        /// <param name="messageBody">Email message body.</param>
-        /// <returns>A configured MailMessage object.</returns>
+        /// <param name="subject">Subject of the email.</param>
+        /// <param name="messageBody">HTML message body.</param>
+        /// <returns>Configured MailMessage object.</returns>
         private MailMessage CreateMailMessage(string toEmail, string subject, string messageBody)
         {
             var mailMessage = new MailMessage
@@ -86,7 +92,7 @@ namespace Mobi.Service.EmailServices
                 From = new MailAddress(_smtpUser, "AdminMobi Support"),
                 Subject = subject,
                 Body = messageBody,
-                IsBodyHtml = true // Send HTML emails
+                IsBodyHtml = true
             };
 
             mailMessage.To.Add(toEmail);

@@ -242,6 +242,8 @@ namespace Mobi.Web.Controllers
         [HttpGet]
         public IActionResult GetMonthlyWorkingHours(int year, int month, int? employeeId)
         {
+            var kuwaitTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Arab Standard Time");
+
             var query = _attendanceRepository.GetAll()
                 .Where(log => log.AttendanceDateTime.Year == year && log.AttendanceDateTime.Month == month)
                 .Join(_employeeRepository.GetAll(),
@@ -250,6 +252,12 @@ namespace Mobi.Web.Controllers
                       (log, emp) => new { log, emp.NameEng, emp.FileNumber, emp.Id })
                 .OrderBy(entry => entry.Id)
                 .ThenBy(entry => entry.log.AttendanceDateTime);
+
+            if (employeeId.HasValue)
+            {
+                query = query.Where(x => x.Id == employeeId.Value).OrderBy(entry => entry.Id)
+                .ThenBy(entry => entry.log.AttendanceDateTime);
+            }   
 
             var groupedData = query
                 .AsEnumerable()
@@ -263,29 +271,29 @@ namespace Mobi.Web.Controllers
 
                     foreach (var entry in logs)
                     {
-                        var time = entry.log.AttendanceDateTime;
+                        var timeKuwait = TimeZoneInfo.ConvertTimeFromUtc(entry.log.AttendanceDateTime, kuwaitTimeZone);
                         var type = entry.log.ActionTypeId;
 
                         if (type == 1) // IN
                         {
-                            inQueue.Enqueue(time);
+                            inQueue.Enqueue(timeKuwait);
                         }
                         else if (type == 2 && inQueue.Count > 0) // OUT
                         {
                             var inTime = inQueue.Dequeue();
-                            if (inTime.Date == time.Date) // Only allow same-day IN/OUT
+                            if (inTime.Date == timeKuwait.Date) // Same day after timezone conversion
                             {
-                                var duration = (int)Math.Ceiling((time - inTime).TotalMinutes);
-                                if (duration >= 0) totalMinutes += duration;
+                                var duration = (int)Math.Ceiling((timeKuwait - inTime).TotalMinutes);
+                                if (duration >= 0)
+                                    totalMinutes += duration;
                             }
                             else
                             {
-                                hasMissingOut = true; // OUT on different date, discard
+                                hasMissingOut = true;
                             }
                         }
                     }
 
-                    // If any INs remain unpaired
                     if (inQueue.Count > 0)
                         hasMissingOut = true;
 
@@ -307,6 +315,7 @@ namespace Mobi.Web.Controllers
                 data = groupedData
             });
         }
+
 
 
 
