@@ -242,8 +242,6 @@ namespace Mobi.Web.Controllers
         [HttpGet]
         public IActionResult GetMonthlyWorkingHours(int year, int month, int? employeeId)
         {
-            var kuwaitTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Arab Standard Time");
-
             var query = _attendanceRepository.GetAll()
                 .Where(log => log.AttendanceDateTime.Year == year && log.AttendanceDateTime.Month == month)
                 .Join(_employeeRepository.GetAll(),
@@ -255,9 +253,10 @@ namespace Mobi.Web.Controllers
 
             if (employeeId.HasValue)
             {
-                query = query.Where(x => x.Id == employeeId.Value).OrderBy(entry => entry.Id)
-                .ThenBy(entry => entry.log.AttendanceDateTime);
-            }   
+                query = query.Where(x => x.Id == employeeId.Value)
+                             .OrderBy(entry => entry.Id)
+                             .ThenBy(entry => entry.log.AttendanceDateTime);
+            }
 
             var groupedData = query
                 .AsEnumerable()
@@ -265,37 +264,53 @@ namespace Mobi.Web.Controllers
                 .Select(group =>
                 {
                     var logs = group.OrderBy(x => x.log.AttendanceDateTime).ToList();
-                    var inQueue = new Queue<DateTime>();
+                    var groupedByDate = logs.GroupBy(x => x.log.AttendanceDateTime.Date);
                     int totalMinutes = 0;
                     bool hasMissingOut = false;
 
-                    foreach (var entry in logs)
+                    foreach (var dateGroup in groupedByDate)
                     {
-                        var timeKuwait = TimeZoneInfo.ConvertTimeFromUtc(entry.log.AttendanceDateTime, kuwaitTimeZone);
-                        var type = entry.log.ActionTypeId;
+                        var dayLogs = dateGroup.OrderBy(x => x.log.AttendanceDateTime).ToList();
+                        var ins = new Queue<DateTime>();
+                        var outs = new Queue<DateTime>();
 
-                        if (type == 1) // IN
+                        foreach (var entry in dayLogs)
                         {
-                            inQueue.Enqueue(timeKuwait);
+                            if (entry.log.ActionTypeId == 1)
+                                ins.Enqueue(entry.log.AttendanceDateTime);
+                            else if (entry.log.ActionTypeId == 2)
+                                outs.Enqueue(entry.log.AttendanceDateTime);
                         }
-                        else if (type == 2 && inQueue.Count > 0) // OUT
+
+                        while (ins.Count > 0 && outs.Count > 0)
                         {
-                            var inTime = inQueue.Dequeue();
-                            if (inTime.Date == timeKuwait.Date) // Same day after timezone conversion
+                            var inTime = ins.Dequeue();
+                            var possibleOut = outs.FirstOrDefault(outTime => outTime > inTime && outTime.Date == inTime.Date);
+                            if (possibleOut != default)
                             {
-                                var duration = (int)Math.Ceiling((timeKuwait - inTime).TotalMinutes);
-                                if (duration >= 0)
-                                    totalMinutes += duration;
+                                outs = new Queue<DateTime>(outs.Where(x => x != possibleOut));
+                                var duration = (possibleOut - inTime).TotalMinutes;
+
+                                int rounded = 0;
+                                if (duration > 0 && duration < 1)
+                                    rounded = 1;
+                                else if (duration >= 1)
+                                    rounded = (int)Math.Floor(duration); // ✅ Use Floor to avoid overcounting
+
+                                totalMinutes += rounded;
                             }
                             else
                             {
                                 hasMissingOut = true;
+                                break;
                             }
                         }
-                    }
 
-                    if (inQueue.Count > 0)
-                        hasMissingOut = true;
+                        if (ins.Count > 0 || outs.Count > 0)
+                        {
+                            hasMissingOut = true;
+                        }
+                    }
 
                     return new
                     {
@@ -305,7 +320,8 @@ namespace Mobi.Web.Controllers
                         TotalMinutes = totalMinutes % 60,
                         Notes = hasMissingOut ? "Missing OUT" : ""
                     };
-                }).ToList();
+                })
+                .ToList();
 
             return Json(new
             {
@@ -315,10 +331,6 @@ namespace Mobi.Web.Controllers
                 data = groupedData
             });
         }
-
-
-
-
 
 
         #endregion
