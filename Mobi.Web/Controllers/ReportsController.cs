@@ -239,7 +239,6 @@ namespace Mobi.Web.Controllers
             return View();
         }
 
-        // Controller Code
         [HttpGet]
         public IActionResult GetMonthlyWorkingHours(int year, int month, int? employeeId)
         {
@@ -248,32 +247,71 @@ namespace Mobi.Web.Controllers
                 .Join(_employeeRepository.GetAll(),
                       log => log.EmployeeId,
                       emp => emp.Id,
-                      (log, emp) => new { log, emp.NameEng, emp.Id , emp.FileNumber })
+                      (log, emp) => new { log, emp.NameEng, emp.FileNumber, emp.Id })
                 .OrderBy(entry => entry.Id)
                 .ThenBy(entry => entry.log.AttendanceDateTime);
 
-            var groupedData = query.AsEnumerable()
-                .GroupBy(entry => new { entry.Id, entry.NameEng , entry.FileNumber })
+            if (employeeId.HasValue)
+            {
+                query = query.Where(x => x.Id == employeeId.Value)
+                             .OrderBy(entry => entry.Id)
+                             .ThenBy(entry => entry.log.AttendanceDateTime);
+            }
+
+            var groupedData = query
+                .AsEnumerable()
+                .GroupBy(entry => new { entry.Id, entry.NameEng, entry.FileNumber })
                 .Select(group =>
                 {
-                    int totalMinutes = 0;
                     var logs = group.OrderBy(x => x.log.AttendanceDateTime).ToList();
-                    var inQueue = new Queue<DateTime>();
+                    var groupedByDate = logs.GroupBy(x => x.log.AttendanceDateTime.Date);
+                    int totalMinutes = 0;
+                    bool hasMissingOut = false;
 
-                    foreach (var entry in logs)
+                    foreach (var dateGroup in groupedByDate)
                     {
-                        if (entry.log.ActionTypeId == 1) // IN
+                        var dayLogs = dateGroup.OrderBy(x => x.log.AttendanceDateTime).ToList();
+                        var ins = new Queue<DateTime>();
+                        var outs = new Queue<DateTime>();
+
+                        foreach (var entry in dayLogs)
                         {
-                            inQueue.Enqueue(entry.log.AttendanceDateTime);
+                            if (entry.log.ActionTypeId == 1)
+                                ins.Enqueue(entry.log.AttendanceDateTime);
+                            else if (entry.log.ActionTypeId == 2)
+                                outs.Enqueue(entry.log.AttendanceDateTime);
                         }
-                        else if (entry.log.ActionTypeId == 2 && inQueue.Count > 0) // OUT
+
+                        while (ins.Count > 0 && outs.Count > 0)
                         {
-                            var inTimeVal = inQueue.Dequeue();
-                            totalMinutes += (int)Math.Round((entry.log.AttendanceDateTime - inTimeVal).TotalMinutes);
+                            var inTime = ins.Dequeue();
+                            var possibleOut = outs.FirstOrDefault(outTime => outTime > inTime && outTime.Date == inTime.Date);
+                            if (possibleOut != default)
+                            {
+                                outs = new Queue<DateTime>(outs.Where(x => x != possibleOut));
+                                var duration = (possibleOut - inTime).TotalMinutes;
+
+                                int rounded = 0;
+                                if (duration > 0 && duration < 1)
+                                    rounded = 1;
+                                else if (duration >= 1)
+                                    rounded = (int)Math.Floor(duration); // ✅ Use Floor to avoid overcounting
+
+                                totalMinutes += rounded;
+                            }
+                            else
+                            {
+                                hasMissingOut = true;
+                                break;
+                            }
+                        }
+
+                        if (ins.Count > 0 || outs.Count > 0)
+                        {
+                            hasMissingOut = true;
                         }
                     }
 
-                    bool hasMissingOut = inQueue.Count > 0;
                     return new
                     {
                         EmployeeId = group.Key.FileNumber,
@@ -282,7 +320,8 @@ namespace Mobi.Web.Controllers
                         TotalMinutes = totalMinutes % 60,
                         Notes = hasMissingOut ? "Missing OUT" : ""
                     };
-                }).ToList();
+                })
+                .ToList();
 
             return Json(new
             {
@@ -292,7 +331,6 @@ namespace Mobi.Web.Controllers
                 data = groupedData
             });
         }
-
 
 
         #endregion

@@ -189,12 +189,38 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     return BadRequest(response);
                 }
 
-                var employee = _employeeService.GetEmployeeByEmail(queryModel.QrCode);
+                var parts = queryModel.QrCode.Split(':');
+                if (parts.Length != 2)
+                {
+                    response.Success = false;
+                    response.Message = "Invalid QR code format.";
+                    return BadRequest(response);
+                }
+
+                string email = parts[0];
+                string timestampString = parts[1];
+
+                if (!long.TryParse(timestampString, out var qrTimestamp))
+                {
+                    response.Success = false;
+                    response.Message = "Invalid timestamp in QR code.";
+                    return BadRequest(response);
+                }
+
+                var currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                if (currentTimestamp - qrTimestamp > 600)
+                {
+                    response.Success = false;
+                    response.Message = "QR code has expired.";
+                    return BadRequest(response);
+                }
+
+                var employee = _employeeService.GetEmployeeByEmail(email);
                 if (employee is null)
                 {
                     response.Success = false;
                     response.Message = "Using QR code record are not found";
-                    return BadRequest(response);  //OR return response
+                    return BadRequest(response);
                 }
 
                 dynamic empObject = new ExpandoObject();
@@ -563,8 +589,8 @@ namespace Mobi.Web.Areas.Admin.Controllers
 
                 if (queryModel.AttendanceDateTime.HasValue)
                 {
-                    var attendanceDateTime = queryModel.AttendanceDateTime.Value.Date;
-                    employeeAttendanceList = employeeAttendanceList.Where(x => x.AttendanceDateTime.Date == attendanceDateTime).ToList();
+                    var attendanceDateTime = queryModel.AttendanceDateTime.Value.Date.ToLocalTime();
+                    employeeAttendanceList = employeeAttendanceList.Where(x => x.AttendanceDateTime.Date.ToLocalTime() == attendanceDateTime).ToList();
                 }
 
                 var employeeAttendanceResponseList = new List<EmployeeAttendanceResponseModel>();

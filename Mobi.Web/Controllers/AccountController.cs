@@ -141,7 +141,7 @@ namespace Mobi.Web.Controllers
             message.AppendLine("If you did not request this, please ignore this email.");
 
             // Configure your email service with SMTP details
-            var emailService = new EmailService("smtp.gmail.com", 587, "ppatel14151617@gmail.com", "pP@telTest");
+            var emailService = new EmailService("smtp.gmail.com", 587, "Mfppkw@gmail.com", "Android@2020");
 
             try
             {
