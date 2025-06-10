@@ -6,6 +6,7 @@ namespace Mobi.Data.Domain
     {
         public int EmployeeId { get; set; }
         public DateTime AttendanceDateTime { get; set; }
+        public DateTime LocalTimeAttendanceDateTime { get; set; }
         public int ActionTypeId { get; set; }
         public bool ActionTypeStatus { get; set; }
         public int ProofTypeId { get; set; }
