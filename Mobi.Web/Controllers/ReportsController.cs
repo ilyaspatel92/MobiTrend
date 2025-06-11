@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Xml.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Mobi.Data.Domain;
 using Mobi.Data.Domain.Employees;
 using Mobi.Data.Enums;
@@ -10,6 +11,8 @@ using Mobi.Web.Factories.Employees;
 using Mobi.Web.Models.EmployeeAttendance;
 using Mobi.Web.Models.Employees;
 using Mobi.Web.Models.Reports;
+using Mobi.Web.Utilities.PDF;
+using QuestPDF.Fluent;
 using static Azure.Core.HttpHeader;
 using static QRCoder.PayloadGenerator;
 
@@ -26,6 +29,7 @@ namespace Mobi.Web.Controllers
         private readonly ILocationService _locationService;
         private readonly IRepository<Location> _locationRepository;
         private readonly IEmployeeLocationService _employeeLocationService;
+
         #endregion
 
         #region Ctor
@@ -43,13 +47,56 @@ namespace Mobi.Web.Controllers
             _employeeRepository = employeeRepository;
             _locationService = locationService;
             _locationRepository = locationRepository;
-            _employeeLocationService = employeeLocationService;
+            _employeeLocationService = employeeLocationService;            
         }
         #endregion
 
         #region Methods
 
         #region Daily Attendance Reports
+        private List<EmployeeAttendanceLogModel> GetAttendanceLogs(DateTime? startDate, DateTime? endDate, int employeeId)
+        {
+            var query = _attendanceRepository.GetAll()
+                .Join(_employeeRepository.GetAll(),
+                      log => log.EmployeeId,
+                      emp => emp.Id,
+                      (log, emp) => new
+                      {
+                          log,
+                          emp.NameEng,
+                          emp.Id,
+                          emp.FileNumber
+                      });
+
+            if (startDate.HasValue)
+                query = query.Where(entry => entry.log.AttendanceDateTime.Date >= startDate.Value.Date);
+            if (endDate.HasValue)
+                query = query.Where(entry => entry.log.AttendanceDateTime.Date <= endDate.Value.Date);
+            if (employeeId > 0)
+                query = query.Where(entry => entry.Id == employeeId);
+
+            var kuwaitTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Arab Standard Time");
+
+            return query.Select(entry =>
+            {
+                var kuwaitTime = TimeZoneInfo.ConvertTimeFromUtc(entry.log.AttendanceDateTime, kuwaitTimeZone);
+
+                return new EmployeeAttendanceLogModel
+                {
+                    Id = entry.log.Id,
+                    FileNumber = entry.FileNumber,
+                    EmployeeName = entry.NameEng,
+                    Date = kuwaitTime.ToString("dd/MM/yyyy"),
+                    Time = kuwaitTime.ToString("hh:mm tt"),
+                    ActionTypeId = entry.log.ActionTypeId,
+                    ActionTypeName = GetActionTypeName(entry.log.ActionTypeId),
+                    ProofType = GetProofType(entry.log.ProofTypeId),
+                    Location = entry.log.CurrentLocation,
+                    ActionTypeStatus = entry.log.ActionTypeId == 1
+                };
+            }).ToList();
+        }
+
 
         [HttpGet]
         public IActionResult DailyAttendanceReport()
@@ -58,74 +105,41 @@ namespace Mobi.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetDailyAttendanceData(DateTime? startDate, DateTime? endDate, int EmployeeId)
+        public IActionResult GetDailyAttendanceData(DateTime? startDate, DateTime? endDate, int employeeId)
         {
-            var query = _attendanceRepository.GetAll()
-        .Join(_employeeRepository.GetAll(),
-              log => log.EmployeeId,
-              emp => emp.Id,
-              (log, emp) => new
-              {
-                  log,
-                  emp.NameEng,
-                  emp.Id,
-                  emp.FileNumber
-              });
-
-            if (startDate.HasValue)
-                query = query.Where(entry => entry.log.LocalTimeAttendanceDateTime.Date >= startDate.Value.Date);
-            if (endDate.HasValue)
-                query = query.Where(entry => entry.log.LocalTimeAttendanceDateTime.Date <= endDate.Value.Date);
-            if (EmployeeId > 0)
-                query = query.Where(entry => entry.Id == EmployeeId);
-
-            var kuwaitTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Arab Standard Time");
-
-            var attendanceLogs = query.Select(entry =>
-            {
-                return new EmployeeAttendanceLogModel
-                {
-                    Id = entry.log.Id,
-                    FileNumber = entry.FileNumber,
-                    EmployeeName = entry.NameEng,
-                    //Date = kuwaitTime.ToString("dd/MM/yyyy"),
-                    //Time = kuwaitTime.ToString("hh:mm tt"),
-                    Date = entry.log.LocalTimeAttendanceDateTime.ToString("dd/MM/yyyy"),
-                    Time = entry.log.LocalTimeAttendanceDateTime.ToString("hh:mm tt"),
-                    ActionTypeId = entry.log.ActionTypeId,
-                    ActionTypeName = GetActionTypeName(entry.log.ActionTypeId),
-                    ProofType = GetProofType(entry.log.ProofTypeId),
-                    Location = entry.log.CurrentLocation,
-                    //Location = entry.log.LocationId == 0
-                    //    ? "Free Location"
-                    //    : _locationService.GetLocationById(Convert.ToInt32(entry.log.LocationId))?.LocationNameEnglish,
-                    ActionTypeStatus = entry.log.ActionTypeId == 1
-                };
-            }).ToList();
-
-
-            //var attendanceLogs = query.Select(entry => new EmployeeAttendanceLogModel
-            //{
-            //    Id = entry.log.Id,
-            //    EmployeeName = entry.NameEng,
-            //    Date = entry.log.AttendanceDateTime.ToLocalTime().ToString("dd/MM/yyyy"),
-            //    Time = entry.log.AttendanceDateTime.ToLocalTime().ToString("hh:mm tt"),
-            //    ActionTypeId = entry.log.ActionTypeId,
-            //    ActionTypeName = GetActionTypeName(entry.log.ActionTypeId),
-            //    ProofType = GetProofType(entry.log.ProofTypeId),
-            //    Location = entry.log.LocationId ==0 ? "Free Location" : _locationService.GetLocationById(Convert.ToInt32(entry.log.LocationId))?.LocationNameEnglish,
-            //    ActionTypeStatus = entry.log.ActionTypeId == 1
-            //}).ToList();
-
+            var logs = GetAttendanceLogs(startDate, endDate, employeeId);
 
             return Json(new
             {
                 draw = Request.Query["draw"],
-                recordsTotal = query.Count(),
-                recordsFiltered = attendanceLogs.Count(),
-                data = attendanceLogs
+                recordsTotal = logs.Count,
+                recordsFiltered = logs.Count,
+                data = logs
             });
         }
+
+        [HttpGet]
+        public IActionResult DownloadDailyAttendancePdf(DateTime? startDate, DateTime? endDate, int employeeId)
+        {
+            var logs = GetAttendanceLogs(startDate, endDate, employeeId); // Your method
+            var employeeName = logs.FirstOrDefault()?.EmployeeName ?? "Unknown";
+
+            //var report = new DailyAttendanceReport(logs, $"Daily Attendance Report - {employeeName}", "USER1");
+            var report = new DailyAttendanceReport(
+            logs,
+           title: $"Daily Attendance Report - {employeeName}",
+           printedBy: User.Identity.Name,
+           isRtl: false
+       );
+
+            using var stream = new MemoryStream();
+            report.GeneratePdf(stream);
+            return File(stream.ToArray(), "application/pdf", $"AttendanceReport_{employeeName}_{DateTime.Now:yyyyMMdd}.pdf");
+        }
+
+
+
+
 
         private string GetActionTypeName(int actionTypeId)
         {
