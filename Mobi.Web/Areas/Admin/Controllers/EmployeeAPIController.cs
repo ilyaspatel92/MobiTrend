@@ -525,6 +525,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                 {
                     EmployeeId = employee.Id,
                     AttendanceDateTime = queryModel.AttendanceDateTime,
+                    LocalTimeAttendanceDateTime = queryModel.AttendanceDateTime.ToLocalTime(),
                     TransferDateTime = queryModel.TransferDateTime,
                     MobileSerialNumber = queryModel.MobileSerialNumber,
                     LocationId = queryModel.LocationId,
