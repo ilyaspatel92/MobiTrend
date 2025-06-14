@@ -8,14 +8,15 @@ namespace Mobi.Web.Utilities.PDF
 {
     public abstract class BaseReportDocument : IDocument
     {
-        readonly string _title, _printedBy, _logoPath;
-        readonly DateTime _printTime;
+        readonly string _title, _printedBy, _logoPath, _dateRangeText;
+        readonly DateTime _printTime;        
         readonly bool _isRtl;
 
         protected BaseReportDocument(string title,
                                      string printedBy = "SYSTEM",
                                      string logoPath = null,
-                                     bool isRtl = false)
+                                     bool isRtl = false,
+                                     string dateRangeText = default)
         {
             _title = title;
             _printedBy = printedBy;
@@ -23,6 +24,7 @@ namespace Mobi.Web.Utilities.PDF
             _isRtl = isRtl;
             _logoPath = logoPath
                          ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "pdflogo.png");
+            _dateRangeText = dateRangeText ?? "";
         }
 
         public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
@@ -48,26 +50,39 @@ namespace Mobi.Web.Utilities.PDF
         }
 
         // 1) Bordered header with logo + dynamic title
-        void ComposeHeader(IContainer c)
+        private void ComposeHeader(IContainer container)
         {
-            c.Border(1)
-             .Padding(8)
-             .Row(r =>
-             {
-                 r.ConstantColumn(60)
-                  .Height(40)
-                  .AlignMiddle()
-                  .Image(_logoPath, ImageScaling.FitArea);
+            container
+                .Border(1)
+                .Padding(0)
+                .Row(row =>
+                {
+                    // LEFT BLOCK: Company name, title, optional date range
+                    row.RelativeColumn().Padding(8).Column(col =>
+                    {
+                        col.Item().Text("Company XYZ").FontSize(10).SemiBold();
+                        col.Item().LineHorizontal(1); // divider line
+                        col.Item().PaddingTop(2).Text(_title).FontSize(12).Bold();
 
-                 r.Spacing(10);
+                        if (!string.IsNullOrEmpty(_dateRangeText))
+                        {
+                            col.Item().PaddingTop(2).Text(_dateRangeText).FontSize(10).Italic();
+                        }
+                    });
+                    // MIDDLE COLUMN: vertical line
+                    row.ConstantColumn(1).Background(Colors.Grey.Lighten2);
 
-                 r.RelativeColumn()
-                  .AlignMiddle()
-                  .Text(_title)
-                  .FontSize(14)
-                  .SemiBold();
-             });
+                    // RIGHT BLOCK: Logo
+                    row.ConstantColumn(60).Padding(8).AlignMiddle().AlignCenter().Element(e =>
+                    {
+                        if (File.Exists(_logoPath))
+                            e.Image(_logoPath, ImageScaling.FitArea);
+                    });
+                });
         }
+
+
+
 
         // Wraps child content in its own bordered box
         void ComposeContentContainer(IContainer c)

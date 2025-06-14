@@ -129,7 +129,8 @@ namespace Mobi.Web.Controllers
             logs,
            title: $"Daily Attendance Report - {employeeName}",
            printedBy: User.Identity.Name,
-           isRtl: false
+           _dateRangeText: $"From {startDate.Value.ToString("dd/MM/yy")} To {endDate.Value.ToString("dd/MM/yy")}",
+        isRtl: false           
        );
 
             using var stream = new MemoryStream();

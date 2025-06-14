@@ -13,8 +13,9 @@ namespace Mobi.Web.Utilities.PDF
         public DailyAttendanceReport(List<EmployeeAttendanceLogModel> logs,
                                      string title,
                                      string printedBy,
+                                     string _dateRangeText,
                                      bool isRtl = false)
-          : base(title, printedBy, isRtl: isRtl)
+          : base(title, printedBy, isRtl: isRtl,dateRangeText: _dateRangeText)
         {
             _logs = logs;
         }
@@ -26,14 +27,14 @@ namespace Mobi.Web.Utilities.PDF
                 // Column widths
                 table.ColumnsDefinition(cols =>
                 {
-                    cols.ConstantColumn(20);
-                    cols.ConstantColumn(60);
-                    cols.RelativeColumn();
-                    cols.ConstantColumn(70);
-                    cols.ConstantColumn(60);
-                    cols.ConstantColumn(50);
-                    cols.RelativeColumn();
-                    cols.ConstantColumn(50);
+                    cols.ConstantColumn(20);    // #
+                    cols.ConstantColumn(60);    // File No
+                    cols.RelativeColumn();      // Name
+                    cols.ConstantColumn(70);    // Date
+                    cols.ConstantColumn(60);    // Time
+                    cols.ConstantColumn(50);    // Type
+                    cols.RelativeColumn();      // Location
+                    cols.ConstantColumn(50);    // Proof
                 });
 
                 // Header row
@@ -42,9 +43,9 @@ namespace Mobi.Web.Utilities.PDF
                     foreach (var h in new[] { "#", "File No", "Name", "Date", "Time", "Type", "Location", "Proof" })
                     {
                         header.Cell()
-                              .Background("#f1f1f1")
+                              .Border(1)
                               .Padding(4)
-                              .BorderBottom(1)
+                              .Background("#f1f1f1")
                               .AlignCenter()
                               .Text(h).SemiBold().FontSize(9);
                     }
@@ -54,16 +55,17 @@ namespace Mobi.Web.Utilities.PDF
                 int idx = 1;
                 foreach (var item in _logs)
                 {
-                    table.Cell().Padding(3).AlignCenter().Text(idx++.ToString());
-                    table.Cell().Padding(3).AlignCenter().Text(item.FileNumber ?? "");
-                    table.Cell().Padding(3).AlignLeft().Text(item.EmployeeName ?? "");
-                    table.Cell().Padding(3).AlignCenter().Text(item.Date ?? "");
-                    table.Cell().Padding(3).AlignCenter().Text(item.Time ?? "");
-                    table.Cell().Padding(3).AlignCenter().Text(item.ActionTypeName ?? "");
-                    table.Cell().Padding(3).AlignLeft().Text(item.Location ?? "").WrapAnywhere();
-                    table.Cell().Padding(3).AlignCenter().Text(item.ProofType ?? "");
+                    table.Cell().Border(1).Padding(3).AlignCenter().Text(idx++.ToString());
+                    table.Cell().Border(1).Padding(3).AlignCenter().Text(item.FileNumber ?? "");
+                    table.Cell().Border(1).Padding(3).AlignLeft().Text(item.EmployeeName ?? "");
+                    table.Cell().Border(1).Padding(3).AlignCenter().Text(item.Date ?? "");
+                    table.Cell().Border(1).Padding(3).AlignCenter().Text(item.Time ?? "");
+                    table.Cell().Border(1).Padding(3).AlignCenter().Text(item.ActionTypeName ?? "");
+                    table.Cell().Border(1).Padding(3).AlignLeft().Text(item.Location ?? "").WrapAnywhere();
+                    table.Cell().Border(1).Padding(3).AlignCenter().Text(item.ProofType ?? "");
                 }
             });
         }
+
     }
 }
