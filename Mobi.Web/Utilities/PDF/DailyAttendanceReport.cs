@@ -24,10 +24,10 @@ namespace Mobi.Web.Utilities.PDF
         {
             c.Table(table =>
             {
-                // Column widths
+                // Define column widths
                 table.ColumnsDefinition(cols =>
                 {
-                    cols.ConstantColumn(20);    // #
+                    cols.ConstantColumn(30);    // #
                     cols.ConstantColumn(60);    // File No
                     cols.RelativeColumn();      // Name
                     cols.ConstantColumn(70);    // Date
@@ -37,7 +37,7 @@ namespace Mobi.Web.Utilities.PDF
                     cols.ConstantColumn(50);    // Proof
                 });
 
-                // Header row
+                // Table Header
                 table.Header(header =>
                 {
                     foreach (var h in new[] { "#", "File No", "Name", "Date", "Time", "Type", "Location", "Proof" })
@@ -51,21 +51,22 @@ namespace Mobi.Web.Utilities.PDF
                     }
                 });
 
-                // Data rows
+                // Table Rows — Apply .ShowEntire() to each cell!
                 int idx = 1;
                 foreach (var item in _logs)
                 {
-                    table.Cell().Border(1).Padding(3).AlignCenter().Text(idx++.ToString());
-                    table.Cell().Border(1).Padding(3).AlignCenter().Text(item.FileNumber ?? "");
-                    table.Cell().Border(1).Padding(3).AlignLeft().Text(item.EmployeeName ?? "");
-                    table.Cell().Border(1).Padding(3).AlignCenter().Text(item.Date ?? "");
-                    table.Cell().Border(1).Padding(3).AlignCenter().Text(item.Time ?? "");
-                    table.Cell().Border(1).Padding(3).AlignCenter().Text(item.ActionTypeName ?? "");
-                    table.Cell().Border(1).Padding(3).AlignLeft().Text(item.Location ?? "").WrapAnywhere();
-                    table.Cell().Border(1).Padding(3).AlignCenter().Text(item.ProofType ?? "");
+                    table.Cell().Element(e => e.ShowEntire()).Border(1).Padding(3).AlignCenter().Text(idx++.ToString());
+                    table.Cell().Element(e => e.ShowEntire()).Border(1).Padding(3).AlignCenter().Text(item.FileNumber ?? "");
+                    table.Cell().Element(e => e.ShowEntire()).Border(1).Padding(3).AlignLeft().Text(item.EmployeeName ?? "");
+                    table.Cell().Element(e => e.ShowEntire()).Border(1).Padding(3).AlignCenter().Text(item.Date ?? "");
+                    table.Cell().Element(e => e.ShowEntire()).Border(1).Padding(3).AlignCenter().Text(item.Time ?? "");
+                    table.Cell().Element(e => e.ShowEntire()).Border(1).Padding(3).AlignCenter().Text(item.ActionTypeName ?? "");
+                    table.Cell().Element(e => e.ShowEntire()).Border(1).Padding(3).AlignLeft().Text(item.Location ?? "").WrapAnywhere();
+                    table.Cell().Element(e => e.ShowEntire()).Border(1).Padding(3).AlignCenter().Text(item.ProofType ?? "");
                 }
             });
         }
+
 
     }
 }
