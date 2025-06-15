@@ -31,7 +31,10 @@ using Mobi.Web.Factories.LocationBeacons;
 using Mobi.Web.Factories.Locations;
 using Mobi.Web.Utilities;
 using Mobi.Web.Utilities.Filters;
+using Mobi.Web.Utilities.PDF;
 using System.Text;
+using QuestPDF;
+
 
 namespace Mobi.Web
 {
@@ -63,6 +66,10 @@ namespace Mobi.Web
             services.AddControllers();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddHttpContextAccessor();
+
+            QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+            QuestPDF.Settings.EnableDebugging = true;
+
 
             // Configure Kestrel's request limits
             services.Configure<KestrelServerOptions>(Configuration.GetSection("Kestrel"));
@@ -250,7 +257,7 @@ namespace Mobi.Web
             services.AddScoped<IEmployeeAttendanceService, EmployeeAttendanceService>();
             services.AddScoped<ISystemUserAuthorityService, SystemUserAuthorityService>();
             services.AddScoped<IAccessControlService, AccessControlService>();
-            
+
 
             // Register Factories
             services.AddScoped<ISystemUserFactory, SystemUserFactory>();

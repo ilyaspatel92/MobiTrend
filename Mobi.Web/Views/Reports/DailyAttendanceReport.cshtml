@@ -38,6 +38,11 @@
                         <div class="col-md-3 mt-4">
                             <button id="searchBtn" class="btn btn-primary">@T("Mobi.Reports.DailyAttendance.Search")</button>
                         </div>
+                        <div class="col-md-3 mt-2">
+                            <button id="downloadPdfBtn" class="btn btn-success">@T("Mobi.Reports.DailyAttendance.DownloadPdf")</button>
+                        </div>
+
+
                     </div>
 
                     <table id="attendanceTable" class="table table-bordered">
@@ -199,7 +204,36 @@
                     }
                 });
             });
+
+            $('#downloadPdfBtn').click(function () {
+            console.log("Print button");
+            let startDate = $('#startDate').val();
+            let endDate = $('#endDate').val();
+            let employeeId = $('#EmployeeId').val();
+
+            if (!startDate) {
+                alert("@T("Mobi.Reports.DailyAttendance.SelectStartDate")");
+                return;
+            }
+
+            if (!endDate) {
+                alert("@T("Mobi.Reports.DailyAttendance.SelectEndDate")");
+                return;
+            }
+
+            // Construct URL for PDF endpoint
+            let downloadUrl = '@Url.Action("DownloadDailyAttendancePdf", "Reports")'
+                            + '?startDate=' + encodeURIComponent(startDate)
+                            + '&endDate=' + encodeURIComponent(endDate)
+                            + '&employeeId=' + encodeURIComponent(employeeId);
+
+            window.open(downloadUrl, '_blank');
         });
+
+
+        });
+
+   
 
 
     </script>

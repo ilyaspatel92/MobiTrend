@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Mobi.Service.EmailServices;
 using Mobi.Service.Helpers;
 using Mobi.Service.SystemUser;
+using Mobi.Web.Models.Employees;
 using System.Security.Claims;
 using System.Text;
 
@@ -153,6 +154,9 @@ namespace Mobi.Web.Controllers
             {
                 Console.WriteLine($"Failed to send email: {ex.Message}");
             }
+            ViewBag.Token = token;
+            ViewBag.Email = user.Email;
+            ViewBag.UserName = user.EmployeeName;
 
             ViewBag.Message = "Password reset link has been sent to your email.";
 
@@ -170,11 +174,11 @@ namespace Mobi.Web.Controllers
             }
 
             // Verify token (example implementation)
-            //var isValid = _systemUserService.ValidatePasswordResetToken(email, token);
-            //if (!isValid)
-            //{
-            //    return BadRequest("Invalid or expired token.");
-            //}
+            var isValid = _systemUserService.ValidatePasswordResetToken(email, token);
+            if (!isValid)
+            {
+                return BadRequest("Invalid or expired token.");
+            }
 
             ViewBag.Token = token;
             ViewBag.Email = email;
@@ -182,32 +186,28 @@ namespace Mobi.Web.Controllers
             return View();
         }
 
-        // Reset Password POST
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public IActionResult ResetPassword(string token, string email, string newPassword)
+        public JsonResult ResetPassword([FromBody] ResetPasswordModel model)
         {
-            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(newPassword))
+            var user = _systemUserService.GetSystemUserByEmail(model.Email);
+
+            if (string.IsNullOrEmpty(model.Token) || string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.NewPassword) || user == null)
             {
-                ModelState.AddModelError("", "Invalid input.");
-                return View();
+                return Json(new { success = false, message = "Invalid input." });
             }
 
-            //Verify token
-            var isValid = _systemUserService.ValidatePasswordResetToken(email, token);
+            var isValid = _systemUserService.ValidatePasswordResetToken(model.Email, model.Token);
             if (!isValid)
             {
-                ModelState.AddModelError("", "Invalid or expired token.");
-                return View();
+                return Json(new { success = false, message = "Invalid or expired token." });
             }
 
-            // Update password
-            var hashedPassword = PasswordHelper.HashPassword(newPassword); // Use your hashing method
-            //_systemUserService.UpdatePassword(email, hashedPassword);
+            var hashedPassword = PasswordHelper.HashPassword(model.NewPassword);
+            _systemUserService.ChangePassword(user.Id, hashedPassword);
 
-            ViewBag.Message = "Password reset successfully!";
-            return RedirectToAction("Login");
+            return Json(new { success = true });
         }
 
         #endregion
