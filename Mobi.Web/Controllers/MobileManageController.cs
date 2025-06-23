@@ -147,17 +147,16 @@ namespace Mobi.Web.Controllers
 
         private string GenerateQrCode(string email)
         {
-            // Initialize the QRCode generator
+            var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var qrText = $"{email}:{timestamp}";
+            
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            QRCodeData qrCodeData = qrGenerator.CreateQrCode(email, QRCodeGenerator.ECCLevel.Q);
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrText, QRCodeGenerator.ECCLevel.Q);
 
-            // Generate the QRCode image
             BitmapByteQRCode qrCode = new BitmapByteQRCode(qrCodeData);
 
-            // Convert to Base64 string
             string base64String = Convert.ToBase64String(qrCode.GetGraphic(20));
 
-            // Return as a data URI for embedding in an <img> tag
             return string.Format("data:image/png;base64,{0}", base64String);
         }
     }
