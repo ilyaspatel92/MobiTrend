@@ -307,7 +307,17 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     return BadRequest(response);  //OR return response
                 }
 
-                var employee = _employeeService.GetEmployeeByEmail(empModel.QrCode);
+                var parts = empModel.QrCode.Split(':');
+                if (parts.Length != 2)
+                {
+                    response.Success = false;
+                    response.Message = "Invalid QR code format.";
+                    return BadRequest(response);
+                }
+
+                string email = parts[0];
+
+                var employee = _employeeService.GetEmployeeByEmail(email);
                 if (employee is null)
                 {
                     response.Success = false;
