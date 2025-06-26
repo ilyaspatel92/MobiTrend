@@ -8,6 +8,7 @@ namespace Mobi.Web.Models.APIModels
         public string? LocationName { get; set; }
         public int LocationId { get; set; }
         public DateTime AttendanceDateTime { get; set; }
+        public DateTime LocalTimeAttendanceDateTime { get; set; }
         public int ActionType { get; set; }
         public int ActionTypeMode { get; set; }
         public DateTime TransferDateTime { get; set; }

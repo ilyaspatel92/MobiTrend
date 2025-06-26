@@ -42,11 +42,11 @@ namespace Mobi.Web.Controllers
                 });
 
             if (startDate.HasValue && endDate.HasValue)
-                query = query.Where(entry => entry.Log.AttendanceDateTime.Date >= startDate.Value.Date && entry.Log.AttendanceDateTime.Date <= endDate.Value.Date);
+                query = query.Where(entry => entry.Log.LocalTimeAttendanceDateTime.Date >= startDate.Value.Date && entry.Log.LocalTimeAttendanceDateTime.Date <= endDate.Value.Date);
             else if (startDate.HasValue)
-                query = query.Where(entry => entry.Log.AttendanceDateTime.Date >= startDate.Value.Date);
+                query = query.Where(entry => entry.Log.LocalTimeAttendanceDateTime.Date >= startDate.Value.Date);
             else if (endDate.HasValue)
-                query = query.Where(entry => entry.Log.AttendanceDateTime.Date <= endDate.Value.Date);
+                query = query.Where(entry => entry.Log.LocalTimeAttendanceDateTime.Date <= endDate.Value.Date);
 
             if (!string.IsNullOrWhiteSpace(employeeName))
             {
@@ -78,7 +78,7 @@ namespace Mobi.Web.Controllers
                 Id = entry.Log.Id,
                 FileNumber = entry.FileNumber,
                 EmployeeName = entry.EmployeeName,
-                DateAndTime = entry.Log.AttendanceDateTime.ToLocalTime().ToString("dd/MM/yyyy @ hh:mm tt"),
+                DateAndTime = entry.Log.LocalTimeAttendanceDateTime.ToString("dd/MM/yyyy @ hh:mm tt"),
                 ActionTypeName = GetActionTypeName(entry.Log.ActionTypeId),
                 ActionTypeId = entry.Log.ActionTypeId,
                 ActionTypeStatus = entry.Log.ActionTypeStatus,
@@ -141,11 +141,11 @@ namespace Mobi.Web.Controllers
                              };
 
             if (startDate.HasValue && endDate.HasValue)
-                joinedLogs = joinedLogs.Where(entry => entry.Log.AttendanceDateTime.Date >= startDate.Value && entry.Log.AttendanceDateTime.Date <= endDate.Value);
+                joinedLogs = joinedLogs.Where(entry => entry.Log.LocalTimeAttendanceDateTime.Date >= startDate.Value && entry.Log.LocalTimeAttendanceDateTime.Date <= endDate.Value);
             else if (startDate.HasValue)
-                joinedLogs = joinedLogs.Where(entry => entry.Log.AttendanceDateTime.Date >= startDate.Value);
+                joinedLogs = joinedLogs.Where(entry => entry.Log.LocalTimeAttendanceDateTime.Date >= startDate.Value);
             else if (endDate.HasValue)
-                joinedLogs = joinedLogs.Where(entry => entry.Log.AttendanceDateTime.Date <= endDate.Value);
+                joinedLogs = joinedLogs.Where(entry => entry.Log.LocalTimeAttendanceDateTime.Date <= endDate.Value);
 
             if (!string.IsNullOrWhiteSpace(employeeName))
             {
@@ -162,7 +162,7 @@ namespace Mobi.Web.Controllers
                 Id = entry.Log.Id,
                 FileNumber = entry.FileNumber,
                 EmployeeName = entry.EmployeeName,
-                DateAndTime = entry.Log.AttendanceDateTime.ToLocalTime().ToString("MM/dd/yyyy @ hh:mm tt"),
+                DateAndTime = entry.Log.LocalTimeAttendanceDateTime.ToString("MM/dd/yyyy @ hh:mm tt"),
                 ActionTypeName = GetActionTypeName(entry.Log.ActionTypeId),
                 ActionTypeId = entry.Log.ActionTypeId,
                 ActionTypeStatus = entry.Log.ActionTypeStatus,
@@ -199,11 +199,11 @@ namespace Mobi.Web.Controllers
                              };
 
             if (startDate.HasValue && endDate.HasValue)
-                joinedLogs = joinedLogs.Where(entry => entry.Log.AttendanceDateTime.Date >= startDate.Value && entry.Log.AttendanceDateTime.Date <= endDate.Value);
+                joinedLogs = joinedLogs.Where(entry => entry.Log.LocalTimeAttendanceDateTime.Date >= startDate.Value && entry.Log.LocalTimeAttendanceDateTime.Date <= endDate.Value);
             else if (startDate.HasValue)
-                joinedLogs = joinedLogs.Where(entry => entry.Log.AttendanceDateTime.Date >= startDate.Value);
+                joinedLogs = joinedLogs.Where(entry => entry.Log.LocalTimeAttendanceDateTime.Date >= startDate.Value);
             else if (endDate.HasValue)
-                joinedLogs = joinedLogs.Where(entry => entry.Log.AttendanceDateTime.Date <= endDate.Value);
+                joinedLogs = joinedLogs.Where(entry => entry.Log.LocalTimeAttendanceDateTime.Date <= endDate.Value);
 
 
             if (!string.IsNullOrWhiteSpace(employeeName))
@@ -232,7 +232,7 @@ namespace Mobi.Web.Controllers
                 Id = entry.Log.Id,
                 FileNumber = entry.FileNumber,
                 EmployeeName = entry.EmployeeName,
-                DateAndTime = entry.Log.AttendanceDateTime.ToLocalTime().ToString("MM/dd/yyyy @ hh:mm tt"),
+                DateAndTime = entry.Log.LocalTimeAttendanceDateTime.ToString("MM/dd/yyyy @ hh:mm tt"),
                 ActionTypeName = GetActionTypeName(entry.Log.ActionTypeId),
                 ActionTypeId = entry.Log.ActionTypeId,
                 ActionTypeClass = GetActionTypeClass(entry.Log.ActionTypeId),
