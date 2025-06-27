@@ -113,14 +113,14 @@ namespace Mobi.Web.Controllers
             {
                 draw = Request.Query["draw"],
                 recordsTotal = 0,
-                recordsFiltered =0,
+                recordsFiltered = 0,
                 data = new List<EmployeeAttendanceLogModel>()
             });
 
         }
 
 
-            [HttpGet]
+        [HttpGet]
         public IActionResult Logs(DateTime? startDate, DateTime? endDate, string employeeName, string employeeId, string TransStatus)
         {
             bool hasAccess = _accessControlService.HasAccess(nameof(ScreenAuthorityEnum.EmployeeAttendance));

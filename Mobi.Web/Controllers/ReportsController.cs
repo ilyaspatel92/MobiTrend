@@ -54,6 +54,7 @@ namespace Mobi.Web.Controllers
         #region Methods
 
         #region Daily Attendance Reports
+
         private List<EmployeeAttendanceLogModel> GetAttendanceLogs(DateTime? startDate, DateTime? endDate, int employeeId)
         {
             var query = _attendanceRepository.GetAll()
@@ -137,10 +138,6 @@ namespace Mobi.Web.Controllers
             return File(stream.ToArray(), "application/pdf", $"AttendanceReport_{employeeName}_{DateTime.Now:yyyyMMdd}.pdf");
         }
 
-
-
-
-
         private string GetActionTypeName(int actionTypeId)
         {
             return actionTypeId switch
@@ -173,7 +170,6 @@ namespace Mobi.Web.Controllers
             };
         }
 
-
         #endregion
 
         #region Employee Data Report
@@ -198,6 +194,25 @@ namespace Mobi.Web.Controllers
                 data = employeeViewModels
             });
         }
+
+        [HttpGet]
+        public IActionResult DownloadEmployeeDataPdf()
+        {
+            var employees = _employeeService.GetAllEmployees();
+            var employeeViewModels = _employeeFactory.PrepareEmployeeViewModels(employees).ToList();
+
+            var report = new EmployeeDataReport(
+                employeeViewModels,
+                title: "Employee Master Report",
+                printedBy: User.Identity?.Name ?? "System"
+            );
+
+            using var stream = new MemoryStream();
+            report.GeneratePdf(stream);
+
+            return File(stream.ToArray(), "application/pdf", $"EmployeeReport_{DateTime.Now:yyyyMMdd}.pdf");
+        }
+
 
         #endregion
 
@@ -240,6 +255,44 @@ namespace Mobi.Web.Controllers
                 recordsFiltered = employeeViewModels.Count(),
                 data = employeeViewModels
             });
+        }
+
+        [HttpGet]
+        public IActionResult DownloadRegisteredPhonesPdf()
+        {
+            var employees = _employeeService.GetAllEmployees().ToList();
+
+            var employeeViewModels = employees.Select(emp =>
+            {
+                var model = new EmployeeModel
+                {
+                    FileNumber = emp.FileNumber,
+                    NameEng = emp.NameEng,
+                    Email = emp.Email,
+                    MobileType = emp.MobileType,
+                    MobileTypeName = Enum.GetName(typeof(MobileType), emp.MobileType),
+                    MobRegistrationDate = emp.MobRegistrationDate?.ToLocalTime().ToString("dd/MM/yyyy")
+                };
+
+                var last = _attendanceRepository.GetAll()
+                    .Where(x => x.EmployeeId == emp.Id)
+                    .OrderByDescending(x => x.CreatedDateTime)
+                    .FirstOrDefault();
+
+                model.LastTransactionDate = last?.CreatedDateTime.ToString("dd/MM/yyyy");
+                return model;
+            }).ToList();
+
+            var report = new RegisteredPhonesReport(
+                employeeViewModels,
+                title: "Registered Phones Report",
+                printedBy: User.Identity?.Name ?? "SYSTEM"
+            );
+
+            using var stream = new MemoryStream();
+            report.GeneratePdf(stream);
+
+            return File(stream.ToArray(), "application/pdf", $"RegisteredPhones_{DateTime.Now:yyyyMMdd}.pdf");
         }
 
 

@@ -6,8 +6,11 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">@T("Mobi.Reports.RegisteredMobileReport")</h3>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="card-title mb-0">@T("Mobi.Reports.RegisteredMobileReport")</h3>
+                    <button id="downloadPdfBtn" class="btn btn-secondary buttons-print ms-auto">
+                        <i class="fas fa-print"></i> @T("Mobi.Reports.DailyAttendance.Print")
+                    </button>
                 </div>
                 <div class="card-body">
                     <table id="mobileTable" class="table table-bordered table-striped">
@@ -46,30 +49,7 @@
                 searching: false,
                 ordering: true,
                 dom: '<"d-flex justify-content-between align-items-center mb-2"lB>frtip',
-                buttons: [
-                    {
-                        extend: 'print',
-                        text: '<i class="fas fa-print"></i> @T("Mobi.Common.Print")',
-                        className: 'btn btn-secondary',
-                        title: '',
-                        exportOptions: { columns: ':visible' },
-                        customize: function (win) {
-                            // $(win.document.body).find('thead').css('display', 'none');
-                            $(win.document.body).find('tfoot').css('display', 'none');
-                            $(win.document.head).find('title').text('');
-                            $(win.document.body).css('font-size', '10pt')
-                                .prepend('<h4 class="text-center">@T("Mobi.Reports.RegisteredMobileReport")</h4>');
-
-                            $(win.document.body).find('table')
-                                .addClass('display')
-                                .css('font-size', 'inherit');
-
-                            $(win.document.body).find('table tbody tr').each(function (index) {
-                                $(this).find('td:first').text(index + 1);
-                            });
-                        }
-                    }
-                ],
+                buttons: [],
                 ajax: '@Url.Action("GetRegisteredPhones", "Reports")',
                 columns: [
                     { data: null, orderable: false, render: function (data, type, row, meta) { return meta.row + 1; } },
@@ -80,6 +60,11 @@
                     { data: 'mobRegistrationDate' },
                     { data: 'lastTransactionDate' }
                 ]
+            });
+
+            $('#downloadPdfBtn').click(function () {
+                let downloadUrl = '@Url.Action("DownloadRegisteredPhonesPdf", "Reports")';
+                window.open(downloadUrl, '_blank');
             });
         });
     </script>

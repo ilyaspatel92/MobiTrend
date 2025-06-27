@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = @T("Mobi.Reports.EmployeeDataReport");
+	ViewData["Title"] = @T("Mobi.Reports.EmployeeDataReport");
 }
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -15,121 +15,96 @@
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
 
 <div class="app-content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card mb-12">
-                    <div class="card-header">
-                        <h3 class="card-title">@T("Mobi.Reports.EmployeeDataReport")</h3>
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-bordered" id="employeeTable">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>@T("Mobi.Reports.FileNumber")</th>
-                                    <th>@T("Mobi.Reports.NameEnglish")</th>
-                                    <th>@T("Mobi.Reports.Email")</th>
-                                    <th>@T("Mobi.Reports.RegDate")</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="card mb-12">
+					<div class="card-header d-flex justify-content-between align-items-center">
+						<h3 class="card-title mb-0">@T("Mobi.Reports.EmployeeDataReport")</h3>
+						<button id="downloadPdfBtn" class="btn btn-secondary buttons-print ms-auto">
+							<i class="fas fa-print"></i> @T("Mobi.Reports.DailyAttendance.Print")
+						</button>
+					</div>
+					<div class="card-body">
+						<table class="table table-bordered" id="employeeTable">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>@T("Mobi.Reports.FileNumber")</th>
+									<th>@T("Mobi.Reports.NameEnglish")</th>
+									<th>@T("Mobi.Reports.Email")</th>
+									<th>@T("Mobi.Reports.RegDate")</th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 @section Scripts {
-    <script>
-        $(document).ready(function () {
-            var table = $('#employeeTable').DataTable({
-                ajax: {
-                    url: '@Url.Action("GetEmployeeDataReport", "Reports")',
-                    type: 'GET',
-                    dataSrc: 'data'
-                },
-                columns: [
-                    { data: null, title: "#" , orderable: false },
-                    { data: 'fileNumber' },
-                    { data: 'nameEng' },
-                    { data: 'email' },
-                    { data: 'mobRegistrationDate' }
-                ],
-                processing: true,
-                serverSide: false,
-                order: [[0, "asc"]],
-                paging: true,
-                searching: false,
-                lengthChange: true,
-                pageLength: 10,
-                language: {
-                    paginate: {
-                        previous: "Previous",
-                        next: "Next"
-                    },
-                    info: "Showing _START_ to _END_ of _TOTAL_ entries"
-                },
-                createdRow: function (row, data, dataIndex) {
-                    $('td:eq(0)', row).html(dataIndex + 1);
-                },
-                dom: '<"d-flex justify-content-between align-items-center mb-2"lB>frtip',
-                buttons: [
-                    {
-                        extend: 'print',
-                        text: '<i class="fas fa-print"></i> ' + '@T("Mobi.Common.Print")',
-                        className: 'btn btn-secondary',
-                        title: '@T("Mobi.Reports.EmployeeDataReport")',
-                        messageTop: '',
-                        footer: true,
-                        exportOptions: {
-                            columns: ':visible'
-                        },
-                        customize: function (win) {
-                            $(win.document.head).find('title').text('');
-                            $(win.document.body).css('font-size', '10pt')
-                                .prepend('<h3 class="text-center">@T("Mobi.Reports.EmployeeDataReport")</h3>');
+	<script>
+		$(document).ready(function () {
+			var table = $('#employeeTable').DataTable({
+				ajax: {
+					url: '@Url.Action("GetEmployeeDataReport", "Reports")',
+					type: 'GET',
+					dataSrc: 'data'
+				},
+				columns: [
+					{ data: null, title: "#" , orderable: false },
+					{ data: 'fileNumber' },
+					{ data: 'nameEng' },
+					{ data: 'email' },
+					{ data: 'mobRegistrationDate' }
+				],
+				processing: true,
+				serverSide: false,
+				order: [[0, "asc"]],
+				paging: true,
+				searching: false,
+				lengthChange: true,
+				pageLength: 10,
+				language: {
+					paginate: {
+						previous: "Previous",
+						next: "Next"
+					},
+					info: "Showing _START_ to _END_ of _TOTAL_ entries"
+				},
+				createdRow: function (row, data, dataIndex) {
+					$('td:eq(0)', row).html(dataIndex + 1);
+				},
+				dom: '<"d-flex justify-content-between align-items-center mb-2"lB>frtip',
+				buttons: [],
+				drawCallback: function (settings) {
+					var api = this.api();
+					$('#totalRecordsRow').remove();
+					var totalRecords = api.data().count();
+					$(api.table().body()).append(
+						'<tr id="totalRecordsRow" class="total-records-row">' +
+						'<td colspan="3" class="text-right font-weight-bold">@T("Mobi.Reports.TotalRecords")</td>' +
+						'<td class="font-weight-bold text-center">' + totalRecords + '</td>' +
+						'</tr>'
+					);
+				}
+			});
 
-                            $(win.document.body).find('table')
-                                .addClass('display')
-                                .css('font-size', 'inherit');
+			$('#downloadPdfBtn').click(function () {
+				let downloadUrl = '@Url.Action("DownloadEmployeeDataPdf", "Reports")';
+				window.open(downloadUrl, '_blank');
+			});
+		});
 
-                            $(win.document.body).find('h1').remove();
-
-                            $(win.document.body).find('table tbody tr').each(function (index) {
-                                $(this).find('td:first').text(index + 1);
-                            });
-
-                            var totalRecords = table.data().count();
-                            $(win.document.body).find('table tbody').append(
-                                '<tr>' +
-                                '<td colspan="3" style="text-align:right; font-weight:bold;">@T("Mobi.Reports.TotalRecords")</td>' +
-                                '<td style="font-weight:bold; text-align:center;">' + totalRecords + '</td>' +
-                                '</tr>'
-                            );
-                        }
-                    }
-                ],
-                drawCallback: function (settings) {
-                    var api = this.api();
-                    $('#totalRecordsRow').remove();
-                    var totalRecords = api.data().count();
-                    $(api.table().body()).append(
-                        '<tr id="totalRecordsRow" class="total-records-row">' +
-                        '<td colspan="3" class="text-right font-weight-bold">@T("Mobi.Reports.TotalRecords")</td>' +
-                        '<td class="font-weight-bold text-center">' + totalRecords + '</td>' +
-                        '</tr>'
-                    );
-                }
-            });
-        });
-    </script>
+		
+	</script>
 }
 <style type="text/css" media="print">
-    @@page {
-        size: auto; /* auto is the initial value */
-        margin: 2mm; /* this affects the margin in the printer settings */
-    }
+	@@page {
+		size: auto; /* auto is the initial value */
+		margin: 2mm; /* this affects the margin in the printer settings */
+	}
 </style>
