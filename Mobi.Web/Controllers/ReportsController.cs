@@ -517,10 +517,23 @@ namespace Mobi.Web.Controllers
         [HttpGet]
         public IActionResult GetDailyWorkingHours(DateTime? startDate, DateTime? endDate, int employeeId)
         {
+            var groupedData = GetDailyWorkingHoursData(startDate, endDate, employeeId);
+
+            return Json(new
+            {
+                draw = Request.Query["draw"],
+                recordsTotal = groupedData.Count(),
+                recordsFiltered = groupedData.Count(),
+                data = groupedData
+            });
+        }
+
+        private List<DailyWorkingHoursDto> GetDailyWorkingHoursData(DateTime? startDate, DateTime? endDate, int employeeId)
+        {
             var query = _attendanceRepository.GetAll()
                 .Where(log => (!startDate.HasValue || log.LocalTimeAttendanceDateTime.Date >= startDate.Value.Date)
-                              && (!endDate.HasValue || log.LocalTimeAttendanceDateTime.Date <= endDate.Value.Date)
-                              && (employeeId <= 0 || log.EmployeeId == employeeId)) // Apply filter only if employeeId > 0
+                           && (!endDate.HasValue || log.LocalTimeAttendanceDateTime.Date <= endDate.Value.Date)
+                           && (employeeId <= 0 || log.EmployeeId == employeeId))
                 .Join(_employeeRepository.GetAll(),
                       log => log.EmployeeId,
                       emp => emp.Id,
@@ -538,18 +551,11 @@ namespace Mobi.Web.Controllers
 
                     foreach (var entry in logs)
                     {
-                        if (entry.log.ActionTypeId == 1) // IN
-                        {
+                        if (entry.log.ActionTypeId == 1)
                             inQueue.Enqueue(entry.log.LocalTimeAttendanceDateTime);
-                        }
-                        else if (entry.log.ActionTypeId == 2 && inQueue.Count > 0) // OUT
-                        {
-                            var inTime = inQueue.Dequeue();
-                            totalMinutes += (int)Math.Round((entry.log.LocalTimeAttendanceDateTime - inTime).TotalMinutes);
-                        }
+                        else if (entry.log.ActionTypeId == 2 && inQueue.Count > 0)
+                            totalMinutes += (int)(entry.log.LocalTimeAttendanceDateTime - inQueue.Dequeue()).TotalMinutes;
                     }
-
-                    bool hasMissingOut = inQueue.Count > 0;
 
                     return new DailyWorkingHoursDto
                     {
@@ -561,24 +567,38 @@ namespace Mobi.Web.Controllers
                         TotalHours = totalMinutes / 60,
                         TotalMinutes = totalMinutes % 60,
                         TotalTransactions = totalTransactions,
-                        Notes = hasMissingOut ? "Missing OUT" : ""
+                        Notes = inQueue.Count > 0 ? "Missing OUT" : ""
                     };
                 })
                 .ToList();
 
-            return Json(new
-            {
-                draw = Request.Query["draw"],
-                recordsTotal = groupedData.Count(),
-                recordsFiltered = groupedData.Count(),
-                data = groupedData
-            });
+            return groupedData;
         }
 
 
 
+        [HttpGet]
+        public IActionResult DownloadDailyWorkingHoursPdf(DateTime? startDate, DateTime? endDate, int employeeId)
+        {
+            var data = GetDailyWorkingHoursData(startDate, endDate, employeeId);
+            var employeeName = data.FirstOrDefault()?.EmployeeName ?? "Unknown";
 
+            var report = new DailyWorkingHoursReport(
+                data,
+                title: $"Daily working hours report - {employeeName}",
+                printedBy: User.Identity?.Name ?? "System",
+                employeeId: employeeId,
+                employeeName: employeeName,
+                dateRangeText: startDate.HasValue && endDate.HasValue
+                    ? $"From {startDate.Value:dd/MM/yyyy} To {endDate.Value:dd/MM/yyyy}"
+                    : "",
+                isRtl: false
+            );
 
+            using var stream = new MemoryStream();
+            report.GeneratePdf(stream);
+            return File(stream.ToArray(), "application/pdf", $"WorkingHoursReport_{employeeName}_{DateTime.Now:yyyyMMdd}.pdf");
+        }
 
 
         #endregion
