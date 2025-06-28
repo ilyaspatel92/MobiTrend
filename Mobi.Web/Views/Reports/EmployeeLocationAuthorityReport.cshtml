@@ -3,8 +3,11 @@
 }
 
 <div class="card">
-    <div class="card-header">
-        <h3 class="card-title">@T("Mobi.Reports.EmployeeLocationAuthorityReport")</h3>
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h3 class="card-title mb-0">@T("Mobi.Reports.EmployeeLocationAuthorityReport")</h3>
+        <button id="downloadPdfBtn" class="btn btn-secondary buttons-print ms-auto">
+            <i class="fas fa-print"></i> @T("Mobi.Reports.DailyAttendance.Print")
+        </button>
     </div>
     <div class="card-body">
         <table id="employeeReportTable" class="table table-bordered table-striped">
@@ -44,47 +47,7 @@
                     }
                 },
                 dom: '<"d-flex justify-content-between align-items-center mb-2"lB>frtip',
-                buttons: [
-                    {
-                        extend: 'print',
-                        text: '<i class="fas fa-print"></i> ' + '@T("Mobi.Common.Print")',
-                        className: 'btn btn-secondary',
-                        title : '@T("Mobi.Reports.EmployeeLocationAuthorityReport")',
-                        action: function (e, dt, node, config) {
-                            let dataCount = dt.rows({ search: 'applied' }).count();
-                            if (dataCount === 0) {
-                                alert("@T("Mobi.Common.NoDataToPrint")");
-                            } else {
-                                $.fn.dataTable.ext.buttons.print.action.call(this, e, dt, node, config);
-                            }
-                        },
-                        customize: function (win) {
-                                let body = win.document.body;                                
-                                let titleElement = win.document.querySelector('h1');
-                                if (titleElement) {
-                                    titleElement.style.fontSize = "16px";
-                                    titleElement.style.marginBottom = "10px";
-                                }
-                                $(body).css({
-                                    'font-size': '12px',
-                                    'text-align': 'center',
-                                    'margin': '10px'
-                                });
-                                $(body).find('table')
-                                    .addClass('table table-bordered')
-                                    .css({
-                                        'width': '100%',
-                                        'border-collapse': 'collapse',
-                                        'margin-top': '20px'
-                                });
-                                $(body).find('table th, table td').css({
-                                    'border': '1px solid black',
-                                    'padding': '5px',
-                                    'font-size': '12px'
-                                });
-                        }
-                    }
-                ],
+                buttons: [],
                 columns: [
                     { data: 'fileNumber', title: '@T("Mobi.Reports.FileNumber")', className: 'text-center' },
                     { data: 'employeeName', title: '@T("Mobi.Reports.EmployeeName")', className: 'text-left' },
@@ -95,6 +58,11 @@
 
             $('#printReport').on('click', function () {
                 table.button('.buttons-print').trigger();
+            });
+
+            $('#downloadPdfBtn').click(function () {
+                let downloadUrl = '@Url.Action("DownloadEmployeeLocationAuthorityPdf", "Reports")';
+                window.open(downloadUrl, '_blank');
             });
         });
     </script>

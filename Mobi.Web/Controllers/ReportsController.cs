@@ -707,6 +707,37 @@ namespace Mobi.Web.Controllers
             });
         }
 
+        [HttpGet]
+        public IActionResult DownloadEmployeeLocationAuthorityPdf()
+        {
+            var employees = _employeeService.GetAllEmployees();
+            var allLocations = _locationService.GetAllLocations();
+            var links = _employeeLocationService.GetAllEmployeeLocations();
+
+            var data = employees.SelectMany(emp =>
+            {
+                var empLinks = links.Where(el => el.EmployeeId == emp.Id).ToList();
+
+                return empLinks.Select(link =>
+                {
+                    var location = allLocations.FirstOrDefault(l => l.Id == link.LocationId);
+                    return new EmployeeLocationDto
+                    {
+                        EmployeeName = emp.NameEng,
+                        FileNumber = emp.FileNumber,
+                        LocationName = location?.LocationNameEnglish ?? "-",
+                        ProofType = link.IsFreeLocation ? "Free Location" :"GPS"
+                    };
+                });
+            }).ToList();
+
+            var report = new EmployeeLocationAuthorityReport(data, "Employee Location Authority Report", User.Identity.Name);
+            using var stream = new MemoryStream();
+            report.GeneratePdf(stream);
+
+            return File(stream.ToArray(), "application/pdf", $"EmployeeLocationReport_{DateTime.Now:yyyyMMdd}.pdf");
+        }
+
 
 
 
