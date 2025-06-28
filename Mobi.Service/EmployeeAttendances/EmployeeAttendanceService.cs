@@ -47,7 +47,7 @@ namespace Mobi.Service.EmployeeAttendances
         {
             return _attendanceRepository
                 .GetAll()
-                .Where(l => l.AttendanceDateTime >= startDate && l.AttendanceDateTime <= endDate)
+                .Where(l => l.LocalTimeAttendanceDateTime >= startDate && l.LocalTimeAttendanceDateTime <= endDate)
                 .ToList();
         }
 

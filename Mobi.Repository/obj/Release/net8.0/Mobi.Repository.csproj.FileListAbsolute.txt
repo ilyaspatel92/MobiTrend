@@ -15,3 +15,21 @@ E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Repository\obj\Release\net8
 E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Repository\obj\Release\net8.0\Mobi.Repository.pdb
 E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Repository\obj\Release\net8.0\Mobi.Repository.genruntimeconfig.cache
 E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Repository\obj\Release\net8.0\ref\Mobi.Repository.dll
+D:\Mobi\Mobi.Repository\bin\Release\net8.0\Mobi.Repository.deps.json
+D:\Mobi\Mobi.Repository\bin\Release\net8.0\Mobi.Repository.runtimeconfig.json
+D:\Mobi\Mobi.Repository\bin\Release\net8.0\Mobi.Repository.dll
+D:\Mobi\Mobi.Repository\bin\Release\net8.0\Mobi.Repository.pdb
+D:\Mobi\Mobi.Repository\bin\Release\net8.0\Mobi.Data.dll
+D:\Mobi\Mobi.Repository\bin\Release\net8.0\Mobi.Data.pdb
+D:\Mobi\Mobi.Repository\obj\Release\net8.0\Mobi.Repository.csproj.AssemblyReference.cache
+D:\Mobi\Mobi.Repository\obj\Release\net8.0\Mobi.Repository.GeneratedMSBuildEditorConfig.editorconfig
+D:\Mobi\Mobi.Repository\obj\Release\net8.0\Mobi.Repository.AssemblyInfoInputs.cache
+D:\Mobi\Mobi.Repository\obj\Release\net8.0\Mobi.Repository.AssemblyInfo.cs
+D:\Mobi\Mobi.Repository\obj\Release\net8.0\Mobi.Repository.csproj.CoreCompileInputs.cache
+D:\Mobi\Mobi.Repository\obj\Release\net8.0\Mobi.Repository.sourcelink.json
+D:\Mobi\Mobi.Repository\obj\Release\net8.0\Mobi.Rep.87831C3E.Up2Date
+D:\Mobi\Mobi.Repository\obj\Release\net8.0\Mobi.Repository.dll
+D:\Mobi\Mobi.Repository\obj\Release\net8.0\refint\Mobi.Repository.dll
+D:\Mobi\Mobi.Repository\obj\Release\net8.0\Mobi.Repository.pdb
+D:\Mobi\Mobi.Repository\obj\Release\net8.0\Mobi.Repository.genruntimeconfig.cache
+D:\Mobi\Mobi.Repository\obj\Release\net8.0\ref\Mobi.Repository.dll

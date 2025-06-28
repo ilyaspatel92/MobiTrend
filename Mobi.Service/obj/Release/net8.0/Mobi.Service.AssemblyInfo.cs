@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Mobi.Service")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4943582984d69d4e36c319a41b89cb52fe544d49")]
 [assembly: System.Reflection.AssemblyProductAttribute("Mobi.Service")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Mobi.Service")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

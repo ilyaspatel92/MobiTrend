@@ -1,4 +1,6 @@
-﻿using System.Xml.Linq;
+﻿using System.Globalization;
+using System.Text.Json;
+using System.Xml.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Mobi.Data.Domain;
 using Mobi.Data.Domain.Employees;
@@ -47,7 +49,7 @@ namespace Mobi.Web.Controllers
             _employeeRepository = employeeRepository;
             _locationService = locationService;
             _locationRepository = locationRepository;
-            _employeeLocationService = employeeLocationService;            
+            _employeeLocationService = employeeLocationService;
         }
         #endregion
 
@@ -79,7 +81,7 @@ namespace Mobi.Web.Controllers
             var kuwaitTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Arab Standard Time");
 
             return query.Select(entry =>
-            {               
+            {
 
                 return new EmployeeAttendanceLogModel
                 {
@@ -130,7 +132,7 @@ namespace Mobi.Web.Controllers
            title: $"Daily Attendance Report - {employeeName}",
            printedBy: User.Identity.Name,
            _dateRangeText: $"From {startDate.Value.ToString("dd/MM/yy")} To {endDate.Value.ToString("dd/MM/yy")}",
-        isRtl: false           
+        isRtl: false
        );
 
             using var stream = new MemoryStream();
@@ -410,97 +412,36 @@ namespace Mobi.Web.Controllers
             });
         }
 
+
         [HttpGet]
-        public IActionResult GetMonthlyWorkingHours1(int year, int month, int? employeeId)
+        public IActionResult DownloadMonthlyWorkingHoursPdf(int year, int month, int? employeeId)
         {
-            var query = _attendanceRepository.GetAll()
-                .Where(log => log.LocalTimeAttendanceDateTime.Year == year && log.LocalTimeAttendanceDateTime.Month == month)
-                .Join(_employeeRepository.GetAll(),
-                      log => log.EmployeeId,
-                      emp => emp.Id,
-                      (log, emp) => new { log, emp.NameEng, emp.FileNumber, emp.Id })
-                .OrderBy(entry => entry.Id)
-                .ThenBy(entry => entry.log.LocalTimeAttendanceDateTime);
+            var result = GetMonthlyWorkingHours(year, month, employeeId) as JsonResult;
 
-            if (employeeId.HasValue)
+            if (result?.Value is null)
+                return BadRequest("No data found.");
+
+            // Serialize and deserialize to a known DTO
+            var json = JsonSerializer.Serialize(result.Value);
+            var options = new JsonSerializerOptions
             {
-                query = query.Where(x => x.Id == employeeId.Value)
-                             .OrderBy(entry => entry.Id)
-                             .ThenBy(entry => entry.log.LocalTimeAttendanceDateTime);
-            }
+                PropertyNameCaseInsensitive = true
+            };
 
-            var groupedData = query
-                .AsEnumerable()
-                .GroupBy(entry => new { entry.Id, entry.NameEng, entry.FileNumber })
-                .Select(group =>
-                {
-                    var logs = group.OrderBy(x => x.log.LocalTimeAttendanceDateTime).ToList();
-                    var groupedByDate = logs.GroupBy(x => x.log.LocalTimeAttendanceDateTime.Date);
-                    int totalMinutes = 0;
-                    bool hasMissingOut = false;
+            var wrapper = JsonSerializer.Deserialize<MonthlyWorkingHoursWrapper>(json, options);
 
-                    foreach (var dateGroup in groupedByDate)
-                    {
-                        var dayLogs = dateGroup.OrderBy(x => x.log.LocalTimeAttendanceDateTime).ToList();
-                        var ins = new Queue<DateTime>();
-                        var outs = new Queue<DateTime>();
+            if (wrapper?.Data == null || !wrapper.Data.Any())
+                return BadRequest("No records to print.");
 
-                        foreach (var entry in dayLogs)
-                        {
-                            if (entry.log.ActionTypeId == 1)
-                                ins.Enqueue(entry.log.LocalTimeAttendanceDateTime);
-                            else if (entry.log.ActionTypeId == 2)
-                                outs.Enqueue(entry.log.LocalTimeAttendanceDateTime);
-                        }
+            var title = "Monthly Working Hours Report";
+            var printedBy = User.Identity?.Name ?? "SYSTEM";
+            var dateRange = $"{CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month)} {year}";
 
-                        while (ins.Count > 0 && outs.Count > 0)
-                        {
-                            var inTime = ins.Dequeue();
-                            var possibleOut = outs.FirstOrDefault(outTime => outTime > inTime && outTime.Date == inTime.Date);
-                            if (possibleOut != default)
-                            {
-                                outs = new Queue<DateTime>(outs.Where(x => x != possibleOut));
-                                var duration = (possibleOut - inTime).TotalMinutes;
+            var report = new MonthlyWorkingHoursReport(wrapper.Data, title, printedBy, dateRange, isRtl: false);
 
-                                int rounded = 0;
-                                if (duration > 0 && duration < 1)
-                                    rounded = 1;
-                                else if (duration >= 1)
-                                    rounded = (int)Math.Floor(duration); // ✅ Use Floor to avoid overcounting
-
-                                totalMinutes += rounded;
-                            }
-                            else
-                            {
-                                hasMissingOut = true;
-                                break;
-                            }
-                        }
-
-                        if (ins.Count > 0 || outs.Count > 0)
-                        {
-                            hasMissingOut = true;
-                        }
-                    }
-
-                    return new
-                    {
-                        EmployeeId = group.Key.FileNumber,
-                        EmployeeName = group.Key.NameEng,
-                        TotalHours = totalMinutes / 60,
-                        TotalMinutes = totalMinutes % 60,
-                        Notes = hasMissingOut ? "Missing OUT" : ""
-                    };
-                })
-                .ToList();
-
-            return Json(new
-            {
-                draw = Request.Query["draw"],
-                recordsTotal = groupedData.Count,
-                recordsFiltered = groupedData.Count,
-                data = groupedData
-            });
+            using var stream = new MemoryStream();
+            report.GeneratePdf(stream);
+            return File(stream.ToArray(), "application/pdf", $"MonthlyWorkingHours_{DateTime.Now:yyyyMMdd}.pdf");
         }
 
 
@@ -726,7 +667,7 @@ namespace Mobi.Web.Controllers
                         EmployeeName = emp.NameEng,
                         FileNumber = emp.FileNumber,
                         LocationName = location?.LocationNameEnglish ?? "-",
-                        ProofType = link.IsFreeLocation ? "Free Location" :"GPS"
+                        ProofType = link.IsFreeLocation ? "Free Location" : "GPS"
                     };
                 });
             }).ToList();
