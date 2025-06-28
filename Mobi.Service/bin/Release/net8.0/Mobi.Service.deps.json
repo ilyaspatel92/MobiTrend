@@ -15,9 +15,7 @@
           "NLog.Web.AspNetCore": "5.3.15",
           "System.Data.SqlClient": "4.9.0",
           "System.Linq": "4.3.0",
-          "System.Linq.Expressions": "4.3.0",
-          "System.Runtime.Caching": "9.0.0",
-          "log4net": "3.0.3"
+          "System.Linq.Expressions": "4.3.0"
         },
         "runtime": {
           "Mobi.Service.dll": {}
@@ -47,7 +45,7 @@
           "Microsoft.Identity.Client": "4.61.3",
           "Microsoft.Identity.Client.Extensions.Msal": "4.61.3",
           "System.Memory": "4.5.4",
-          "System.Security.Cryptography.ProtectedData": "9.0.0",
+          "System.Security.Cryptography.ProtectedData": "8.0.0",
           "System.Text.Json": "4.7.2",
           "System.Threading.Tasks.Extensions": "4.5.4"
         },
@@ -324,17 +322,6 @@
           }
         }
       },
-      "log4net/3.0.3": {
-        "dependencies": {
-          "System.Configuration.ConfigurationManager": "9.0.0"
-        },
-        "runtime": {
-          "lib/netstandard2.0/log4net.dll": {
-            "assemblyVersion": "3.0.3.0",
-            "fileVersion": "3.0.3.0"
-          }
-        }
-      },
       "Microsoft.Bcl.AsyncInterfaces/1.1.1": {
         "runtime": {
           "lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll": {
@@ -352,8 +339,8 @@
           "Microsoft.IdentityModel.JsonWebTokens": "6.35.0",
           "Microsoft.IdentityModel.Protocols.OpenIdConnect": "6.35.0",
           "Microsoft.SqlServer.Server": "1.0.0",
-          "System.Configuration.ConfigurationManager": "9.0.0",
-          "System.Runtime.Caching": "9.0.0"
+          "System.Configuration.ConfigurationManager": "8.0.0",
+          "System.Runtime.Caching": "8.0.0"
         },
         "runtime": {
           "lib/net8.0/Microsoft.Data.SqlClient.dll": {
@@ -576,7 +563,7 @@
       "Microsoft.Identity.Client.Extensions.Msal/4.61.3": {
         "dependencies": {
           "Microsoft.Identity.Client": "4.61.3",
-          "System.Security.Cryptography.ProtectedData": "9.0.0"
+          "System.Security.Cryptography.ProtectedData": "8.0.0"
         },
         "runtime": {
           "lib/net6.0/Microsoft.Identity.Client.Extensions.Msal.dll": {
@@ -751,15 +738,15 @@
         }
       },
       "System.ComponentModel.Annotations/5.0.0": {},
-      "System.Configuration.ConfigurationManager/9.0.0": {
+      "System.Configuration.ConfigurationManager/8.0.0": {
         "dependencies": {
-          "System.Diagnostics.EventLog": "9.0.0",
-          "System.Security.Cryptography.ProtectedData": "9.0.0"
+          "System.Diagnostics.EventLog": "8.0.0",
+          "System.Security.Cryptography.ProtectedData": "8.0.0"
         },
         "runtime": {
           "lib/net8.0/System.Configuration.ConfigurationManager.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.24.52809"
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.53103"
           }
         }
       },
@@ -800,28 +787,7 @@
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         }
       },
-      "System.Diagnostics.EventLog/9.0.0": {
-        "runtime": {
-          "lib/net8.0/System.Diagnostics.EventLog.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.24.52809"
-          }
-        },
-        "runtimeTargets": {
-          "runtimes/win/lib/net8.0/System.Diagnostics.EventLog.Messages.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "0.0.0.0"
-          },
-          "runtimes/win/lib/net8.0/System.Diagnostics.EventLog.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.24.52809"
-          }
-        }
-      },
+      "System.Diagnostics.EventLog/8.0.0": {},
       "System.Formats.Asn1/8.0.1": {},
       "System.Globalization/4.3.0": {
         "dependencies": {
@@ -973,22 +939,22 @@
           "Microsoft.NETCore.Targets": "1.1.0"
         }
       },
-      "System.Runtime.Caching/9.0.0": {
+      "System.Runtime.Caching/8.0.0": {
         "dependencies": {
-          "System.Configuration.ConfigurationManager": "9.0.0"
+          "System.Configuration.ConfigurationManager": "8.0.0"
         },
         "runtime": {
           "lib/net8.0/System.Runtime.Caching.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.24.52809"
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.53103"
           }
         },
         "runtimeTargets": {
           "runtimes/win/lib/net8.0/System.Runtime.Caching.dll": {
             "rid": "win",
             "assetType": "runtime",
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.24.52809"
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.53103"
           }
         }
       },
@@ -1001,11 +967,11 @@
         }
       },
       "System.Security.Cryptography.Cng/4.5.0": {},
-      "System.Security.Cryptography.ProtectedData/9.0.0": {
+      "System.Security.Cryptography.ProtectedData/8.0.0": {
         "runtime": {
           "lib/net8.0/System.Security.Cryptography.ProtectedData.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.24.52809"
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.53103"
           }
         }
       },
@@ -1046,7 +1012,6 @@
       },
       "Mobi.Repository/1.0.0": {
         "dependencies": {
-          "BCrypt.Net-Next": "4.0.3",
           "FluentMigrator": "6.2.0",
           "FluentMigrator.Runner": "6.2.0",
           "FluentMigrator.Runner.SqlServer": "6.2.0",
@@ -1230,13 +1195,6 @@
       "sha512": "sha512-8llYcHk20c3ZZRtRmJZmVEflK7Sl29ZBWH2h+TyWuYatEL5jxPX3yAxV1oKAxpPSRyN1n2Dei9P87Fo04pzusA==",
       "path": "fluentmigrator.runner.sqlserver/6.2.0",
       "hashPath": "fluentmigrator.runner.sqlserver.6.2.0.nupkg.sha512"
-    },
-    "log4net/3.0.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-LAZBO0rHo4DM56GIt124NaXKo6LVZcfiuWVgODdUnhPNMzTOlRJWOEIXo8zVNLm426B+coDc4ocfTsTw7R7Zeg==",
-      "path": "log4net/3.0.3",
-      "hashPath": "log4net.3.0.3.nupkg.sha512"
     },
     "Microsoft.Bcl.AsyncInterfaces/1.1.1": {
       "type": "package",
@@ -1511,12 +1469,12 @@
       "path": "system.componentmodel.annotations/5.0.0",
       "hashPath": "system.componentmodel.annotations.5.0.0.nupkg.sha512"
     },
-    "System.Configuration.ConfigurationManager/9.0.0": {
+    "System.Configuration.ConfigurationManager/8.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-PdkuMrwDhXoKFo/JxISIi9E8L+QGn9Iquj2OKDWHB6Y/HnUOuBouF7uS3R4Hw3FoNmwwMo6hWgazQdyHIIs27A==",
-      "path": "system.configuration.configurationmanager/9.0.0",
-      "hashPath": "system.configuration.configurationmanager.9.0.0.nupkg.sha512"
+      "sha512": "sha512-JlYi9XVvIREURRUlGMr1F6vOFLk7YSY4p1vHo4kX3tQ0AGrjqlRWHDi66ImHhy6qwXBG3BJ6Y1QlYQ+Qz6Xgww==",
+      "path": "system.configuration.configurationmanager/8.0.0",
+      "hashPath": "system.configuration.configurationmanager.8.0.0.nupkg.sha512"
     },
     "System.Data.SqlClient/4.9.0": {
       "type": "package",
@@ -1539,12 +1497,12 @@
       "path": "system.diagnostics.diagnosticsource/6.0.1",
       "hashPath": "system.diagnostics.diagnosticsource.6.0.1.nupkg.sha512"
     },
-    "System.Diagnostics.EventLog/9.0.0": {
+    "System.Diagnostics.EventLog/8.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-qd01+AqPhbAG14KtdtIqFk+cxHQFZ/oqRSCoxU1F+Q6Kv0cl726sl7RzU9yLFGd4BUOKdN4XojXF0pQf/R6YeA==",
-      "path": "system.diagnostics.eventlog/9.0.0",
-      "hashPath": "system.diagnostics.eventlog.9.0.0.nupkg.sha512"
+      "sha512": "sha512-fdYxcRjQqTTacKId/2IECojlDSFvp7LP5N78+0z/xH7v/Tuw5ZAxu23Y6PTCRinqyu2ePx+Gn1098NC6jM6d+A==",
+      "path": "system.diagnostics.eventlog/8.0.0",
+      "hashPath": "system.diagnostics.eventlog.8.0.0.nupkg.sha512"
     },
     "System.Formats.Asn1/8.0.1": {
       "type": "package",
@@ -1679,12 +1637,12 @@
       "path": "system.runtime/4.3.0",
       "hashPath": "system.runtime.4.3.0.nupkg.sha512"
     },
-    "System.Runtime.Caching/9.0.0": {
+    "System.Runtime.Caching/8.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-4sUTbJkQZFxyhvc/CDcrAZOT8q1FWTECRsnnwGgKtC7wC3/uzhYSYUXywbCfkINjB35kgQxw9MalI/G3ZZfM3w==",
-      "path": "system.runtime.caching/9.0.0",
-      "hashPath": "system.runtime.caching.9.0.0.nupkg.sha512"
+      "sha512": "sha512-4TmlmvGp4kzZomm7J2HJn6IIx0UUrQyhBDyb5O1XiunZlQImXW+B8b7W/sTPcXhSf9rp5NR5aDtQllwbB5elOQ==",
+      "path": "system.runtime.caching/8.0.0",
+      "hashPath": "system.runtime.caching.8.0.0.nupkg.sha512"
     },
     "System.Runtime.CompilerServices.Unsafe/6.0.0": {
       "type": "package",
@@ -1707,12 +1665,12 @@
       "path": "system.security.cryptography.cng/4.5.0",
       "hashPath": "system.security.cryptography.cng.4.5.0.nupkg.sha512"
     },
-    "System.Security.Cryptography.ProtectedData/9.0.0": {
+    "System.Security.Cryptography.ProtectedData/8.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-CJW+x/F6fmRQ7N6K8paasTw9PDZp4t7G76UjGNlSDgoHPF0h08vTzLYbLZpOLEJSg35d5wy2jCXGo84EN05DpQ==",
-      "path": "system.security.cryptography.protecteddata/9.0.0",
-      "hashPath": "system.security.cryptography.protecteddata.9.0.0.nupkg.sha512"
+      "sha512": "sha512-+TUFINV2q2ifyXauQXRwy4CiBhqvDEDZeVJU7qfxya4aRYOKzVBpN+4acx25VcPB9ywUN6C0n8drWl110PhZEg==",
+      "path": "system.security.cryptography.protecteddata/8.0.0",
+      "hashPath": "system.security.cryptography.protecteddata.8.0.0.nupkg.sha512"
     },
     "System.Text.Encoding/4.3.0": {
       "type": "package",

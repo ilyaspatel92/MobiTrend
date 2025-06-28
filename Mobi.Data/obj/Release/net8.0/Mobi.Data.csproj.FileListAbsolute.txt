@@ -10,16 +10,3 @@ E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Data\obj\Release\net8.0\Mob
 E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Data\obj\Release\net8.0\refint\Mobi.Data.dll
 E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Data\obj\Release\net8.0\Mobi.Data.pdb
 E:\G Drive\Project Repositry\Ahmed\Project\Mobi\Mobi.Data\obj\Release\net8.0\ref\Mobi.Data.dll
-D:\Mobi\Mobi.Data\bin\Release\net8.0\Mobi.Data.deps.json
-D:\Mobi\Mobi.Data\bin\Release\net8.0\Mobi.Data.dll
-D:\Mobi\Mobi.Data\bin\Release\net8.0\Mobi.Data.pdb
-D:\Mobi\Mobi.Data\obj\Release\net8.0\Mobi.Data.csproj.AssemblyReference.cache
-D:\Mobi\Mobi.Data\obj\Release\net8.0\Mobi.Data.GeneratedMSBuildEditorConfig.editorconfig
-D:\Mobi\Mobi.Data\obj\Release\net8.0\Mobi.Data.AssemblyInfoInputs.cache
-D:\Mobi\Mobi.Data\obj\Release\net8.0\Mobi.Data.AssemblyInfo.cs
-D:\Mobi\Mobi.Data\obj\Release\net8.0\Mobi.Data.csproj.CoreCompileInputs.cache
-D:\Mobi\Mobi.Data\obj\Release\net8.0\Mobi.Data.sourcelink.json
-D:\Mobi\Mobi.Data\obj\Release\net8.0\Mobi.Data.dll
-D:\Mobi\Mobi.Data\obj\Release\net8.0\refint\Mobi.Data.dll
-D:\Mobi\Mobi.Data\obj\Release\net8.0\Mobi.Data.pdb
-D:\Mobi\Mobi.Data\obj\Release\net8.0\ref\Mobi.Data.dll

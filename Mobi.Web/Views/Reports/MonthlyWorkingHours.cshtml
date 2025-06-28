@@ -43,7 +43,6 @@
                         </div>
                         <div class="col-md-3 mt-4">
                             <button id="searchBtn" class="btn btn-primary">@T("Mobi.Common.Search")</button>
-                            <button id="downloadPdfBtn" class="btn btn-secondary buttons-print"><i class="fas fa-print"></i> @T("Mobi.Reports.DailyAttendance.Print")</span></button>
                         </div>
                     </div>
 
@@ -132,18 +131,6 @@
                         console.error("Error fetching data:", xhr);
                     }
                 });
-            });
-
-            $('#downloadPdfBtn').click(function () {
-
-                let year = $('#year').val();
-                let month = $('#month').val();
-
-                let url = '@Url.Action("DownloadMonthlyWorkingHoursPdf", "Reports")'
-                    + '?year=' + year
-                    + '&month=' + month;
-
-                window.open(url, '_blank');
             });
         });
     </script>
