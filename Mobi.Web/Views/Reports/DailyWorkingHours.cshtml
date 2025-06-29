@@ -42,6 +42,7 @@
                         </div>
                         <div class="col-md-3 mt-4">
                             <button id="searchBtn" class="btn btn-primary">@T("Mobi.Common.Search")</button>
+                            <button id="downloadPdfBtn" class="btn btn-secondary buttons-print"><i class="fas fa-print"></i> @T("Mobi.Reports.DailyAttendance.Print")</span></button>
                         </div>
                     </div>
 
@@ -80,42 +81,7 @@
                 lengthChange: true,
                 pageLength: 10,
                 dom: '<"d-flex justify-content-between align-items-center mb-2"lB>frtip',
-                buttons: [
-                    {
-                        extend: 'print',
-                        text: '<i class="fas fa-print"></i> Print',
-                        className: 'btn btn-secondary',
-                        // title: 'Daily Working Hours Report',
-                        title: '',
-                        exportOptions: { columns: ':visible' },
-                        action: function (e, dt, node, config)
-                        {
-                            let dataCount = dt.rows({ search: 'applied' }).count(); // Get count of filtered rows
-
-                            if (dataCount === 0) {
-                                alert("No data available to print.");
-                            } else {
-                                $.fn.dataTable.ext.buttons.print.action.call(this, e, dt, node, config);
-                            }
-                        },
-                        customize: function (win) {
-                            $(win.document.head).find('title').text('');
-                            $(win.document.body).css('font-size', '10pt')
-                                .prepend('<h4 class="text-center">Daily Working Hours Report</h4>');
-
-                            let startDate = $('#startDate').val();
-                            let endDate = $('#endDate').val();
-                            let employeeName = $('#EmployeeName').val();
-
-                            if (startDate && endDate) {
-                                $(win.document.body).prepend('<h5 class="text-center">From ' + startDate + ' To ' + endDate + '</h5>');
-                            }
-                            if (employeeName) {
-                                $(win.document.body).prepend('<h5 class="text-center">Employee: ' + employeeName + '</h5>');
-                            }
-                        }
-                    }
-                ],
+                buttons: [],
                 columns: [
                     { data: null, orderable: false, render: function (data, type, row, meta) { return meta.row + 1; } },
                     { data: 'employeeName' },
@@ -205,6 +171,32 @@
                     $('#EmployeeNameDropdown').hide();
                 }
             });
+
+            $('#downloadPdfBtn').click(function () {                 
+                 let startDate = $('#startDate').val();
+                 let endDate = $('#endDate').val();
+                 let employeeId = $('#EmployeeId').val();
+
+                 if (!startDate) {
+                     alert("@T("Mobi.Reports.DailyAttendance.SelectStartDate")");
+                     return;
+                 }
+
+                 if (!endDate) {
+                     alert("@T("Mobi.Reports.DailyAttendance.SelectEndDate")");
+                     return;
+                 }
+
+                 // Construct URL for PDF generation
+                 let downloadUrl = '@Url.Action("DownloadDailyWorkingHoursPdf", "Reports")'
+                     + '?startDate=' + encodeURIComponent(startDate)
+                     + '&endDate=' + encodeURIComponent(endDate)
+                     + '&employeeId=' + encodeURIComponent(employeeId);
+
+                 // Open PDF in new tab
+                 window.open(downloadUrl, '_blank');
+             });
+
         });
     </script>
 }

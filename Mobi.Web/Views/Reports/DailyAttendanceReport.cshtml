@@ -37,12 +37,8 @@
                         </div>
                         <div class="col-md-3 mt-4">
                             <button id="searchBtn" class="btn btn-primary">@T("Mobi.Reports.DailyAttendance.Search")</button>
+                            <button id="downloadPdfBtn" class="btn btn-secondary buttons-print"><i class="fas fa-print"></i> @T("Mobi.Reports.DailyAttendance.Print")</span></button>
                         </div>
-                        <div class="col-md-3 mt-2">
-                            <button id="downloadPdfBtn" class="btn btn-success">@T("Mobi.Reports.DailyAttendance.DownloadPdf")</button>
-                        </div>
-
-
                     </div>
 
                     <table id="attendanceTable" class="table table-bordered">
@@ -78,40 +74,40 @@
                 ordering: true,
                 dom: '<"d-flex justify-content-between align-items-center mb-2"lB>frtip',
                 buttons: [
-                    {
-                        extend: 'print',
-                        text: '<i class="fas fa-print"></i> @T("Mobi.Reports.DailyAttendance.Print")',
-                        className: 'btn btn-secondary',
-                        // title: '@T("Mobi.Reports.DailyAttendance.Title")',
-                        title: '',
-                        action: function (e, dt, node, config) {
-                            let dataCount = dt.rows({ search: 'applied' }).count();
-                            if (dataCount === 0) {
-                                alert("@T("Mobi.Reports.DailyAttendance.NoDataToPrint")");
-                            } else {
-                                $.fn.dataTable.ext.buttons.print.action.call(this, e, dt, node, config);
-                            }
-                        },
-                        customize: function (win) {
-                            $(win.document.head).find('title').text('');
-                            //$(win.document.body).find('thead, tfoot').hide();
+                    // {
+                    //     extend: 'print',
+                    //     text: '<i class="fas fa-print"></i> @T("Mobi.Reports.DailyAttendance.Print")',
+                    //     className: 'btn btn-secondary',
+                    //     // title: '@T("Mobi.Reports.DailyAttendance.Title")',
+                    //     title: '',
+                    //     action: function (e, dt, node, config) {
+                    //         let dataCount = dt.rows({ search: 'applied' }).count();
+                    //         if (dataCount === 0) {
+                    //             alert("@T("Mobi.Reports.DailyAttendance.NoDataToPrint")");
+                    //         } else {
+                    //             $.fn.dataTable.ext.buttons.print.action.call(this, e, dt, node, config);
+                    //         }
+                    //     },
+                    //     customize: function (win) {
+                    //         $(win.document.head).find('title').text('');
+                    //         //$(win.document.body).find('thead, tfoot').hide();
 
-                            let startDate = $('#startDate').val();
-                            let endDate = $('#endDate').val();
-                            let employeeName = $('#EmployeeName').val();
+                    //         let startDate = $('#startDate').val();
+                    //         let endDate = $('#endDate').val();
+                    //         let employeeName = $('#EmployeeName').val();
 
-                                let titleBlock = '';
-                            if (employeeName) 
-                            {
-                                titleBlock += '<h4 class="text-center">' + employeeName + ' - @T("Mobi.Reports.DailyAttendance.Title")</h4>';
-                            }
-                            if (startDate && endDate) {
-                                titleBlock += '<h5 class="text-center">@T("Mobi.Reports.DailyAttendance.From") ' + startDate + ' @T("Mobi.Reports.DailyAttendance.To") ' + endDate + '</h5>';
-                            }
+                    //             let titleBlock = '';
+                    //         if (employeeName) 
+                    //         {
+                    //             titleBlock += '<h4 class="text-center">' + employeeName + ' - @T("Mobi.Reports.DailyAttendance.Title")</h4>';
+                    //         }
+                    //         if (startDate && endDate) {
+                    //             titleBlock += '<h5 class="text-center">@T("Mobi.Reports.DailyAttendance.From") ' + startDate + ' @T("Mobi.Reports.DailyAttendance.To") ' + endDate + '</h5>';
+                    //         }
 
-                            $(win.document.body).prepend(titleBlock);
-                        }
-                    }
+                    //         $(win.document.body).prepend(titleBlock);
+                    //     }
+                    // }
                 ],
                 columns: [
                     { data: null, orderable: false, render: (data, type, row, meta) => meta.row + 1 },
@@ -206,7 +202,6 @@
             });
 
             $('#downloadPdfBtn').click(function () {
-            console.log("Print button");
             let startDate = $('#startDate').val();
             let endDate = $('#endDate').val();
             let employeeId = $('#EmployeeId').val();
