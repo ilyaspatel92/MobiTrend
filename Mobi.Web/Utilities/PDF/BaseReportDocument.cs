@@ -60,7 +60,7 @@ namespace Mobi.Web.Utilities.PDF
                     // LEFT BLOCK: Company name, title, optional date range
                     row.RelativeColumn().Padding(8).Column(col =>
                     {
-                        col.Item().Text("Company XYZ").FontSize(10).SemiBold();
+                        col.Item().Text("MOBITEND").FontSize(10).SemiBold();
                         col.Item().LineHorizontal(1); // divider line
                         col.Item().PaddingTop(2).Text(_title).FontSize(12).Bold();
 

@@ -137,7 +137,8 @@ namespace Mobi.Web.Controllers
 
             using var stream = new MemoryStream();
             report.GeneratePdf(stream);
-            return File(stream.ToArray(), "application/pdf", $"AttendanceReport_{employeeName}_{DateTime.Now:yyyyMMdd}.pdf");
+            Response.Headers.Add("Content-Disposition", "inline; filename=DailyAttendancePdf.pdf");
+            return File(stream.ToArray(), "application/pdf");
         }
 
         private string GetActionTypeName(int actionTypeId)
@@ -212,7 +213,8 @@ namespace Mobi.Web.Controllers
             using var stream = new MemoryStream();
             report.GeneratePdf(stream);
 
-            return File(stream.ToArray(), "application/pdf", $"EmployeeReport_{DateTime.Now:yyyyMMdd}.pdf");
+            Response.Headers.Add("Content-Disposition", "inline; filename=EmployeeDataPdf.pdf");
+            return File(stream.ToArray(), "application/pdf");
         }
 
 
@@ -294,7 +296,8 @@ namespace Mobi.Web.Controllers
             using var stream = new MemoryStream();
             report.GeneratePdf(stream);
 
-            return File(stream.ToArray(), "application/pdf", $"RegisteredPhones_{DateTime.Now:yyyyMMdd}.pdf");
+            Response.Headers.Add("Content-Disposition", "inline; filename=RegisteredPhonesPdf.pdf");
+            return File(stream.ToArray(), "application/pdf");
         }
 
 
@@ -441,7 +444,8 @@ namespace Mobi.Web.Controllers
 
             using var stream = new MemoryStream();
             report.GeneratePdf(stream);
-            return File(stream.ToArray(), "application/pdf", $"MonthlyWorkingHours_{DateTime.Now:yyyyMMdd}.pdf");
+            Response.Headers.Add("Content-Disposition", "inline; filename=MonthlyWorkingHoursPdf.pdf");
+            return File(stream.ToArray(), "application/pdf");
         }
 
 
@@ -538,7 +542,8 @@ namespace Mobi.Web.Controllers
 
             using var stream = new MemoryStream();
             report.GeneratePdf(stream);
-            return File(stream.ToArray(), "application/pdf", $"WorkingHoursReport_{employeeName}_{DateTime.Now:yyyyMMdd}.pdf");
+            Response.Headers.Add("Content-Disposition", "inline; filename=DailyWorkingHoursPdf.pdf");
+            return File(stream.ToArray(), "application/pdf");
         }
 
 
@@ -676,8 +681,10 @@ namespace Mobi.Web.Controllers
             using var stream = new MemoryStream();
             report.GeneratePdf(stream);
 
-            return File(stream.ToArray(), "application/pdf", $"EmployeeLocationReport_{DateTime.Now:yyyyMMdd}.pdf");
+            Response.Headers.Add("Content-Disposition", "inline; filename=EmployeeLocationReport.pdf");
+            return File(stream.ToArray(), "application/pdf");
         }
+
 
 
 
