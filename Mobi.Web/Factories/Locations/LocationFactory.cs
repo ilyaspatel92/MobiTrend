@@ -21,7 +21,7 @@ namespace Mobi.Web.Factories.Locations
                 Status = location.Status,
                 ProofType = location.ProofType,
                 ProofTypeName = Enum.GetName(typeof(ProofType), location.ProofType),
-                CreatedDate = location.CreatedDate.ToLocalTime(),
+                CreatedDate = location.CreatedDate.ConvertToUserTime(),
                 GPSLocationAddress = location.GPSLocationAddress,
                 Latitude = location.Latitude,
                 Longitude = location.Longitude,

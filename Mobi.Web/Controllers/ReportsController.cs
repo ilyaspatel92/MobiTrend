@@ -72,9 +72,9 @@ namespace Mobi.Web.Controllers
                       });
 
             if (startDate.HasValue)
-                query = query.Where(entry => entry.log.LocalTimeAttendanceDateTime.Date >= startDate.Value.Date);
+                query = query.Where(entry => entry.log.AttendanceDateTime.ConvertToUserTime().Date >= startDate.Value.Date);
             if (endDate.HasValue)
-                query = query.Where(entry => entry.log.LocalTimeAttendanceDateTime.Date <= endDate.Value.Date);
+                query = query.Where(entry => entry.log.AttendanceDateTime.ConvertToUserTime().Date <= endDate.Value.Date);
             if (employeeId > 0)
                 query = query.Where(entry => entry.Id == employeeId);
 
@@ -88,8 +88,8 @@ namespace Mobi.Web.Controllers
                     Id = entry.log.Id,
                     FileNumber = entry.FileNumber,
                     EmployeeName = entry.NameEng,
-                    Date = entry.log.LocalTimeAttendanceDateTime.ToString("dd/MM/yyyy"),
-                    Time = entry.log.LocalTimeAttendanceDateTime.ToString("hh:mm tt"),
+                    Date = entry.log.AttendanceDateTime.ConvertToUserTime().ToString("dd/MM/yyyy"),
+                    Time = entry.log.AttendanceDateTime.ConvertToUserTime().ToString("hh:mm tt"),
                     ActionTypeId = entry.log.ActionTypeId,
                     ActionTypeName = GetActionTypeName(entry.log.ActionTypeId),
                     ProofType = GetProofType(entry.log.ProofTypeId),
@@ -242,7 +242,7 @@ namespace Mobi.Web.Controllers
                     Email = emp.Email,
                     MobileType = emp.MobileType,
                     MobileTypeName = Enum.GetName(typeof(MobileType), emp.MobileType),
-                    MobRegistrationDate = emp.MobRegistrationDate?.ToLocalTime().ToString("dd/MM/yyyy")
+                    MobRegistrationDate = emp.MobRegistrationDate?.ConvertToUserTime().ToString("dd/MM/yyyy")
                 };
 
                 // Fetch last transaction date from attendance records
@@ -275,7 +275,7 @@ namespace Mobi.Web.Controllers
                     Email = emp.Email,
                     MobileType = emp.MobileType,
                     MobileTypeName = Enum.GetName(typeof(MobileType), emp.MobileType),
-                    MobRegistrationDate = emp.MobRegistrationDate?.ToLocalTime().ToString("dd/MM/yyyy")
+                    MobRegistrationDate = emp.MobRegistrationDate?.ConvertToUserTime().ToString("dd/MM/yyyy")
                 };
 
                 var last = _attendanceRepository.GetAll()
@@ -315,19 +315,19 @@ namespace Mobi.Web.Controllers
         public IActionResult GetMonthlyWorkingHours(int year, int month, int? employeeId)
         {
             var query = _attendanceRepository.GetAll()
-                .Where(log => log.LocalTimeAttendanceDateTime.Year == year && log.LocalTimeAttendanceDateTime.Month == month)
+                .Where(log => log.AttendanceDateTime.ConvertToUserTime().Year == year && log.AttendanceDateTime.ConvertToUserTime().Month == month)
                 .Join(_employeeRepository.GetAll(),
                       log => log.EmployeeId,
                       emp => emp.Id,
                       (log, emp) => new { log, emp.NameEng, emp.FileNumber, emp.Id })
                 .OrderBy(entry => entry.Id)
-                .ThenBy(entry => entry.log.LocalTimeAttendanceDateTime);
+                .ThenBy(entry => entry.log.AttendanceDateTime.ConvertToUserTime());
 
             if (employeeId.HasValue)
             {
                 query = query.Where(x => x.Id == employeeId.Value)
                              .OrderBy(entry => entry.Id)
-                             .ThenBy(entry => entry.log.LocalTimeAttendanceDateTime);
+                             .ThenBy(entry => entry.log.AttendanceDateTime.ConvertToUserTime());
             }
 
             var groupedData = query
@@ -335,23 +335,23 @@ namespace Mobi.Web.Controllers
                 .GroupBy(entry => new { entry.Id, entry.NameEng, entry.FileNumber })
                 .Select(group =>
                 {
-                    var logs = group.OrderBy(x => x.log.LocalTimeAttendanceDateTime).ToList();
-                    var groupedByDate = logs.GroupBy(x => x.log.LocalTimeAttendanceDateTime.Date);
+                    var logs = group.OrderBy(x => x.log.AttendanceDateTime.ConvertToUserTime()).ToList();
+                    var groupedByDate = logs.GroupBy(x => x.log.AttendanceDateTime.ConvertToUserTime().Date);
                     int totalMinutes = 0;
                     bool hasMissingOut = false;
 
                     foreach (var dateGroup in groupedByDate)
                     {
-                        var dayLogs = dateGroup.OrderBy(x => x.log.LocalTimeAttendanceDateTime).ToList();
+                        var dayLogs = dateGroup.OrderBy(x => x.log.AttendanceDateTime.ConvertToUserTime()).ToList();
                         var ins = new Queue<DateTime>();
                         var outs = new Queue<DateTime>();
 
                         foreach (var entry in dayLogs)
                         {
                             if (entry.log.ActionTypeId == 1)
-                                ins.Enqueue(entry.log.LocalTimeAttendanceDateTime);
+                                ins.Enqueue(entry.log.AttendanceDateTime.ConvertToUserTime());
                             else if (entry.log.ActionTypeId == 2)
-                                outs.Enqueue(entry.log.LocalTimeAttendanceDateTime);
+                                outs.Enqueue(entry.log.AttendanceDateTime.ConvertToUserTime());
                         }
 
                         while (ins.Count > 0 && outs.Count > 0)
@@ -476,8 +476,8 @@ namespace Mobi.Web.Controllers
         private List<DailyWorkingHoursDto> GetDailyWorkingHoursData(DateTime? startDate, DateTime? endDate, int employeeId)
         {
             var query = _attendanceRepository.GetAll()
-                .Where(log => (!startDate.HasValue || log.LocalTimeAttendanceDateTime.Date >= startDate.Value.Date)
-                           && (!endDate.HasValue || log.LocalTimeAttendanceDateTime.Date <= endDate.Value.Date)
+                .Where(log => (!startDate.HasValue || log.AttendanceDateTime.ConvertToUserTime().Date >= startDate.Value.Date)
+                           && (!endDate.HasValue || log.AttendanceDateTime.ConvertToUserTime().Date <= endDate.Value.Date)
                            && (employeeId <= 0 || log.EmployeeId == employeeId))
                 .Join(_employeeRepository.GetAll(),
                       log => log.EmployeeId,
@@ -486,10 +486,10 @@ namespace Mobi.Web.Controllers
                 .ToList();
 
             var groupedData = query
-                .GroupBy(entry => new { entry.Id, entry.NameEng, entry.FileNumber, entry.log.LocalTimeAttendanceDateTime.Date })
+                .GroupBy(entry => new { entry.Id, entry.NameEng, entry.FileNumber, entry.log.AttendanceDateTime.ConvertToUserTime().Date })
                 .Select(group =>
                 {
-                    var logs = group.OrderBy(x => x.log.LocalTimeAttendanceDateTime).ToList();
+                    var logs = group.OrderBy(x => x.log.AttendanceDateTime.ConvertToUserTime()).ToList();
                     int totalMinutes = 0;
                     int totalTransactions = logs.Count();
                     var inQueue = new Queue<DateTime>();
@@ -497,9 +497,9 @@ namespace Mobi.Web.Controllers
                     foreach (var entry in logs)
                     {
                         if (entry.log.ActionTypeId == 1)
-                            inQueue.Enqueue(entry.log.LocalTimeAttendanceDateTime);
+                            inQueue.Enqueue(entry.log.AttendanceDateTime.ConvertToUserTime());
                         else if (entry.log.ActionTypeId == 2 && inQueue.Count > 0)
-                            totalMinutes += (int)(entry.log.LocalTimeAttendanceDateTime - inQueue.Dequeue()).TotalMinutes;
+                            totalMinutes += (int)(entry.log.AttendanceDateTime.ConvertToUserTime() - inQueue.Dequeue()).TotalMinutes;
                     }
 
                     return new DailyWorkingHoursDto
@@ -559,8 +559,8 @@ namespace Mobi.Web.Controllers
         public IActionResult GetDailyAttendanceReportbyLocation(DateTime? startDate, DateTime? endDate, int employeeId)
         {
             var query = _attendanceRepository.GetAll()
-                        .Where(log => (!startDate.HasValue || log.LocalTimeAttendanceDateTime.Date >= startDate.Value.Date)
-                                      && (!endDate.HasValue || log.LocalTimeAttendanceDateTime.Date <= endDate.Value.Date)
+                        .Where(log => (!startDate.HasValue || log.AttendanceDateTime.ConvertToUserTime().Date >= startDate.Value.Date)
+                                      && (!endDate.HasValue || log.AttendanceDateTime.ConvertToUserTime().Date <= endDate.Value.Date)
                                       && log.EmployeeId == employeeId)
                         .Join(_employeeRepository.GetAll(),
                               log => log.EmployeeId,
@@ -572,8 +572,8 @@ namespace Mobi.Web.Controllers
                               (log, loc) => new { log, loc.LocationNameEnglish });
 
             var groupedData = query.AsEnumerable()
-                .GroupBy(entry => new { entry.log.Id, entry.log.NameEng, entry.log.log.LocalTimeAttendanceDateTime.Date, entry.LocationNameEnglish })
-                .SelectMany(group => group.OrderBy(x => x.log.log.LocalTimeAttendanceDateTime)
+                .GroupBy(entry => new { entry.log.Id, entry.log.NameEng, entry.log.log.AttendanceDateTime.ConvertToUserTime().Date, entry.LocationNameEnglish })
+                .SelectMany(group => group.OrderBy(x => x.log.log.AttendanceDateTime.ConvertToUserTime())
                 .Select((entry, index) => new
                 {
                     SerialNumber = index + 1,
@@ -581,7 +581,7 @@ namespace Mobi.Web.Controllers
                     EmployeeId = group.Key.Id,
                     EmployeeName = group.Key.NameEng,
                     Location = group.Key.LocationNameEnglish,
-                    Time = entry.log.log.LocalTimeAttendanceDateTime.ToString("hh:mm tt"),
+                    Time = entry.log.log.AttendanceDateTime.ConvertToUserTime().ToString("hh:mm tt"),
                     EventType = entry.log.log.ActionTypeId == 1 ? "IN" : "OUT",
                     ProofType = entry.log.log.ProofTypeId == 1 ? "beacon" : "GPS"
                 })).ToList();
