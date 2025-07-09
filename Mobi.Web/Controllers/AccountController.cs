@@ -6,6 +6,8 @@ using Mobi.Service.EmailServices;
 using Mobi.Service.Helpers;
 using Mobi.Service.SystemUser;
 using Mobi.Web.Models.Employees;
+using System.Net.Mail;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 
@@ -142,12 +144,19 @@ namespace Mobi.Web.Controllers
             message.AppendLine("If you did not request this, please ignore this email.");
 
             // Configure your email service with SMTP details
-            var emailService = new EmailService("smtp.gmail.com", 587, "Mfppkw@gmail.com", "Android@2020");
+            var emailService = new SmtpClient("smtp.gmail.com")
+            {
+                Port = 587,
+                Credentials = new NetworkCredential("mobitendapp@gmail.com", "cqtw gfkf dyac kkeg"),
+                //Credentials = new NetworkCredential("mobitendapp@gmail.com", "Mobi@tend@123"),
+
+                EnableSsl = true,
+            };
 
             try
             {
                 // Send an email
-                emailService.SendEmail(email, subject, message.ToString());
+                emailService.Send("mobitendapp@gmail.com",email, subject, message.ToString());
                 Console.WriteLine("Email sent successfully!");
             }
             catch (Exception ex)
