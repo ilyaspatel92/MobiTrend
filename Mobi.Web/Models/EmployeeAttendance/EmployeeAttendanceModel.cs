@@ -18,6 +18,9 @@
         public string FileNumber { get; set; }
         public string EmployeeName { get; set; }
         public string DateAndTime { get; set; }
+        public DateTime DateAndTime1 { get; set; }
+        public string DateAndTime2 { get; set; }
+        public DateTime DateAndTime3 { get; set; }
         public string Date { get; set; }
         public string Time { get; set; }
         public string ActionTypeName { get; set; }

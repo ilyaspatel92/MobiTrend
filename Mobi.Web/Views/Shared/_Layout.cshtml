@@ -12,6 +12,11 @@
 <!--begin::Head-->
 
 <head>
+    <script>
+        const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone; // e.g., "Asia/Kuwait"
+        document.cookie = `userTimeZone=${userTimeZone}; path=/`; // set cookie
+    </script>
+
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Mobi Admin | Dashboard</title><!--begin::Primary Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,6 +37,24 @@
     <script src="~/datatables/jquery.dataTables.min.js"></script>
     <script src="~/datatables/dataTables.bootstrap5.min.js"></script>
     <link rel="stylesheet" href="~/datatables/dataTables.bootstrap5.min.css" />
+    <style>
+        .rtl .navbar > .container-fluid {
+            display: inline;
+        }
+
+        .rtl .navbar-expand .navbar-nav {
+            justify-content: flex-end;
+        }
+
+        .rtl .dropdown-menu-end[data-bs-popper] {
+            left: 0;
+            right: auto;
+        }
+
+        .sidebar-menu .nav-item > .nav-link > p {
+            font-size: 15px;
+        }
+</style>
     <!--end::jQuery and DataTable scripts-->
     @RenderSection("Scripts", required: false)
 </head> <!--end::Head--> <!--begin::Body-->
@@ -39,7 +62,7 @@
 <body class="layout-fixed  sidebar-mini bg-body-tertiary hold-transition" >
 
     <!--begin::App Wrapper-->
-    <div class="app-wrapper">
+    <div class="app-wrapper @dir">
         <!--begin::Header-->
         <nav class="app-header navbar navbar-expand bg-body">
             <!--begin::Container-->

@@ -535,7 +535,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                 {
                     EmployeeId = employee.Id,
                     AttendanceDateTime = queryModel.AttendanceDateTime,
-                    LocalTimeAttendanceDateTime = queryModel.AttendanceDateTime.ToLocalTime(),
+                    LocalTimeAttendanceDateTime = queryModel.AttendanceDateTime.ConvertToUserTime(),
                     TransferDateTime = queryModel.TransferDateTime,
                     MobileSerialNumber = queryModel.MobileSerialNumber,
                     LocationId = queryModel.LocationId,
@@ -600,8 +600,8 @@ namespace Mobi.Web.Areas.Admin.Controllers
 
                 if (queryModel.AttendanceDateTime.HasValue)
                 {
-                    var attendanceDateTime = queryModel.AttendanceDateTime.Value.Date.ToLocalTime();
-                    employeeAttendanceList = employeeAttendanceList.Where(x => x.LocalTimeAttendanceDateTime.Date == attendanceDateTime).ToList();
+                    var attendanceDateTime = queryModel.AttendanceDateTime.Value.Date.ConvertToUserTime();
+                    employeeAttendanceList = employeeAttendanceList.Where(x => x.AttendanceDateTime.Date == attendanceDateTime).ToList();
                 }
 
                 var employeeAttendanceResponseList = new List<EmployeeAttendanceResponseModel>();
@@ -616,7 +616,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     model.ActionType = item.ActionTypeId;
                     model.ActionTypeMode = item.ProofTypeId;
                     model.TransferDateTime = item.TransferDateTime;
-                    model.AttendanceDateTime = item.AttendanceDateTime;
+                    model.AttendanceDateTime = item.AttendanceDateTime.ConvertToUserTime();
                     model.LocalTimeAttendanceDateTime = item.LocalTimeAttendanceDateTime;
 
                     if (item.LocationId == 0)
