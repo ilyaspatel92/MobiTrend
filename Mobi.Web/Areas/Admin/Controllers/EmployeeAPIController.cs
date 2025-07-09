@@ -601,7 +601,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                 if (queryModel.AttendanceDateTime.HasValue)
                 {
                     var attendanceDateTime = queryModel.AttendanceDateTime.Value.Date.ConvertToUserTime();
-                    employeeAttendanceList = employeeAttendanceList.Where(x => x.AttendanceDateTime.Date == attendanceDateTime).ToList();
+                    employeeAttendanceList = employeeAttendanceList.Where(x => x.AttendanceDateTime.Date == attendanceDateTime.Date).ToList();
                 }
 
                 var employeeAttendanceResponseList = new List<EmployeeAttendanceResponseModel>();
