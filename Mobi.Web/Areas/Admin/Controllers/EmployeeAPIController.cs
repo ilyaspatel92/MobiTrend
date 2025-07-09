@@ -601,7 +601,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                 if (queryModel.AttendanceDateTime.HasValue)
                 {
                     var attendanceDateTime = queryModel.AttendanceDateTime.Value.Date.ConvertToUserTime();
-                    employeeAttendanceList = employeeAttendanceList.Where(x => x.AttendanceDateTime.Date == attendanceDateTime.Date).ToList();
+                    employeeAttendanceList = employeeAttendanceList.Where(x => x.AttendanceDateTime.ConvertToUserTime().Date == attendanceDateTime.Date).ToList();
                 }
 
                 var employeeAttendanceResponseList = new List<EmployeeAttendanceResponseModel>();
@@ -616,7 +616,7 @@ namespace Mobi.Web.Areas.Admin.Controllers
                     model.ActionType = item.ActionTypeId;
                     model.ActionTypeMode = item.ProofTypeId;
                     model.TransferDateTime = item.TransferDateTime;
-                    model.AttendanceDateTime = item.AttendanceDateTime.ConvertToUserTime();
+                    model.AttendanceDateTime = item.AttendanceDateTime;
                     model.LocalTimeAttendanceDateTime = item.LocalTimeAttendanceDateTime;
 
                     if (item.LocationId == 0)
