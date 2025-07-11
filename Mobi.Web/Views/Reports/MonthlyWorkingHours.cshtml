@@ -77,30 +77,6 @@
                 ordering: true,
                 dom: '<"d-flex justify-content-between align-items-center mb-2"lB>frtip',
                 buttons: [
-                    {
-                        extend: 'print',
-                        text: '<i class="fas fa-print"></i> @T("Mobi.Common.Print")',
-                        className: 'btn btn-secondary',
-                        // title: '@T("Mobi.Reports.MonthlyWorkingHoursReport")',
-                        title: '',
-                        exportOptions: { columns: ':visible' },
-                        action: function (e, dt, node, config) {
-                            let dataCount = dt.rows({ search: 'applied' }).count();
-                            if (dataCount === 0) {
-                                alert("@T("Mobi.Reports.NoDataToPrint")");
-                            } else {
-                                $.fn.dataTable.ext.buttons.print.action.call(this, e, dt, node, config);
-                            }
-                        },
-                        customize: function (win) {
-                            $(win.document.body).prepend('<h4 class="text-center">@T("Mobi.Reports.MonthlyWorkingHoursReport")</h4>');
-
-                            let year = $('#year').val();
-                            let month = $('#month').find(':selected').text();
-                            $(win.document.body).prepend('<h5 class="text-center">@T("Mobi.Reports.Year") : ' + year + ' | @T("Mobi.Reports.Month") : ' + month + '</h5>');
-                            $(win.document.body).find('table').addClass('display').css('font-size', 'inherit');
-                        }
-                    }
                 ],
                 columns: [
                     { data: null, orderable: false, render: function (data, type, row, meta) { return meta.row + 1; } },
